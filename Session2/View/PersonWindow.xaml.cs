@@ -30,10 +30,10 @@ namespace Session2.View
     /// 
     public partial class PersonWindow : Window
     {
-        public PersonWindow(Employee employee)
+        public PersonWindow(Employee employee, int depid)
         {
             InitializeComponent();
-            DataContext = new PersonViewModel(employee);
+            DataContext = new PersonViewModel(employee, depid);
         }
 
         private void CloseButton_Click(object sender, RoutedEventArgs e)
