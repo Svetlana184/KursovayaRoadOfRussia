@@ -7,12 +7,15 @@
         xmlns:materialIcons ="clr-namespace:Material.Icons.WPF;assembly=Material.Icons.WPF"
         xmlns:vm="clr-namespace:Session2.ViewModel"
         xmlns:local="clr-namespace:Session2" 
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:converter ="clr-namespace:Session2.Helpers"
         d:DataContext="{d:DesignInstance Type=vm:PersonViewModel}"
         mc:Ignorable="d"
         Title="PersonWindow" Height="590" Width="800">
     <Window.Resources>
         <converter:IdDepartmentToName x:Key="IdDepartmentToName"/>
+        <converter:IdEventToName x:Key="IdEventToName"/>
+        <converter:IdEventToDescription x:Key="IdEventToDescription"/>
     </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
@@ -24,8 +27,14 @@
             <RowDefinition Height="9.5*"/>
             <RowDefinition Height="0.75*"/>
         </Grid.RowDefinitions>
-        <Button  x:Name="Button_Edit" Width="50" HorizontalAlignment="Right" Height="25" Margin="10 5" Content="{materialIcons:MaterialIconExt Kind=Pencil}" ToolTip="Перейти в режим редактирования"/>
-        <Button x:Name="ButtonFire" Width="100" HorizontalAlignment="Left" Height="25" Margin="10 5" Content="{materialIcons:MaterialIconExt Kind=Fire}" ToolTip="Удалить сотрудника" />
+        <Button  Width="50" HorizontalAlignment="Right" Height="25" Margin="10 5" Content="{materialIcons:MaterialIconExt Kind=Pencil}" ToolTip="Перейти в режим редактирования">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="MouseDoubleClick">
+                    <i:InvokeCommandAction Command="{Binding ChangeEditabilityCommand}"/>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+        </Button>
+        <Button x:Name="ButtonFire" Width="100" HorizontalAlignment="Left" Height="25" Margin="10 5" Content="{materialIcons:MaterialIconExt Kind=Fire}" ToolTip="Удалить сотрудника" Command="{Binding TurnoffCommand}"/>
         <StackPanel Grid.Row="1" Grid.Column="0" IsEnabled="{Binding IsEditable}">
             <TextBox x:Name="SurName" Margin="10  5" materialDesign:HintAssist.Hint="Surname" Text="{Binding Surname_}" IsEnabled="{Binding IsEditable}">
             </TextBox>
@@ -37,13 +46,13 @@
             <TextBox x:Name="Cabinet" Margin="10  5" materialDesign:HintAssist.Hint="Cabinet"  Text="{Binding Cabinet_}" IsEnabled="{Binding IsEditable}"/>
             <TextBox x:Name="Email_" Margin="10  5" materialDesign:HintAssist.Hint="E-mail" Text="{Binding Email_}" IsEnabled="{Binding IsEditable}"/>
             <TextBox x:Name="Department_" Margin="10  5" materialDesign:HintAssist.Hint="Department" Text="{Binding SelectedDepartment, Converter={StaticResource IdDepartmentToName}}" IsEnabled="{Binding IsEditable}"/>
-            <ComboBox x:Name="IdBoss" Margin="10 5" materialDesign:HintAssist.Hint="Boss"  IsEditable="True" ItemsSource="{Binding EmployeeList}" DisplayMemberPath="Surname" SelectedValuePath="IdEmployee" SelectedItem="{Binding BossId_}" IsEnabled="{Binding IsEditable}"/>
+            <ComboBox x:Name="IdBoss" Margin="10 5" materialDesign:HintAssist.Hint="Boss"  IsEditable="True" ItemsSource="{Binding EmployeeList}" DisplayMemberPath="Surname" SelectedValuePath="IdEmployee" SelectedItem="{Binding BossId_}"  IsEnabled="{Binding IsEditable}"/>
             <ComboBox x:Name="IdHelper" Margin="10 5" materialDesign:HintAssist.Hint="Helper"  IsEditable="True" ItemsSource="{Binding EmployeeList}" DisplayMemberPath="Surname" SelectedValuePath="IdEmployee" SelectedItem="{Binding HelperId_}" IsEnabled="{Binding IsEditable}"/>
-            <DatePicker x:Name="BirthDay" IsDropDownOpen="True" SelectedDateFormat="Short" Margin="10 5" materialDesign:HintAssist.Hint="Birth Day" SelectedDate="{Binding Birthday_}" IsEnabled="{Binding IsEditable}"/>
+            <DatePicker  IsDropDownOpen="True" Margin="10 5" materialDesign:HintAssist.Hint="Birth Day" SelectedDate="{Binding Birthday_}" SelectedDateFormat="Short" IsEnabled="{Binding IsEditable}"/>
             <TextBox x:Name="Other" Margin="10 5" Height="40" materialDesign:HintAssist.Hint="Other" Text="{Binding Other_}"/>
         </StackPanel>
         <Button Grid.Row="2" Grid.Column="0" Content="Ок" Width="90" HorizontalAlignment="Right" Margin="10 5" Background="Green" Height="25" Command="{Binding AddEmp}" />
-        <Button  Grid.Row="2" Grid.Column="0" Content="Отмена" Width="90" HorizontalAlignment="Left" Margin="10 5"  Height="25" />
+        <Button  Grid.Row="2" Grid.Column="0" Content="Отмена" Width="90" HorizontalAlignment="Left" Margin="10 5"  Height="25" Command="{Binding ResetCommand}"/>
 
         <StackPanel Grid.Column="1" Grid.Row="0" Orientation="Horizontal" >
             <Button x:Name="LastButton" Content="Прошедшие" Height="25" Width="80" Background="LightGreen" FontSize="9" Foreground="White" Margin="10 0" />
@@ -53,13 +62,17 @@
         </StackPanel>
         <ListView x:Name="EventList" Grid.Column="1" Grid.Row="1">
             <Label Content="Обучения" FontSize="20"/>
-            <ListBox  x:Name="StudyList" SelectedItem="{Binding SelectedCalendar}">
+            <ListBox  x:Name="StudyList"  ItemsSource="{Binding StudyList}">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <Expander Header="{Binding Dates}">
+                        <Expander Header="{Binding IdEvent, Converter={StaticResource IdEventToName}}">
                             <StackPanel  Background="LightGray" Margin="5">
-                                <Label Content="{Binding EvName}" FontSize="18"/>
-                                <Label Content="{Binding DescriptionStudy}"/>
+                                <StackPanel Orientation="Horizontal">
+                                    <Label Content="{Binding DateStart}" FontSize="14"/>
+                                    <Label Content=" - " FontSize="14"/>
+                                    <Label Content="{Binding DateFinish}" FontSize="14"/>
+                                </StackPanel>
+                                <Label Content="{Binding IdEvent, Converter={StaticResource IdEventToDescription}}"/>
                                 <StackPanel Orientation="Horizontal">
                                     <Button Width="40" Height="20" Margin="10 5" Content="{materialIcons:MaterialIconExt Kind=Delete}" ToolTip="Удалить мероприятие" Command="{Binding DeleteCommand}" CommandParameter="{Binding SelectedCalendar}"/>
                                 </StackPanel>

@@ -70,7 +70,7 @@ namespace Session2.ViewModel
                 return addCommand ??
                   (addCommand = new RelayCommand((o) =>
                   {
-                     PersonWindow window = new PersonWindow(new Employee(), 883);
+                     PersonWindow window = new PersonWindow(new Employee(), 893);
                       if (window.ShowDialog() == true)
                       {
                           using (RoadOfRussiaContext db = new RoadOfRussiaContext())
