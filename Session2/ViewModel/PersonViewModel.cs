@@ -214,8 +214,6 @@ namespace Session2.ViewModel
         }
 
 
-
-
         //СЕРВИСЫ
         public EmployeeService employeeService;
         public CalendarService calendarService;
@@ -249,7 +247,7 @@ namespace Session2.ViewModel
                   }));
             }
         }
-        private RelayCommand addEmp;
+        private RelayCommand? addEmp;
         public RelayCommand AddEmp
         {
             get
@@ -261,7 +259,7 @@ namespace Session2.ViewModel
                   }));
             }
         }
-        private RelayCommand resetCommand;
+        private RelayCommand? resetCommand;
         public RelayCommand ResetCommand
         {
             get
@@ -269,12 +267,31 @@ namespace Session2.ViewModel
                 return resetCommand ??
                   (resetCommand = new RelayCommand((o) =>
                   {
-                      var result = MessageBox.Show("Вы хотите отменить изменения?","Подтверждение", MessageBoxButton.YesNo);
+                      var result = MessageBox.Show("Вы уверены, что хотите отменить изменения?","Подтверждение", MessageBoxButton.YesNo);
                       if (result == MessageBoxResult.Yes) BrowseEmployee();
 
                   }));
             }
         }
+        private RelayCommand? deletecalendarCommand;
+        public RelayCommand DeleteCalendarCommand
+        {
+            get
+            {
+                return deletecalendarCommand ??
+                  (deletecalendarCommand = new RelayCommand((o) =>
+                  {
+                      int calendarid = (int)(o);
+                      Calendar_ calendar_ = Calendars.FirstOrDefault(x => x.IdCalendar == calendarid)!;
+                      var result = MessageBox.Show("Вы уверены, что хотите удалить это мероприятие?", "Подтверждение", MessageBoxButton.YesNo);
+                      if (result == MessageBoxResult.Yes) calendarService.Delete(calendar_);
+
+                  }));
+            }
+        }
+
+
+
         public PersonViewModel(Employee employee, int departmentid)
         {
             SelectedEmployee = employee;
@@ -344,7 +361,7 @@ namespace Session2.ViewModel
             Calendars = new ObservableCollection<Calendar_>(calendarService.GetAll()).Where(x => x.IdEmployee == SelectedEmployee.IdEmployee).ToList();
             Calendars.Sort();
             var listStudy = Calendars.Where(x => x.TypeOfEvent == "Обучение");
-            var listSkip = Calendars.Where(x => x.TypeOfEvent == "Временное отстутствие");
+            var listSkip = Calendars.Where(x => x.TypeOfEvent == "Временное отсутствие");
             var listVacation = Calendars.Where(x => x.TypeOfEvent == "Отпуск");
             StudyList = listStudy.ToList();
             SkipList = listSkip.ToList();

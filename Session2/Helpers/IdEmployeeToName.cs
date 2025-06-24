@@ -9,14 +9,15 @@ using System.Windows.Data;
 
 namespace Session2.Helpers
 {
-    public class IdEventToName : IValueConverter
+    public class IdEmployeeToName : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             int id = int.Parse(value.ToString()!);
             using (RoadOfRussiaContext db = new RoadOfRussiaContext())
             {
-                return db.Events.FirstOrDefault(x => x.IdEvent == id)!.EventName;
+                return db.Employees.FirstOrDefault(x => x.IdEmployee == id)!.Surname + " " +
+                    db.Employees.FirstOrDefault(x => x.IdEmployee == id)!.FirstName;
             }
         }
 

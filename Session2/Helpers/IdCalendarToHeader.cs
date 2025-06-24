@@ -9,14 +9,16 @@ using System.Windows.Data;
 
 namespace Session2.Helpers
 {
-    public class IdEventToName : IValueConverter
+    public class IdCalendarToHeader : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             int id = int.Parse(value.ToString()!);
             using (RoadOfRussiaContext db = new RoadOfRussiaContext())
             {
-                return db.Events.FirstOrDefault(x => x.IdEvent == id)!.EventName;
+                string header = db.Calendars.FirstOrDefault(x => x.IdCalendar == id)!.DateStart.ToString() +
+                    " - " + db.Calendars.FirstOrDefault(x => x.IdCalendar == id)!.DateFinish.ToString();
+                return header;
             }
         }
 

@@ -16,6 +16,8 @@
         <converter:IdDepartmentToName x:Key="IdDepartmentToName"/>
         <converter:IdEventToName x:Key="IdEventToName"/>
         <converter:IdEventToDescription x:Key="IdEventToDescription"/>
+        <converter:IdCalendarToHeader x:Key="IdCalendarToHeader"/>
+        <converter:IdEmployeeToName x:Key="IdEmployeeToName"/>
     </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
@@ -65,16 +67,19 @@
             <ListBox  x:Name="StudyList"  ItemsSource="{Binding StudyList}">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <Expander Header="{Binding IdEvent, Converter={StaticResource IdEventToName}}">
+                        <Expander Header="{Binding IdCalendar, Converter={StaticResource IdCalendarToHeader}}">
                             <StackPanel  Background="LightGray" Margin="5">
-                                <StackPanel Orientation="Horizontal">
-                                    <Label Content="{Binding DateStart}" FontSize="14"/>
-                                    <Label Content=" - " FontSize="14"/>
-                                    <Label Content="{Binding DateFinish}" FontSize="14"/>
-                                </StackPanel>
+                                <Label Content="{Binding IdEvent, Converter={StaticResource IdEventToName}}" FontSize="16"></Label>
+                                
                                 <Label Content="{Binding IdEvent, Converter={StaticResource IdEventToDescription}}"/>
                                 <StackPanel Orientation="Horizontal">
-                                    <Button Width="40" Height="20" Margin="10 5" Content="{materialIcons:MaterialIconExt Kind=Delete}" ToolTip="Удалить мероприятие" Command="{Binding DeleteCommand}" CommandParameter="{Binding SelectedCalendar}"/>
+                                    <Button Width="40" Height="20" Margin="10 5" Content="{materialIcons:MaterialIconExt Kind=Delete}" ToolTip="Удалить мероприятие">
+                                        <i:Interaction.Triggers>
+                                            <i:EventTrigger EventName="MouseDoubleClick">
+                                                <i:InvokeCommandAction Command="{Binding DeleteCalendarCommand}" CommandParameter="{Binding IdCalendar}"/>
+                                            </i:EventTrigger>
+                                        </i:Interaction.Triggers>
+                                    </Button>
                                 </StackPanel>
                             </StackPanel>
                         </Expander>
@@ -83,13 +88,16 @@
                 </ListBox.ItemTemplate>
             </ListBox>
             <Label Content="Временное отсутствие" FontSize="20"/>
-            <ListBox x:Name="SkipList" >
+            <ListBox x:Name="SkipList" ItemsSource="{Binding SkipList}" >
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <Expander Header="{Binding Dates}">
+                        <Expander Header="{Binding IdCalendar, Converter={StaticResource IdCalendarToHeader}}">
                             <StackPanel Background="LightGray" Margin="5">
-                                <Label Content="{Binding TypeOfAbsence_}"/>
-                                <Label Content="{Binding Alternate_}"/>
+                                <Label Content="{Binding TypeOfAbsence}"/>
+                                <StackPanel Orientation="Horizontal">
+                                    <Label Content="Замена: "/>
+                                    <Label Content="{Binding IdAlternate, Converter={StaticResource IdEmployeeToName}}"/>
+                                </StackPanel>
                                 <StackPanel Orientation="Horizontal">
                                     <Button x:Name="Button_DeleteEvent" Width="40" Height="20" Margin="10 5" Content="{materialIcons:MaterialIconExt Kind=Delete}" ToolTip="Удалить мероприятие" />
                                 </StackPanel>
@@ -99,12 +107,16 @@
                 </ListBox.ItemTemplate>
             </ListBox>
             <Label Content="Отпуск" FontSize="20"/>
-            <ListBox  x:Name="VacationList" >
+            <ListBox  x:Name="VacationList" ItemsSource="{Binding VacationList}">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <Expander Header="{Binding Dates}">
+                        <Expander Header="{Binding IdCalendar, Converter={StaticResource IdCalendarToHeader}}">
                             <StackPanel Background="LightGray" Margin="5">
-                                <Label Content="{Binding DescriptionStudy}"/>
+                                <StackPanel Orientation="Horizontal">
+                                    <Label Content="Замена: "/>
+                                    <Label Content="{Binding IdAlternate, Converter={StaticResource IdEmployeeToName}}"/>
+                                </StackPanel>
+                                
                                 <StackPanel Orientation="Horizontal">
                                     <Button Width="40" Height="20" Margin="10 5" Content="{materialIcons:MaterialIconExt Kind=Delete}" ToolTip="Удалить мероприятие" />
                                 </StackPanel>
