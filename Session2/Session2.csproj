@@ -28,7 +28,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Logo.png" />
+    <Resource Include="Assets\Logo.png" />
   </ItemGroup>
 
 </Project>

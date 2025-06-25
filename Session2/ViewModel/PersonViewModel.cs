@@ -22,11 +22,29 @@ namespace Session2.ViewModel
         public List<Calendar_> Calendars { get; set; }
         public List<Employee> EmployeeList { get; set; }
         public ObservableCollection<Event> Events { get; set; }
-        public bool IsEditable { get; set; }
+        private bool iseditable;
+        public bool IsEditable 
+        {
+            get {return iseditable; }
+            set
+            {
+                iseditable = value;
+                OnPropertyChanged(nameof(iseditable));
+            }
+        }
         public Employee SelectedBoss { get; set; }
         public Employee SelectedHelper { get; set; }
 
-        public string VisibilityButton { get; set; }
+        private string visibilitybutton;
+        public string VisibilityButton 
+        { 
+            get { return visibilitybutton; }
+            set
+            {
+                visibilitybutton = value;
+                OnPropertyChanged(nameof(visibilitybutton));
+            }
+        }
 
         //поля для карточки сотрудника
         private string surname_;
@@ -135,10 +153,19 @@ namespace Session2.ViewModel
         }
 
         //поля для календаря сотрудника
-
-        public List<Calendar_> StudyList { get; set; }
-        public List<Calendar_> SkipList { get; set; }
-        public List<Calendar_> VacationList { get; set; }
+        
+        private ObservableCollection<Calendar_> studyList;
+        public ObservableCollection<Calendar_> StudyList
+        {
+            get => studyList;
+            set
+            {
+                studyList = value;
+                OnPropertyChanged(); 
+            }
+        }
+        public ObservableCollection<Calendar_> SkipList { get; set; }
+        public ObservableCollection<Calendar_> VacationList { get; set; }
         public int IdCalendar
         {
             get;
@@ -230,7 +257,21 @@ namespace Session2.ViewModel
                 return turnoffCommand ??
                     (turnoffCommand = new RelayCommand((o) =>
                     {
-                        var result = MessageBox.Show("робит");
+                        var result = MessageBox.Show("Вы уверены, что хотите уволить данного сотрудника?", "Подтверждение", MessageBoxButton.YesNo);
+                        if (result == MessageBoxResult.Yes)
+                        {
+                            List<Calendar_> calendarPresent = StudyList.Where(x => x.DateFinish > DateOnly.FromDateTime(DateTime.Now)).ToList();
+                            if (calendarPresent.Count != 0)
+                            {
+                                var result1 = MessageBox.Show("Вы не можете уволить данного сотрудника из-за запланированного обучения", "Подтверждение", MessageBoxButton.OKCancel);
+                            }
+                            else
+                            {
+                                SelectedEmployee.IsFired = DateTime.Now;
+                                employeeService.Update(SelectedEmployee);
+                            }
+                        }
+
                     }));
             }
         }
@@ -273,7 +314,7 @@ namespace Session2.ViewModel
                   }));
             }
         }
-        private RelayCommand? deletecalendarCommand;
+        private RelayCommand deletecalendarCommand;
         public RelayCommand DeleteCalendarCommand
         {
             get
@@ -284,8 +325,12 @@ namespace Session2.ViewModel
                       int calendarid = (int)(o);
                       Calendar_ calendar_ = Calendars.FirstOrDefault(x => x.IdCalendar == calendarid)!;
                       var result = MessageBox.Show("Вы уверены, что хотите удалить это мероприятие?", "Подтверждение", MessageBoxButton.YesNo);
-                      if (result == MessageBoxResult.Yes) calendarService.Delete(calendar_);
-
+                      if (result == MessageBoxResult.Yes)
+                      {
+                          calendarService.Delete(calendar_);
+                          Calendars.Remove(calendar_);
+                          UpdateEvents();
+                      }
                   }));
             }
         }
@@ -318,11 +363,9 @@ namespace Session2.ViewModel
                 BossId_ = EmployeeList.FirstOrDefault(x => x.IdEmployee == SelectedEmployee.IdBoss);
                 HelperId_ = EmployeeList.FirstOrDefault(x => x.IdEmployee == SelectedEmployee.IdHelper);
                 Birthday_ = SelectedEmployee.BirthDay;
-                IsEditable = true;
-                //IsEditable = false;
+                IsEditable = false;
+                VisibilityButton = "Visible";
                 BrowseEvents();
-
-
             }
             else
             {
@@ -342,7 +385,6 @@ namespace Session2.ViewModel
                 SelectedDepartment = 888;
                 VisibilityButton = "Hidden";
             }
-            int x = 7;
         }
         private void LoadEmpDep()
         {
@@ -360,12 +402,14 @@ namespace Session2.ViewModel
             List<Event> events = Events.Where(p => p.DateOfEvent >= DateTime.Now).ToList();
             Calendars = new ObservableCollection<Calendar_>(calendarService.GetAll()).Where(x => x.IdEmployee == SelectedEmployee.IdEmployee).ToList();
             Calendars.Sort();
-            var listStudy = Calendars.Where(x => x.TypeOfEvent == "Обучение");
-            var listSkip = Calendars.Where(x => x.TypeOfEvent == "Временное отсутствие");
-            var listVacation = Calendars.Where(x => x.TypeOfEvent == "Отпуск");
-            StudyList = listStudy.ToList();
-            SkipList = listSkip.ToList();
-            VacationList = listVacation.ToList();
+            UpdateEvents();
+            
+        }
+        private void UpdateEvents()
+        {
+            StudyList = new ObservableCollection<Calendar_>(Calendars.Where(x => x.TypeOfEvent == "Обучение"));
+            SkipList = new ObservableCollection<Calendar_>(Calendars.Where(x => x.TypeOfEvent == "Временное отсутствие"));
+            VacationList = new ObservableCollection<Calendar_>(Calendars.Where(x => x.TypeOfEvent == "Отпуск"));
         }
     }
 }

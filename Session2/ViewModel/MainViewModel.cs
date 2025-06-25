@@ -17,11 +17,11 @@ namespace Session2.ViewModel
        
         public ObservableCollection<Employee> Employees { get; set; }
         public ObservableCollection<Department> Deps{ get; set; }
-        public List<EmployeeForList> EmployeesList { get; set; }
-        private EmployeeForList selectedemployee;
+        public List<Employee> EmployeesList { get; set; }
+        private Employee selectedemployee;
         public EmployeeService employeeService;
         public DepartmentService departmentService;
-        public EmployeeForList SelectedEmployee
+        public Employee SelectedEmployee
         {
             get
             {
@@ -48,18 +48,11 @@ namespace Session2.ViewModel
                 Deps = new ObservableCollection<Department>(departmentService.GetAll());
             }
             
-            EmployeesList = new List<EmployeeForList>();
+            EmployeesList = new List<Employee>();
             foreach(Employee emp in Employees)
             {
-                EmployeeForList empL = new EmployeeForList
-                {
-                    IdEmployeeForList = emp.IdEmployee,
-                    FIO = emp.Surname + " " + emp.FirstName + " " + emp.SecondName,
-                    Contacts = emp.PhoneWork + " " + emp.Email,
-                    WorkPlace = Deps.FirstOrDefault(x => x.IdDepartment == emp.IdDepartment)!.DepartmentName + " - " + emp.Position,
-                    Cabinet = emp.Cabinet
-                };
-                EmployeesList.Add(empL);
+               
+                EmployeesList.Add(emp);
             }
         }
         private RelayCommand? addCommand;
@@ -89,9 +82,8 @@ namespace Session2.ViewModel
                 return editCommand ??
                   (editCommand = new RelayCommand((o) =>
                   {
-                      EmployeeForList employee = o as EmployeeForList;
-                      Employee emp = Employees.FirstOrDefault(x => x.IdEmployee == employee.IdEmployeeForList)!;
-                      PersonWindow window = new PersonWindow(emp, emp.IdDepartment);
+                      Employee employee = o as Employee;
+                      PersonWindow window = new PersonWindow(employee, employee.IdDepartment);
                       window.Show();
                      
                   }));

@@ -29,14 +29,14 @@
             <RowDefinition Height="9.5*"/>
             <RowDefinition Height="0.75*"/>
         </Grid.RowDefinitions>
-        <Button  Width="50" HorizontalAlignment="Right" Height="25" Margin="10 5" Content="{materialIcons:MaterialIconExt Kind=Pencil}" ToolTip="Перейти в режим редактирования">
+        <Button  Width="50" HorizontalAlignment="Right" Height="25" Margin="10 5" Content="{materialIcons:MaterialIconExt Kind=Pencil}" ToolTip="Перейти в режим редактирования" Visibility="{Binding VisibilityButton}">
             <i:Interaction.Triggers>
-                <i:EventTrigger EventName="MouseDoubleClick">
+                <i:EventTrigger EventName="Click">
                     <i:InvokeCommandAction Command="{Binding ChangeEditabilityCommand}"/>
                 </i:EventTrigger>
             </i:Interaction.Triggers>
         </Button>
-        <Button x:Name="ButtonFire" Width="100" HorizontalAlignment="Left" Height="25" Margin="10 5" Content="{materialIcons:MaterialIconExt Kind=Fire}" ToolTip="Удалить сотрудника" Command="{Binding TurnoffCommand}"/>
+        <Button x:Name="ButtonFire" Width="100" HorizontalAlignment="Left" Height="25" Margin="10 5" Content="{materialIcons:MaterialIconExt Kind=Fire}" ToolTip="Уволить сотрудника" Command="{Binding TurnoffCommand}" Visibility="{Binding VisibilityButton}"/>
         <StackPanel Grid.Row="1" Grid.Column="0" IsEnabled="{Binding IsEditable}">
             <TextBox x:Name="SurName" Margin="10  5" materialDesign:HintAssist.Hint="Surname" Text="{Binding Surname_}" IsEnabled="{Binding IsEditable}">
             </TextBox>
@@ -70,20 +70,21 @@
                         <Expander Header="{Binding IdCalendar, Converter={StaticResource IdCalendarToHeader}}">
                             <StackPanel  Background="LightGray" Margin="5">
                                 <Label Content="{Binding IdEvent, Converter={StaticResource IdEventToName}}" FontSize="16"></Label>
-                                
+
                                 <Label Content="{Binding IdEvent, Converter={StaticResource IdEventToDescription}}"/>
-                                <StackPanel Orientation="Horizontal">
-                                    <Button Width="40" Height="20" Margin="10 5" Content="{materialIcons:MaterialIconExt Kind=Delete}" ToolTip="Удалить мероприятие">
+                                <StackPanel HorizontalAlignment="Left">
+                                    <Button x:Name="Button_DeleteEvent" Width="40" Height="20" Margin="10 5" Content="{materialIcons:MaterialIconExt Kind=Delete}" ToolTip="Удалить мероприятие">
                                         <i:Interaction.Triggers>
-                                            <i:EventTrigger EventName="MouseDoubleClick">
-                                                <i:InvokeCommandAction Command="{Binding DeleteCalendarCommand}" CommandParameter="{Binding IdCalendar}"/>
+                                            <i:EventTrigger EventName="Click">
+                                                <i:InvokeCommandAction Command="{Binding DataContext.DeleteCalendarCommand,
+                                                RelativeSource={RelativeSource AncestorType=ListBox}}" 
+                                                CommandParameter="{Binding IdCalendar}" />
                                             </i:EventTrigger>
                                         </i:Interaction.Triggers>
                                     </Button>
                                 </StackPanel>
                             </StackPanel>
                         </Expander>
-                           
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
@@ -99,7 +100,15 @@
                                     <Label Content="{Binding IdAlternate, Converter={StaticResource IdEmployeeToName}}"/>
                                 </StackPanel>
                                 <StackPanel Orientation="Horizontal">
-                                    <Button x:Name="Button_DeleteEvent" Width="40" Height="20" Margin="10 5" Content="{materialIcons:MaterialIconExt Kind=Delete}" ToolTip="Удалить мероприятие" />
+                                    <Button x:Name="Button_DeleteEvent" Width="40" Height="20" Margin="10 5" Content="{materialIcons:MaterialIconExt Kind=Delete}" ToolTip="Удалить мероприятие">
+                                        <i:Interaction.Triggers>
+                                            <i:EventTrigger EventName="Click">
+                                                <i:InvokeCommandAction Command="{Binding DataContext.DeleteCalendarCommand,
+                                                    RelativeSource={RelativeSource AncestorType=ListBox}}" 
+                                                     CommandParameter="{Binding IdCalendar}" />
+                                            </i:EventTrigger>
+                                        </i:Interaction.Triggers>
+                                    </Button>
                                 </StackPanel>
                             </StackPanel>
                         </Expander>
@@ -112,13 +121,22 @@
                     <DataTemplate>
                         <Expander Header="{Binding IdCalendar, Converter={StaticResource IdCalendarToHeader}}">
                             <StackPanel Background="LightGray" Margin="5">
+                              
                                 <StackPanel Orientation="Horizontal">
                                     <Label Content="Замена: "/>
                                     <Label Content="{Binding IdAlternate, Converter={StaticResource IdEmployeeToName}}"/>
                                 </StackPanel>
                                 
                                 <StackPanel Orientation="Horizontal">
-                                    <Button Width="40" Height="20" Margin="10 5" Content="{materialIcons:MaterialIconExt Kind=Delete}" ToolTip="Удалить мероприятие" />
+                                    <Button Width="40" Height="20" Margin="10 5" Content="{materialIcons:MaterialIconExt Kind=Delete}" ToolTip="Удалить мероприятие" >
+                                        <i:Interaction.Triggers>
+                                            <i:EventTrigger EventName="Click">
+                                                <i:InvokeCommandAction Command="{Binding DataContext.DeleteCalendarCommand,
+                                                RelativeSource={RelativeSource AncestorType=ListBox}}" 
+                                                 CommandParameter="{Binding IdCalendar}" />
+                                            </i:EventTrigger>
+                                        </i:Interaction.Triggers>
+                                    </Button>
                                 </StackPanel>
                             </StackPanel>
                         </Expander>
