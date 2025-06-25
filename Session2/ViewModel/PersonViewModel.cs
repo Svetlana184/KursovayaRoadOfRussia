@@ -36,9 +36,10 @@ namespace Session2.ViewModel
         public Employee SelectedBoss { get; set; }
         public Employee SelectedHelper { get; set; }
 
+        
         private string visibilitybutton;
-        public string VisibilityButton 
-        { 
+        public string VisibilityButton
+        {
             get { return visibilitybutton; }
             set
             {
@@ -155,6 +156,33 @@ namespace Session2.ViewModel
 
         //КАЛЕНДАРЬ
 
+        private List<string> types;
+        public List<string> Types
+        {
+            get
+            {
+                return types;
+            }
+            set
+            {
+                types = value;
+                OnPropertyChanged();
+            }
+        }
+        private List<Event> namesEvent;
+        public List<Event> NamesEvent
+        {
+            get
+            {
+                return namesEvent;
+            }
+            set
+            {
+                namesEvent = value;
+                OnPropertyChanged();
+            }
+        }
+
         //фильтры событий
         private bool presentShow;
         public bool PresentShow
@@ -270,12 +298,12 @@ namespace Session2.ViewModel
             get { return typeofevent_; }
             set { typeofevent_ = value; OnPropertyChanged(nameof(TypeOfEvent_)); }
         }
-        private int? nameofstudy_;
-        public int? NameOfStudy_
+        private string? nameofstudy_;
+        public string? NameOfStudy_
         {
             get
             {
-                if (nameofstudy_ != null) return (int)nameofstudy_;
+                if (nameofstudy_ != null) return nameofstudy_;
                 else return null;
             }
             set { nameofstudy_ = value; OnPropertyChanged(nameof(NameOfStudy_)); }
@@ -286,18 +314,24 @@ namespace Session2.ViewModel
             get { return description_; }
             set { description_ = value; OnPropertyChanged(nameof(Description_)); }
         }
-        private int? idalternate_;
-        public int? IdAlternate_
+        private string typeofabsence_;
+        public string Typeofabsence_
+        {
+            get { return typeofabsence_; }
+            set { typeofabsence_ = value; OnPropertyChanged(nameof(Typeofabsence_)); }
+        }
+        private Employee? idalternate_;
+        public Employee? IdAlternate_
         {
             get
             {
-                if (idalternate_ != null) return (int)idalternate_;
+                if (idalternate_ != null) return idalternate_;
                 else return null;
             }
             set { idalternate_ = value; OnPropertyChanged(nameof(IdAlternate_)); }
         }
-        private DateOnly datestart_;
-        public DateOnly DateStart_
+        private DateOnly? datestart_;
+        public DateOnly? DateStart_
         {
             get
             {
@@ -314,8 +348,8 @@ namespace Session2.ViewModel
                 OnPropertyChanged(nameof(DateStart_));
             }
         }
-        private DateOnly datefinish_;
-        public DateOnly DateFinish_
+        private DateOnly? datefinish_;
+        public DateOnly? DateFinish_
         {
             get
             {
@@ -495,6 +529,60 @@ namespace Session2.ViewModel
             }
         }
 
+        private RelayCommand resetEvent;
+        public RelayCommand ResetEvent
+        {
+            get
+            {
+                return resetEvent ??
+                  (resetEvent = new RelayCommand((o) =>
+                  {
+                      var result = MessageBox.Show("Вы уверены, что хотите отменить изменения?", "Подтверждение", MessageBoxButton.YesNo);
+                      if (result == MessageBoxResult.Yes)
+                      {
+                          TypeOfEvent_ = "";
+                          NameOfStudy_ = "";
+                          Description_ = "";
+                          Typeofabsence_ = "";
+                          IdAlternate_ = null;
+                          DateStart_ = null;
+                          DateFinish_ = null;
+                      }
+
+                  }));
+            }
+        }
+
+        public RelayCommand saveEvent;
+        public RelayCommand SaveEvent
+        {
+            get
+            {
+                return saveEvent ??
+                  (saveEvent = new RelayCommand((o) =>
+                  {
+                      var result = MessageBox.Show("Вы уверены, что хотите сохранить мероприятие?", "Подтверждение", MessageBoxButton.YesNo);
+                      if (result == MessageBoxResult.Yes)
+                      {
+                          var newCalendar = new
+                          {
+                              //TypeOfEvent = TypeOfEvent_,
+                              //IdEmployee = SelectedEmployee.IdEmployee,
+                              //DateStart = DateStart_.ToString(),
+                              //DateFinish = DateFinish_.ToString(),
+                              //IdEvent = NameOfStudy_,
+                              //TypeOfAbsense = Typeofabsence_,
+                              //IdAlternate = IdAlternate_.IdEmployee,
+                              //IdCalendar = 5
+                          };
+                          int x = 9;
+                      }
+
+                  }));
+            }
+        }
+
+
 
         public PersonViewModel(Employee employee, int departmentid)
         {
@@ -562,8 +650,9 @@ namespace Session2.ViewModel
 
         private void BrowseEvents()
         {
-            List<string> strings = new List<string>() { "Обучение", "Временное отсутствие", "Отпуск" };
-            List<Event> events = Events.Where(p => DateTime.Parse(p.DateOfEvent) >= DateTime.Now).ToList();
+            Types = new List<string>() { "Обучение", "Временное отсутствие", "Отпуск" };
+            NamesEvent = Events.Where(p => DateTime.Parse(p.DateOfEvent) >= DateTime.Now).ToList();
+            NamesEvent.Add(new Event());
             Calendars = new ObservableCollection<Calendar_>(calendarService.GetAll()).Where(x => x.IdEmployee == SelectedEmployee.IdEmployee).ToList();
             Calendars.Sort();
             

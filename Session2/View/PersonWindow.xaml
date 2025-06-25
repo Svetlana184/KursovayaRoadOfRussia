@@ -145,17 +145,31 @@
                 </ListBox.ItemTemplate>
             </ListBox>
             <Label Content="Добавить мероприятие" FontSize="20"/>
-            <Expander x:Name="AddEx">
+            <Expander x:Name="AddEx" Visibility="{Binding VisibilityButton}">
                 <StackPanel Height="230" x:Name="AddEvent">
-                    <ComboBox x:Name="TypeOfEvent_" materialDesign:HintAssist.Hint="Type of event"/>
-                    <ComboBox x:Name="NameOfStudy_" materialDesign:HintAssist.Hint="Name of study"/>
-                    <DatePicker x:Name="DateStart_" IsDropDownOpen="True" SelectedDateFormat="Short" materialDesign:HintAssist.Hint="Date start"/>
-                    <DatePicker x:Name="DateFinish_" IsDropDownOpen="True" SelectedDateFormat="Short" materialDesign:HintAssist.Hint="Date finish"/>
-                    <ComboBox x:Name="IdAlternate_" materialDesign:HintAssist.Hint="Alternate"/>
-                    <TextBox Height="50" x:Name="Description_" materialDesign:HintAssist.Hint="Short Description"/>
+                    <ComboBox x:Name="TypeOfEvent_" materialDesign:HintAssist.Hint="Type of event" SelectedItem="{Binding TypeOfEvent_}" ItemsSource="{Binding Types}"/>
+                    <ComboBox x:Name="NameOfStudy_" materialDesign:HintAssist.Hint="Name of study" ItemsSource="{Binding NamesEvent}" DisplayMemberPath="EventName" SelectedValuePath="IdEvent" SelectedItem="{Binding NameOfStudy_}" />
+                    <DatePicker x:Name="DateStart_" IsDropDownOpen="True" SelectedDateFormat="Short" materialDesign:HintAssist.Hint="Date start" SelectedDate="{Binding DateStart_}"/>
+                    <DatePicker x:Name="DateFinish_" IsDropDownOpen="True" SelectedDateFormat="Short" materialDesign:HintAssist.Hint="Date finish" SelectedDate="{Binding DateFinish_}"/>
+                    <ComboBox x:Name="IdAlternate_" materialDesign:HintAssist.Hint="Alternate"  ItemsSource="{Binding EmployeeList}" DisplayMemberPath="Surname" SelectedValuePath="IdEmployee" SelectedItem="{Binding IdAlternate_}"/>
+                    <TextBox  x:Name="TypeOfAbsence_" materialDesign:HintAssist.Hint="Type Of Absence" Text="{Binding Typeofabsence_}"/>
                     <StackPanel Orientation="Horizontal" Width="630" >
-                        <Button Content="Отмена" HorizontalAlignment="Left" Margin="5" VerticalAlignment="Center"/>
-                        <Button Content="Ок" HorizontalAlignment="Right" Margin="5" VerticalAlignment="Center" />
+                        <Button Content="Отмена" HorizontalAlignment="Left" Margin="5" VerticalAlignment="Center">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="Click">
+                                    <i:InvokeCommandAction Command="{Binding DataContext.ResetEvent,
+        RelativeSource={RelativeSource AncestorType=ListBox}}"  />
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </Button>
+                        <Button Content="Ок" HorizontalAlignment="Right" Margin="5" VerticalAlignment="Center" >
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="Click">
+                                    <i:InvokeCommandAction Command="{Binding DataContext.SaveEvent,
+RelativeSource={RelativeSource AncestorType=ListBox}}"  />
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </Button>
                     </StackPanel>
                 </StackPanel>
             </Expander>
