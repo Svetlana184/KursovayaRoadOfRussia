@@ -353,14 +353,14 @@ namespace Session2.ViewModel
                         var result = MessageBox.Show("Вы уверены, что хотите уволить данного сотрудника?", "Подтверждение", MessageBoxButton.YesNo);
                         if (result == MessageBoxResult.Yes)
                         {
-                            List<Calendar_> calendarPresent = StudyList.Where(x => x.DateFinish > DateOnly.FromDateTime(DateTime.Now)).ToList();
+                            List<Calendar_> calendarPresent = StudyList.Where(x => DateTime.Parse(x.DateFinish) > (DateTime.Now)).ToList();
                             if (calendarPresent.Count != 0)
                             {
                                 var result1 = MessageBox.Show("Вы не можете уволить данного сотрудника из-за запланированного обучения", "Подтверждение", MessageBoxButton.OKCancel);
                             }
                             else
                             {
-                                SelectedEmployee.IsFired = DateTime.Now;
+                                SelectedEmployee.IsFired = DateTime.Now.ToString();
                                 employeeService.Update(SelectedEmployee);
                             }
                         }
@@ -526,7 +526,7 @@ namespace Session2.ViewModel
                 Other_ = SelectedEmployee.Other;
                 BossId_ = EmployeeList.FirstOrDefault(x => x.IdEmployee == SelectedEmployee.IdBoss);
                 HelperId_ = EmployeeList.FirstOrDefault(x => x.IdEmployee == SelectedEmployee.IdHelper);
-                Birthday_ = SelectedEmployee.BirthDay;
+                Birthday_ = DateOnly.FromDateTime(DateTime.Parse(SelectedEmployee.BirthDay));
                 IsEditable = false;
                 VisibilityButton = "Visible";
                 BrowseEvents();
@@ -563,7 +563,7 @@ namespace Session2.ViewModel
         private void BrowseEvents()
         {
             List<string> strings = new List<string>() { "Обучение", "Временное отсутствие", "Отпуск" };
-            List<Event> events = Events.Where(p => p.DateOfEvent >= DateTime.Now).ToList();
+            List<Event> events = Events.Where(p => DateTime.Parse(p.DateOfEvent) >= DateTime.Now).ToList();
             Calendars = new ObservableCollection<Calendar_>(calendarService.GetAll()).Where(x => x.IdEmployee == SelectedEmployee.IdEmployee).ToList();
             Calendars.Sort();
             
@@ -577,7 +577,7 @@ namespace Session2.ViewModel
             {
                 foreach (Calendar_ item in Calendars)
                 {
-                    if (item.DateFinish < DateOnly.FromDateTime(DateTime.Now))
+                    if (DateTime.Parse(item.DateFinish) < (DateTime.Now))
                     {
                         listAll.Add(item);
                     }
@@ -587,7 +587,7 @@ namespace Session2.ViewModel
             {
                 foreach (Calendar_ item in Calendars)
                 {
-                    if (item.DateStart <= DateOnly.FromDateTime(DateTime.Now) && item.DateFinish >= DateOnly.FromDateTime(DateTime.Now))
+                    if (DateTime.Parse(item.DateStart) <= DateTime.Now && DateTime.Parse(item.DateFinish) >= DateTime.Now)
                     {
                         listAll.Add(item);
                     }
@@ -597,7 +597,7 @@ namespace Session2.ViewModel
             {
                 foreach (Calendar_ item in Calendars)
                 {
-                    if (item.DateStart > DateOnly.FromDateTime(DateTime.Now))
+                    if (DateTime.Parse(item.DateStart) > DateTime.Now)
                     {
                         listAll.Add(item);
                     }

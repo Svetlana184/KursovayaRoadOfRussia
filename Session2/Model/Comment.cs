@@ -11,9 +11,9 @@ public partial class Comment
 
     public string CommentText { get; set; } = null!;
 
-    public DateTime DateCreated { get; set; }
+    public string DateCreated { get; set; } = null!;
 
-    public DateTime? DateUpdated { get; set; }
+    public string? DateUpdated { get; set; }
 
     public int AuthorOfComment { get; set; }
 

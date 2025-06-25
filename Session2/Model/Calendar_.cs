@@ -11,9 +11,9 @@ public partial class Calendar_ : IComparable
 
     public int? IdEmployee { get; set; }
 
-    public DateOnly DateStart { get; set; }
+    public string DateStart { get; set; } = null!;
 
-    public DateOnly DateFinish { get; set; }
+    public string DateFinish { get; set; } = null!;
 
     public int? IdEvent { get; set; }
 
@@ -27,7 +27,7 @@ public partial class Calendar_ : IComparable
 
     public virtual Event? IdEventNavigation { get; set; }
 
-   
+
     public int CompareTo(object? obj)
     {
         if (obj is Calendar_)

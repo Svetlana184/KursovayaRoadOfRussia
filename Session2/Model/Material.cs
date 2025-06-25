@@ -9,9 +9,9 @@ public partial class Material
 
     public string MaterialName { get; set; } = null!;
 
-    public DateTime DateApproval { get; set; }
+    public string DateApproval { get; set; } = null!;
 
-    public DateTime DateChanges { get; set; }
+    public string DateChanges { get; set; } = null!;
 
     public string Status { get; set; } = null!;
 

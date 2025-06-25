@@ -36,7 +36,8 @@ public partial class RoadOfRussiaContext : DbContext
     public virtual DbSet<WorkingCalendar> WorkingCalendars { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseSqlite("Data Source = RoadOfRussia.db");
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder.UseSqlite("Data Source=RoadOfRussia.db");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -46,20 +47,17 @@ public partial class RoadOfRussiaContext : DbContext
 
             entity.ToTable("Calendar");
 
-            entity.Property(e => e.TypeOfAbsense).HasMaxLength(20);
-            entity.Property(e => e.TypeOfEvent).HasMaxLength(50);
+            entity.HasIndex(e => e.IdAlternate, "IX_Calendar_IdAlternate");
 
-            entity.HasOne(d => d.IdAlternateNavigation).WithMany(p => p.CalendarIdAlternateNavigations)
-                .HasForeignKey(d => d.IdAlternate)
-                .HasConstraintName("FK_Calendar_Employee1");
+            entity.HasIndex(e => e.IdEmployee, "IX_Calendar_IdEmployee");
 
-            entity.HasOne(d => d.IdEmployeeNavigation).WithMany(p => p.CalendarIdEmployeeNavigations)
-                .HasForeignKey(d => d.IdEmployee)
-                .HasConstraintName("FK_Calendar_Employee");
+            entity.HasIndex(e => e.IdEvent, "IX_Calendar_IdEvent");
 
-            entity.HasOne(d => d.IdEventNavigation).WithMany(p => p.Calendars)
-                .HasForeignKey(d => d.IdEvent)
-                .HasConstraintName("FK_Calendar_Event");
+            entity.HasOne(d => d.IdAlternateNavigation).WithMany(p => p.CalendarIdAlternateNavigations).HasForeignKey(d => d.IdAlternate);
+
+            entity.HasOne(d => d.IdEmployeeNavigation).WithMany(p => p.CalendarIdEmployeeNavigations).HasForeignKey(d => d.IdEmployee);
+
+            entity.HasOne(d => d.IdEventNavigation).WithMany(p => p.Calendars).HasForeignKey(d => d.IdEvent);
         });
 
         modelBuilder.Entity<Candidate>(entity =>
@@ -67,14 +65,6 @@ public partial class RoadOfRussiaContext : DbContext
             entity.HasKey(e => e.IdCandidate);
 
             entity.ToTable("Candidate");
-
-            entity.Property(e => e.AreaOfActivity)
-                .HasMaxLength(50)
-                .IsFixedLength();
-            entity.Property(e => e.CandidateName).HasMaxLength(20);
-            entity.Property(e => e.CandidateSecondName).HasMaxLength(20);
-            entity.Property(e => e.CandidateSurname).HasMaxLength(20);
-            entity.Property(e => e.Rezume).HasColumnType("text");
         });
 
         modelBuilder.Entity<Comment>(entity =>
@@ -83,19 +73,21 @@ public partial class RoadOfRussiaContext : DbContext
 
             entity.ToTable("Comment");
 
+            entity.HasIndex(e => e.AuthorOfComment, "IX_Comment_AuthorOfComment");
+
+            entity.HasIndex(e => e.IdMaterial, "IX_Comment_IdMaterial");
+
             entity.Property(e => e.CommentText).HasColumnType("ntext");
             entity.Property(e => e.DateCreated).HasColumnType("datetime");
             entity.Property(e => e.DateUpdated).HasColumnType("datetime");
 
             entity.HasOne(d => d.AuthorOfCommentNavigation).WithMany(p => p.Comments)
                 .HasForeignKey(d => d.AuthorOfComment)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Comment_Employee");
+                .OnDelete(DeleteBehavior.ClientSetNull);
 
             entity.HasOne(d => d.IdMaterialNavigation).WithMany(p => p.CommentsNavigation)
                 .HasForeignKey(d => d.IdMaterial)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Comment_Material");
+                .OnDelete(DeleteBehavior.ClientSetNull);
         });
 
         modelBuilder.Entity<Department>(entity =>
@@ -104,12 +96,11 @@ public partial class RoadOfRussiaContext : DbContext
 
             entity.ToTable("Department");
 
-            entity.Property(e => e.DepartmentName).HasMaxLength(100);
+            entity.HasIndex(e => e.IdEmployee, "IX_Department_IdEmployee");
+
             entity.Property(e => e.Description).HasColumnType("ntext");
 
-            entity.HasOne(d => d.IdEmployeeNavigation).WithMany(p => p.Departments)
-                .HasForeignKey(d => d.IdEmployee)
-                .HasConstraintName("FK_Department_Employee");
+            entity.HasOne(d => d.IdEmployeeNavigation).WithMany(p => p.Departments).HasForeignKey(d => d.IdEmployee);
         });
 
         modelBuilder.Entity<Employee>(entity =>
@@ -118,24 +109,13 @@ public partial class RoadOfRussiaContext : DbContext
 
             entity.ToTable("Employee");
 
-            entity.Property(e => e.Cabinet).HasMaxLength(10);
-            entity.Property(e => e.Email).HasMaxLength(50);
-            entity.Property(e => e.FirstName).HasMaxLength(20);
-            entity.Property(e => e.Other).HasColumnType("text");
-            entity.Property(e => e.Password)
-                .HasMaxLength(100)
-                .IsUnicode(false)
-                .HasColumnName("password");
-            entity.Property(e => e.Phone).HasMaxLength(20);
-            entity.Property(e => e.PhoneWork).HasMaxLength(20);
-            entity.Property(e => e.Position).HasMaxLength(100);
-            entity.Property(e => e.SecondName).HasMaxLength(20);
-            entity.Property(e => e.Surname).HasMaxLength(20);
+            entity.HasIndex(e => e.IdDepartment, "IX_Employee_IdDepartment");
+
+            entity.Property(e => e.Password).HasColumnName("password");
 
             entity.HasOne(d => d.IdDepartmentNavigation).WithMany(p => p.Employees)
                 .HasForeignKey(d => d.IdDepartment)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Employee_Department");
+                .OnDelete(DeleteBehavior.ClientSetNull);
         });
 
         modelBuilder.Entity<Event>(entity =>
@@ -146,11 +126,6 @@ public partial class RoadOfRussiaContext : DbContext
 
             entity.Property(e => e.DateOfEvent).HasColumnType("datetime");
             entity.Property(e => e.EventDescription).HasColumnType("ntext");
-            entity.Property(e => e.EventManagers).HasMaxLength(50);
-            entity.Property(e => e.EventName).HasMaxLength(50);
-            entity.Property(e => e.EventStatus).HasMaxLength(15);
-            entity.Property(e => e.TypeOfClass).HasMaxLength(100);
-            entity.Property(e => e.TypeOfEvent).HasMaxLength(50);
         });
 
         modelBuilder.Entity<EventMaterial>(entity =>
@@ -159,15 +134,17 @@ public partial class RoadOfRussiaContext : DbContext
 
             entity.ToTable("EventMaterial");
 
+            entity.HasIndex(e => e.IdEvent, "IX_EventMaterial_IdEvent");
+
+            entity.HasIndex(e => e.IdMaterial, "IX_EventMaterial_IdMaterial");
+
             entity.HasOne(d => d.IdEventNavigation).WithMany(p => p.EventMaterials)
                 .HasForeignKey(d => d.IdEvent)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_EventMaterial_Event");
+                .OnDelete(DeleteBehavior.ClientSetNull);
 
             entity.HasOne(d => d.IdMaterialNavigation).WithMany(p => p.EventMaterials)
                 .HasForeignKey(d => d.IdMaterial)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_EventMaterial_Material");
+                .OnDelete(DeleteBehavior.ClientSetNull);
         });
 
         modelBuilder.Entity<Material>(entity =>
@@ -176,26 +153,15 @@ public partial class RoadOfRussiaContext : DbContext
 
             entity.ToTable("Material");
 
-            entity.Property(e => e.Author).HasMaxLength(20);
             entity.Property(e => e.DateApproval).HasColumnType("datetime");
             entity.Property(e => e.DateChanges).HasColumnType("datetime");
-            entity.Property(e => e.Domain).HasMaxLength(50);
-            entity.Property(e => e.MaterialName).HasMaxLength(100);
-            entity.Property(e => e.Status).HasMaxLength(15);
-            entity.Property(e => e.TypeOfMaterial).HasMaxLength(20);
         });
 
         modelBuilder.Entity<WorkingCalendar>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("WorkingCalendar_pk");
+            entity.ToTable("WorkingCalendar");
 
-            entity.ToTable("WorkingCalendar", tb => tb.HasComment("Список дней исключений в производственном календаре"));
-
-            entity.Property(e => e.Id)
-                .ValueGeneratedNever()
-                .HasComment("Идентификатор строки");
-            entity.Property(e => e.ExceptionDate).HasComment("День-исключение");
-            entity.Property(e => e.IsWorkingDay).HasComment("0 - будний день, но законодательно принят выходным");
+            entity.Property(e => e.Id).ValueGeneratedNever();
         });
 
         OnModelCreatingPartial(modelBuilder);

@@ -15,7 +15,7 @@ public partial class Candidate
 
     public string AreaOfActivity { get; set; } = null!;
 
-    public DateOnly DateOfReceipt { get; set; }
+    public string DateOfReceipt { get; set; } = null!;
 
     public string? Rezume { get; set; }
 }
