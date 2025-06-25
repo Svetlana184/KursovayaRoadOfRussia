@@ -8,7 +8,7 @@ public partial class RoadOfRussiaContext : DbContext
 {
     public RoadOfRussiaContext()
     {
-      
+        Database.EnsureCreated();
     }
 
     public RoadOfRussiaContext(DbContextOptions<RoadOfRussiaContext> options)
@@ -36,7 +36,7 @@ public partial class RoadOfRussiaContext : DbContext
     public virtual DbSet<WorkingCalendar> WorkingCalendars { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseSqlServer("Data Source=GOBLINSCOMP3;Initial Catalog=RoadOfRussia;Integrated Security=True;Encrypt=False");
+        => optionsBuilder.UseSqlite("Data Source = RoadOfRussia.db");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
