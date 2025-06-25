@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Media;
 
 namespace Session2.ViewModel
 {
@@ -152,8 +153,80 @@ namespace Session2.ViewModel
             set { helperid_ = value; OnPropertyChanged(nameof(HelperId_)); }
         }
 
-        //поля для календаря сотрудника
-        
+        //КАЛЕНДАРЬ
+
+        //фильтры событий
+        private bool presentShow;
+        public bool PresentShow
+        {
+            get => presentShow; 
+            set 
+            {
+                presentShow = value;
+                OnPropertyChanged(nameof(PresentShow));
+            }
+        }
+        private bool lastShow;
+        public bool LastShow
+        {
+            get => lastShow;
+            set
+            {
+                lastShow = value;
+                OnPropertyChanged(nameof(LastShow));
+            }
+        }
+        private bool futureShow;
+        public bool FutureShow
+        {
+            get => futureShow;
+            set
+            {
+                futureShow = value;
+                OnPropertyChanged(nameof(FutureShow));
+            }
+        }
+        private string colorLast;
+        public string ColorLast 
+        {
+            get
+            {
+                return colorLast;
+            }
+            set
+            {
+                colorLast = value;
+                OnPropertyChanged(nameof(ColorLast));
+            }
+        }
+        private string colorPresent;
+        public string ColorPresent
+        {
+            get
+            {
+                return colorPresent;
+            }
+            set
+            {
+                colorPresent = value;
+                OnPropertyChanged(nameof(ColorPresent));
+            }
+        }
+        private string colorFuture;
+        public string ColorFuture
+        {
+            get
+            {
+                return colorFuture;
+            }
+            set
+            {
+                colorFuture = value;
+                OnPropertyChanged(nameof(ColorFuture));
+            }
+        }
+
+        //списки событий
         private ObservableCollection<Calendar_> studyList;
         public ObservableCollection<Calendar_> StudyList
         {
@@ -164,8 +237,28 @@ namespace Session2.ViewModel
                 OnPropertyChanged(); 
             }
         }
-        public ObservableCollection<Calendar_> SkipList { get; set; }
-        public ObservableCollection<Calendar_> VacationList { get; set; }
+        private ObservableCollection<Calendar_> skipList;
+        public ObservableCollection<Calendar_> SkipList
+        {
+            get => skipList;
+            set
+            {
+                skipList = value;
+                OnPropertyChanged();
+            }
+        }
+        private ObservableCollection<Calendar_> vacationList;
+        public ObservableCollection<Calendar_> VacationList
+        {
+            get => vacationList;
+            set
+            {
+                vacationList = value;
+                OnPropertyChanged();
+            }
+        }
+
+        //поля для календаря сотрудника
         public int IdCalendar
         {
             get;
@@ -335,6 +428,72 @@ namespace Session2.ViewModel
             }
         }
 
+        private RelayCommand activePresent;
+        public RelayCommand ActivePresent
+        {
+            get
+            {
+                return activePresent ??
+                  (activePresent = new RelayCommand((o) =>
+                  {
+                      if (PresentShow)
+                      {
+                          PresentShow = false;
+                          ColorPresent = "LightGreen";
+                      }
+                      else
+                      {
+                          PresentShow = true;
+                          ColorPresent = "Green";
+                      }
+                      UpdateEvents();
+                  }));
+            }
+        }
+        private RelayCommand activeLast;
+        public RelayCommand ActiveLast
+        {
+            get
+            {
+                return activeLast ??
+                  (activeLast = new RelayCommand((o) =>
+                  {
+                      if (LastShow)
+                      {
+                          LastShow = false;
+                          ColorLast = "LightGreen";
+                      }
+                      else
+                      {
+                          LastShow = true;
+                          ColorLast = "Green";
+                      }
+                      UpdateEvents();
+                  }));
+            }
+        }
+        private RelayCommand activeFuture;
+        public RelayCommand ActiveFuture
+        {
+            get
+            {
+                return activeFuture ??
+                  (activeFuture = new RelayCommand((o) =>
+                  {
+                      if (FutureShow)
+                      {
+                          FutureShow = false;
+                          ColorFuture = "LightGreen";
+                      }
+                      else
+                      {
+                          FutureShow = true;
+                          ColorFuture = "Green";
+                      }
+                      UpdateEvents();
+                  }));
+            }
+        }
 
 
         public PersonViewModel(Employee employee, int departmentid)
@@ -343,7 +502,12 @@ namespace Session2.ViewModel
             SelectedDepartment = departmentid;
             LoadEmpDep();
             EmployeeList = Employees!.Where(x => x.IdDepartment == SelectedDepartment && x.IdEmployee != SelectedEmployee.IdEmployee).ToList();
-            
+            LastShow = false;
+            PresentShow = true;
+            FutureShow = true;
+            ColorPresent = "Green";
+            ColorLast = "LightGreen";
+            ColorFuture = "Green";
             BrowseEmployee(); 
 
         }
@@ -402,14 +566,46 @@ namespace Session2.ViewModel
             List<Event> events = Events.Where(p => p.DateOfEvent >= DateTime.Now).ToList();
             Calendars = new ObservableCollection<Calendar_>(calendarService.GetAll()).Where(x => x.IdEmployee == SelectedEmployee.IdEmployee).ToList();
             Calendars.Sort();
+            
             UpdateEvents();
             
         }
         private void UpdateEvents()
         {
-            StudyList = new ObservableCollection<Calendar_>(Calendars.Where(x => x.TypeOfEvent == "Обучение"));
-            SkipList = new ObservableCollection<Calendar_>(Calendars.Where(x => x.TypeOfEvent == "Временное отсутствие"));
-            VacationList = new ObservableCollection<Calendar_>(Calendars.Where(x => x.TypeOfEvent == "Отпуск"));
+            List<Calendar_> listAll = new List<Calendar_>();
+            if (LastShow)
+            {
+                foreach (Calendar_ item in Calendars)
+                {
+                    if (item.DateFinish < DateOnly.FromDateTime(DateTime.Now))
+                    {
+                        listAll.Add(item);
+                    }
+                }
+            }
+            if (PresentShow)
+            {
+                foreach (Calendar_ item in Calendars)
+                {
+                    if (item.DateStart <= DateOnly.FromDateTime(DateTime.Now) && item.DateFinish >= DateOnly.FromDateTime(DateTime.Now))
+                    {
+                        listAll.Add(item);
+                    }
+                }
+            }
+            if (FutureShow)
+            {
+                foreach (Calendar_ item in Calendars)
+                {
+                    if (item.DateStart > DateOnly.FromDateTime(DateTime.Now))
+                    {
+                        listAll.Add(item);
+                    }
+                }
+            }
+            StudyList = new ObservableCollection<Calendar_>(listAll.Where(x => x.TypeOfEvent == "Обучение"));
+            SkipList = new ObservableCollection<Calendar_>(listAll.Where(x => x.TypeOfEvent == "Временное отсутствие"));
+            VacationList = new ObservableCollection<Calendar_>(listAll.Where(x => x.TypeOfEvent == "Отпуск"));
         }
     }
 }

@@ -57,10 +57,10 @@
         <Button  Grid.Row="2" Grid.Column="0" Content="Отмена" Width="90" HorizontalAlignment="Left" Margin="10 5"  Height="25" Command="{Binding ResetCommand}"/>
 
         <StackPanel Grid.Column="1" Grid.Row="0" Orientation="Horizontal" >
-            <Button x:Name="LastButton" Content="Прошедшие" Height="25" Width="80" Background="LightGreen" FontSize="9" Foreground="White" Margin="10 0" />
-            <Button x:Name="PresentButton" Content="Текущие" Height="25" Width="80" Background="Green" FontSize="9" Foreground="White" Margin="10 0" />
-            <Button x:Name="FutureButton" Content="Будущие" Height="25" Width="80" Background="Green" FontSize="9" Foreground="White" Margin="10 0" />
-            <Button x:Name="CloseButton" Height="25" Width="40" Background="Green" FontSize="9" Foreground="White" Margin="50 0 0 0" Content="{materialIcons:MaterialIconExt Kind=Close}" Click="CloseButton_Click"/>
+            <Button x:Name="LastButton" Content="Прошедшие" Height="25" Width="85" Background="{Binding ColorLast}" FontSize="9" Foreground="White" Margin="10 0" Command="{Binding ActiveLast}"/>
+            <Button x:Name="PresentButton" Content="Текущие" Height="25" Width="85" Background="{Binding ColorPresent}" FontSize="9" Foreground="White" Margin="10 0" Command="{Binding ActivePresent}"/>
+            <Button x:Name="FutureButton" Content="Будущие" Height="25" Width="85" Background="{Binding ColorFuture}" FontSize="9" Foreground="White" Margin="10 0" Command="{Binding ActiveFuture}"/>
+            <Button x:Name="CloseButton" Height="35" Width="50" Background="Transparent" BorderBrush="Transparent" FontSize="9" Foreground="Green" Margin="50 0 0 0" Content="{materialIcons:MaterialIconExt Kind=Close,Size=10}" HorizontalAlignment="Right" VerticalAlignment="Top" HorizontalContentAlignment="Center" VerticalContentAlignment="Top" Click="CloseButton_Click"/>
         </StackPanel>
         <ListView x:Name="EventList" Grid.Column="1" Grid.Row="1">
             <Label Content="Обучения" FontSize="20"/>
