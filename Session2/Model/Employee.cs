@@ -188,7 +188,7 @@ public partial class Employee : IComparable<Employee>, INotifyPropertyChanged, I
                 case "PhoneWork":
                     if (PhoneWork != null)
                     {
-                        if (!Regex.IsMatch(PhoneWork!, @"^[+]{0,1}[0-9]{11}"))
+                        if (!Regex.IsMatch(PhoneWork!, @"^[\+\d\s\-\(\)]{5,20}$"))
                             error = "Телефон может содержать только цифры, дефисы, скобки и плюс";
                     }
                     else
@@ -197,23 +197,23 @@ public partial class Employee : IComparable<Employee>, INotifyPropertyChanged, I
                     }
                     break;
                 case "Phone":
-                    if (Phone != null)
+                    if (Phone != "")
                     {
-                        if (!Regex.IsMatch(Phone!, @"^[+]{0,1}[0-9]{11}"))
+                        if (!Regex.IsMatch(Phone!, @"^[\+\d\s\-\(\)]{5,20}$"))
                             error = "Телефон может содержать только цифры, дефисы, скобки и плюс";
                     }
                     break;
                 case "Cabinet":
                     if (Cabinet != null)
                     {
-                        if (!Regex.IsMatch(Cabinet!, @"[zA-Z0-9]+$"))
+                        if (!Regex.IsMatch(Cabinet!, @"^[a-zA-Zа-яА-ЯёЁ0-9\s\-]{1,10}$"))
                             error = "Номер кабинета может содержать только буквы и цифры";
                     }
                     break;
                 case "Email":
                     if (Email != null)
                     {
-                        if (!Regex.IsMatch(Email!, @"^([\w\.-]+)((\.(\w){2,3})+)+$"))
+                        if (!Regex.IsMatch(Email!, @"^[a-zA-Zа-яА-ЯёЁ0-9._%+-]+@[a-zA-Zа-яА-ЯёЁ0-9.-]+\.[a-zA-Zа-яА-ЯёЁ]{2,}$"))
                             error = "напишите корректную почту";
                     }
                     else
