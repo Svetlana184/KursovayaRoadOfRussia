@@ -9,6 +9,7 @@ using Session2.Utilits;
 using Session2.View;
 using Session2.Services;
 using System.Net;
+using System.Collections.Frozen;
 namespace Session2.ViewModel
 {
     
@@ -120,13 +121,33 @@ namespace Session2.ViewModel
         }
         public void FilterEmployeesByDepartment(int departmentId)
         {
-            using (RoadOfRussiaContext db = new RoadOfRussiaContext())
+            int depId = departmentId;
+            List<Department> depList = new List<Department>();
+
+            depList.Add(Deps.FirstOrDefault(p => p.IdDepartment == depId)!);
+
+            for(int i =0; i <=4; i++)
             {
-                EmployeesList = employeeService.GetAll()
-                    .Where(e => e.IdDepartment == departmentId)
-                    .ToList();
-                OnPropertyChanged(nameof(EmployeesList));
+                List<Department> childList = new List<Department>();
+                foreach (Department v in depList)
+                {
+                    childList.AddRange(Deps.Where(p => p.IdDepartmentParent == v.IdDepartment));
+                }
+                depList.AddRange(childList);
+
             }
+
+            List<Employee> listMain = new List<Employee>();
+
+            foreach (Department d in depList)
+            {
+                
+                listMain.AddRange(Employees.Where(p => p.IdDepartment == d.IdDepartment));
+            }
+            listMain.Sort();
+            EmployeesList = listMain.Distinct().ToList();
+            OnPropertyChanged(nameof(EmployeesList));
+
         }
         private RelayCommand? addCommand;
         public RelayCommand AddEmployeeCommand

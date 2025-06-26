@@ -7,7 +7,7 @@ using System.Text.RegularExpressions;
 
 namespace Session2.Model;
 
-public partial class Employee : IComparable<Employee>, INotifyPropertyChanged, IDataErrorInfo, ICloneable
+public partial class Employee : IComparable<Employee>, INotifyPropertyChanged, IDataErrorInfo, ICloneable, IEquatable<Employee>
 {
 
 
@@ -272,5 +272,10 @@ public partial class Employee : IComparable<Employee>, INotifyPropertyChanged, I
     {
         Employee newEmployee = (Employee)this.MemberwiseClone();
         return newEmployee;
+    }
+
+    public bool Equals(Employee? other)
+    {
+        return IdEmployee == other.IdEmployee;
     }
 }
