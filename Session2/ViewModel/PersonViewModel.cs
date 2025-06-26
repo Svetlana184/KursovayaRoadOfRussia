@@ -27,6 +27,16 @@ namespace Session2.ViewModel
             }
         }
         private Employee BackUpEmployee;
+        private Event newEvent;
+        public Event NewEvent
+        {
+            get { return newEvent;  }
+            set
+            {
+                newEvent = value;
+                OnPropertyChanged(nameof(NewEvent));
+            }
+        }
         public int SelectedDepartment { get; set; }
 
         public ObservableCollection<Employee> Employees { get; set; }
