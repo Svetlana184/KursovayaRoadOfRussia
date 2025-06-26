@@ -153,11 +153,72 @@ public partial class Employee : IComparable<Employee>, INotifyPropertyChanged, I
                     if (Surname != null)
                     {
                         if (!Regex.IsMatch(Surname!, @"[а-яА-ЯёЁ]+$"))
-                            error = "Имя не должно содержать вспомогательных символов";
+                            error = "Фамилия должна быть написано кириллицей";
                     }
                     else
                     {
-                        error = "Имя не должно быть пустым";
+                        error = "Поле не должно быть пустым";
+                    }
+                    break;
+                case "FirstName":
+                    if (FirstName != null)
+                    {
+                        if (!Regex.IsMatch(FirstName!, @"[а-яА-ЯёЁ]+$"))
+                            error = "Имя должно быть написано кириллицей";
+                    }
+                    else
+                    {
+                        error = "Поле не должно быть пустым";
+                    }
+                    break;
+                case "SecondName":
+                    if (SecondName != null)
+                    {
+                        if (!Regex.IsMatch(SecondName!, @"[а-яА-ЯёЁ]+$"))
+                            error = "Отчество должно быть написано кириллицей";
+                    }
+                    break;
+                case "Position":
+                    if (Position != null)
+                    {
+                        if (!Regex.IsMatch(Position!, @"[а-яА-ЯёЁ]+$"))
+                            error = "Должность должна быть написана кириллицей";
+                    }
+                    break;
+                case "PhoneWork":
+                    if (PhoneWork != null)
+                    {
+                        if (!Regex.IsMatch(PhoneWork!, @"^[+]{0,1}[0-9]{11}"))
+                            error = "Телефон может содержать только цифры, дефисы, скобки и плюс";
+                    }
+                    else
+                    {
+                        error = "Поле не должно быть пустым";
+                    }
+                    break;
+                case "Phone":
+                    if (Phone != null)
+                    {
+                        if (!Regex.IsMatch(Phone!, @"^[+]{0,1}[0-9]{11}"))
+                            error = "Телефон может содержать только цифры, дефисы, скобки и плюс";
+                    }
+                    break;
+                //case "Cabinet":
+                //    if (Cabinet != null)
+                //    {
+                //        if (!Regex.IsMatch(Cabinet!, @"[а-яА-ЯёЁ-zA-Z0-9]+$"))
+                //            error = "Номер кабинета может содержать только буквы и цифры";
+                //    }
+                //    break;
+                case "Email":
+                    if (Email != null)
+                    {
+                        if (!Regex.IsMatch(Email!, @"^([\w\.-]+)((\.(\w){2,3})+)+$"))
+                            error = "напишите корректную почту";
+                    }
+                    else
+                    {
+                        error = "Поле не должно быть пустым";
                     }
                     break;
             }

@@ -49,14 +49,15 @@
         </Button>
         <Button x:Name="ButtonFire" Width="100" HorizontalAlignment="Left" Height="25" Margin="10 5" Content="{materialIcons:MaterialIconExt Kind=Fire}" ToolTip="Уволить сотрудника" Command="{Binding TurnoffCommand}" Visibility="{Binding VisibilityButton}"/>
         <StackPanel Grid.Row="1" Grid.Column="0" IsEnabled="{Binding IsEditable}">
-            <TextBox x:Name="SurName" Margin="10  5" materialDesign:HintAssist.Hint="Surname" Text="{Binding SelectedEmployee.Surname}" IsEnabled="{Binding IsEditable}" />
-            <TextBox x:Name="FirstName" Margin="10  5" materialDesign:HintAssist.Hint="First Name" Text="{Binding SelectedEmployee.FirstName}" IsEnabled="{Binding IsEditable}"/>
-            <TextBox x:Name="SecondName" Margin="10  5" materialDesign:HintAssist.Hint="Second Name" Text="{Binding SelectedEmployee.SecondName}" IsEnabled="{Binding IsEditable}"/>
-            <TextBox x:Name="Position" Margin="10  5" materialDesign:HintAssist.Hint="Position" Text="{Binding SelectedEmployee.Position}" IsEnabled="{Binding IsEditable}"/>
-            <TextBox x:Name="Phonework" Margin="10  5" materialDesign:HintAssist.Hint="Work Phone" Text="{Binding SelectedEmployee.PhoneWork}" IsEnabled="{Binding IsEditable}"/>
-            <TextBox x:Name="Phone"  Margin="10  5" materialDesign:HintAssist.Hint="Phone" Text="{Binding SelectedEmployee.Phone}" IsEnabled="{Binding IsEditable}"/>
-            <TextBox x:Name="Cabinet" Margin="10  5" materialDesign:HintAssist.Hint="Cabinet"  Text="{Binding SelectedEmployee.Cabinet}" IsEnabled="{Binding IsEditable}"/>
-            <TextBox x:Name="Email_" Margin="10  5" materialDesign:HintAssist.Hint="E-mail" Text="{Binding SelectedEmployee.Email}" IsEnabled="{Binding IsEditable}"/>
+            <TextBox x:Name="SurName" Margin="10  5" materialDesign:HintAssist.Hint="Surname" Text="{Binding SelectedEmployee.Surname, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsEditable}" />
+
+            <TextBox x:Name="FirstName" Margin="10  5" materialDesign:HintAssist.Hint="First Name" Text="{Binding SelectedEmployee.FirstName, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsEditable}"/>
+            <TextBox x:Name="SecondName" Margin="10  5" materialDesign:HintAssist.Hint="Second Name" Text="{Binding SelectedEmployee.SecondName, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsEditable}"/>
+            <TextBox x:Name="Position" Margin="10  5" materialDesign:HintAssist.Hint="Position" Text="{Binding SelectedEmployee.Position, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsEditable}"/>
+            <TextBox x:Name="Phonework" Margin="10  5" materialDesign:HintAssist.Hint="Work Phone" Text="{Binding SelectedEmployee.PhoneWork, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsEditable}"/>
+            <TextBox x:Name="Phone"  Margin="10  5" materialDesign:HintAssist.Hint="Phone" Text="{Binding SelectedEmployee.Phone, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsEditable}"/>
+            <TextBox x:Name="Cabinet" Margin="10  5" materialDesign:HintAssist.Hint="Cabinet"  Text="{Binding SelectedEmployee.Cabinet, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsEditable}"/>
+            <TextBox x:Name="Email_" Margin="10  5" materialDesign:HintAssist.Hint="E-mail" Text="{Binding SelectedEmployee.Email, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsEditable}"/>
             <TextBox x:Name="Department_" Margin="10  5" materialDesign:HintAssist.Hint="Department" Text="{Binding SelectedEmployee.IdDepartment, Converter={StaticResource IdDepartmentToName}}" IsEnabled="{Binding IsEditable}"/>
             <ComboBox x:Name="IdBoss" Margin="10 5" materialDesign:HintAssist.Hint="Boss"  IsEditable="True" ItemsSource="{Binding EmployeeList}" DisplayMemberPath="Surname" SelectedValuePath="IdEmployee" SelectedItem="{Binding BossId_}" IsEnabled="{Binding IsEditable}" />
             <ComboBox x:Name="IdHelper" Margin="10 5" materialDesign:HintAssist.Hint="Helper"  IsEditable="True"  ItemsSource="{Binding EmployeeList}" DisplayMemberPath="Surname" SelectedValuePath="IdEmployee" SelectedItem="{Binding HelperId_}"  IsEnabled="{Binding IsEditable}"/>

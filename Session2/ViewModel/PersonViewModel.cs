@@ -525,6 +525,7 @@ namespace Session2.ViewModel
                       var result = MessageBox.Show("Вы уверены, что хотите сохранить мероприятие?", "Подтверждение", MessageBoxButton.YesNo);
                       if (result == MessageBoxResult.Yes)
                       {
+                          
                           Calendar_ newCalendar = new Calendar_();
                           newCalendar.IdEmployee = SelectedEmployee.IdEmployee;
                           newCalendar.TypeOfEvent = TypeOfEvent_;
