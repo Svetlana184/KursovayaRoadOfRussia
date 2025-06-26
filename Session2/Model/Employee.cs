@@ -203,13 +203,13 @@ public partial class Employee : IComparable<Employee>, INotifyPropertyChanged, I
                             error = "Телефон может содержать только цифры, дефисы, скобки и плюс";
                     }
                     break;
-                //case "Cabinet":
-                //    if (Cabinet != null)
-                //    {
-                //        if (!Regex.IsMatch(Cabinet!, @"[а-яА-ЯёЁ-zA-Z0-9]+$"))
-                //            error = "Номер кабинета может содержать только буквы и цифры";
-                //    }
-                //    break;
+                case "Cabinet":
+                    if (Cabinet != null)
+                    {
+                        if (!Regex.IsMatch(Cabinet!, @"[zA-Z0-9]+$"))
+                            error = "Номер кабинета может содержать только буквы и цифры";
+                    }
+                    break;
                 case "Email":
                     if (Email != null)
                     {
