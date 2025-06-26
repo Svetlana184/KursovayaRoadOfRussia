@@ -1,16 +1,14 @@
-﻿using Session2.Model;
-using Session2.Services;
-using Session2.Utilits;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows;
 
-namespace Session2.ViewModel
+namespace Session2.Model
 {
-    public class NodeViewModel : ViewModelBase
+    public class NodeControl : INotifyPropertyChanged
     {
         private double x_;
         public double X { get { return x_; } set { x_ = value; OnPropertyChanged(nameof(X)); } }
@@ -26,21 +24,10 @@ namespace Session2.ViewModel
         public int? Department { get { return department; } set { department = value; OnPropertyChanged(nameof(Department)); } }
         private int? parentdepartment;
         public int? ParentDepartment { get { return parentdepartment; } set { parentdepartment = value; OnPropertyChanged(nameof(ParentDepartment)); } }
-        private RelayCommand selectVertex;
-        public RelayCommand SelectVertexCommand
+        public event PropertyChangedEventHandler PropertyChanged;
+        public void OnPropertyChanged([CallerMemberName] string propName = null)
         {
-            get
-            {
-                return selectVertex ??
-                  (selectVertex = new RelayCommand((o) =>
-                  {
-                      if (o is int depId)
-                      {
-                          var mainVm = (MainViewModel)Application.Current.MainWindow.DataContext;
-                          mainVm.FilterEmployeesByDepartment(depId);
-                      }
-                  }));
-            }
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
         }
     }
 }

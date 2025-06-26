@@ -24,20 +24,9 @@ namespace Session2.View
     /// </summary>
     public partial class VertexControl : UserControl
     {
-        private NodeViewModel node;
-        public NodeViewModel NodeViewModel 
-        {
-            get { return node; }
-            set
-            {
-                node = value;
-            }
-        }
         public VertexControl()
         {
             InitializeComponent();
-            NodeViewModel = new NodeViewModel();
-            DataContext = NodeViewModel;
         }
     }
 }

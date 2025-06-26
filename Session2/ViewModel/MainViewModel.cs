@@ -118,6 +118,16 @@ namespace Session2.ViewModel
                 EmployeesList.Add(emp);
             }
         }
+        public void FilterEmployeesByDepartment(int departmentId)
+        {
+            using (RoadOfRussiaContext db = new RoadOfRussiaContext())
+            {
+                EmployeesList = employeeService.GetAll()
+                    .Where(e => e.IdDepartment == departmentId)
+                    .ToList();
+                OnPropertyChanged(nameof(EmployeesList));
+            }
+        }
         private RelayCommand? addCommand;
         public RelayCommand AddEmployeeCommand
         {

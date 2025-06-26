@@ -14,14 +14,14 @@
     </UserControl.DataContext>
     <Grid>
         <Button VerticalAlignment="Center"
-               HorizontalAlignment="Center" Height="50" Width="150" Content="{Binding Title}" Background="#78B24B" Foreground="White">
+               HorizontalAlignment="Center" Height="50" Width="150" Background="#78B24B" Foreground="White">
+            <TextBlock Text="{Binding Title}" TextWrapping="Wrap" TextAlignment="Center"/>
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="Click">
                     <i:InvokeCommandAction Command="{Binding SelectVertexCommand}" 
                         CommandParameter="{Binding Department}" />
-</i:EventTrigger>
+                </i:EventTrigger>
             </i:Interaction.Triggers>
         </Button>
-
     </Grid>
 </UserControl>
