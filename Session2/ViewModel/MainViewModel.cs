@@ -72,10 +72,7 @@ namespace Session2.ViewModel
                   (addCommand = new RelayCommand((o) =>
                   {
                      PersonWindow window = new PersonWindow(new Employee(), 893);
-                      if (window.ShowDialog() == true)
-                      {
-                          
-                      }
+                     window.Show();
                   }));
             }
         }
