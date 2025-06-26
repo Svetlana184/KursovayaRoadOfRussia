@@ -13,12 +13,23 @@ namespace Session2.Helpers
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            int id = int.Parse(value.ToString()!);
-            using (RoadOfRussiaContext db = new RoadOfRussiaContext())
+
+            if (value != null)
             {
-                return db.Employees.FirstOrDefault(x => x.IdEmployee == id)!.Surname + " " +
-                    db.Employees.FirstOrDefault(x => x.IdEmployee == id)!.FirstName;
+                int id = int.Parse(value.ToString());
+                if (id != 0)
+                {
+
+                    using (RoadOfRussiaContext db = new RoadOfRussiaContext())
+                    {
+                        return db.Employees.FirstOrDefault(x => x.IdEmployee == id)!.Surname + " " +
+                            db.Employees.FirstOrDefault(x => x.IdEmployee == id)!.FirstName;
+                    }
+                }
+                else return " ";
             }
+            
+            else return " ";
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

@@ -14,8 +14,16 @@ namespace Session2.ViewModel
     
     public class MainViewModel : ViewModelBase
     {
-       
-        public ObservableCollection<Employee> Employees { get; set; }
+       private ObservableCollection<Employee> employees;
+        public ObservableCollection<Employee> Employees
+        {
+            get { return employees; }
+            set
+            {
+                employees = value;
+                OnPropertyChanged();
+            }
+        }
         public ObservableCollection<Department> Deps{ get; set; }
         public List<Employee> EmployeesList { get; set; }
         private Employee selectedemployee;
@@ -66,10 +74,7 @@ namespace Session2.ViewModel
                      PersonWindow window = new PersonWindow(new Employee(), 893);
                       if (window.ShowDialog() == true)
                       {
-                          using (RoadOfRussiaContext db = new RoadOfRussiaContext())
-                          {
-                             
-                          }
+                          
                       }
                   }));
             }

@@ -18,6 +18,17 @@
         <converter:IdEventToDescription x:Key="IdEventToDescription"/>
         <converter:IdCalendarToHeader x:Key="IdCalendarToHeader"/>
         <converter:IdEmployeeToName x:Key="IdEmployeeToName"/>
+       
+        <!--<Style TargetType="TextBox">
+            <Style.Triggers>
+                <Trigger Property="Validation.HasError" Value="True">
+                    <Setter Property="ToolTip"
+             Value="{Binding RelativeSource={RelativeSource Self},
+                 Path=(Validation.Errors)[0].ErrorContent}" />
+                    <Setter Property="Foreground" Value="Red" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>-->
     </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
@@ -38,20 +49,19 @@
         </Button>
         <Button x:Name="ButtonFire" Width="100" HorizontalAlignment="Left" Height="25" Margin="10 5" Content="{materialIcons:MaterialIconExt Kind=Fire}" ToolTip="Уволить сотрудника" Command="{Binding TurnoffCommand}" Visibility="{Binding VisibilityButton}"/>
         <StackPanel Grid.Row="1" Grid.Column="0" IsEnabled="{Binding IsEditable}">
-            <TextBox x:Name="SurName" Margin="10  5" materialDesign:HintAssist.Hint="Surname" Text="{Binding Surname_}" IsEnabled="{Binding IsEditable}">
-            </TextBox>
-            <TextBox x:Name="FirstName" Margin="10  5" materialDesign:HintAssist.Hint="First Name" Text="{Binding Firstname_}" IsEnabled="{Binding IsEditable}"/>
-            <TextBox x:Name="SecondName" Margin="10  5" materialDesign:HintAssist.Hint="Second Name" Text="{Binding Secondname_}" IsEnabled="{Binding IsEditable}"/>
-            <TextBox x:Name="Position" Margin="10  5" materialDesign:HintAssist.Hint="Position" Text="{Binding Position_}" IsEnabled="{Binding IsEditable}"/>
-            <TextBox x:Name="Phonework" Margin="10  5" materialDesign:HintAssist.Hint="Work Phone" Text="{Binding Phonework_}" IsEnabled="{Binding IsEditable}"/>
-            <TextBox x:Name="Phone"  Margin="10  5" materialDesign:HintAssist.Hint="Phone" Text="{Binding Phone_}" IsEnabled="{Binding IsEditable}"/>
-            <TextBox x:Name="Cabinet" Margin="10  5" materialDesign:HintAssist.Hint="Cabinet"  Text="{Binding Cabinet_}" IsEnabled="{Binding IsEditable}"/>
-            <TextBox x:Name="Email_" Margin="10  5" materialDesign:HintAssist.Hint="E-mail" Text="{Binding Email_}" IsEnabled="{Binding IsEditable}"/>
-            <TextBox x:Name="Department_" Margin="10  5" materialDesign:HintAssist.Hint="Department" Text="{Binding SelectedDepartment, Converter={StaticResource IdDepartmentToName}}" IsEnabled="{Binding IsEditable}"/>
-            <ComboBox x:Name="IdBoss" Margin="10 5" materialDesign:HintAssist.Hint="Boss"  IsEditable="True" ItemsSource="{Binding EmployeeList}" DisplayMemberPath="Surname" SelectedValuePath="IdEmployee" SelectedItem="{Binding BossId_}"  IsEnabled="{Binding IsEditable}"/>
-            <ComboBox x:Name="IdHelper" Margin="10 5" materialDesign:HintAssist.Hint="Helper"  IsEditable="True" ItemsSource="{Binding EmployeeList}" DisplayMemberPath="Surname" SelectedValuePath="IdEmployee" SelectedItem="{Binding HelperId_}" IsEnabled="{Binding IsEditable}"/>
-            <DatePicker  IsDropDownOpen="True" Margin="10 5" materialDesign:HintAssist.Hint="Birth Day" SelectedDate="{Binding Birthday_}" SelectedDateFormat="Short" IsEnabled="{Binding IsEditable}"/>
-            <TextBox x:Name="Other" Margin="10 5" Height="40" materialDesign:HintAssist.Hint="Other" Text="{Binding Other_}"/>
+            <TextBox x:Name="SurName" Margin="10  5" materialDesign:HintAssist.Hint="Surname" Text="{Binding SelectedEmployee.Surname}" IsEnabled="{Binding IsEditable}" />
+            <TextBox x:Name="FirstName" Margin="10  5" materialDesign:HintAssist.Hint="First Name" Text="{Binding SelectedEmployee.FirstName}" IsEnabled="{Binding IsEditable}"/>
+            <TextBox x:Name="SecondName" Margin="10  5" materialDesign:HintAssist.Hint="Second Name" Text="{Binding SelectedEmployee.SecondName}" IsEnabled="{Binding IsEditable}"/>
+            <TextBox x:Name="Position" Margin="10  5" materialDesign:HintAssist.Hint="Position" Text="{Binding SelectedEmployee.Position}" IsEnabled="{Binding IsEditable}"/>
+            <TextBox x:Name="Phonework" Margin="10  5" materialDesign:HintAssist.Hint="Work Phone" Text="{Binding SelectedEmployee.PhoneWork}" IsEnabled="{Binding IsEditable}"/>
+            <TextBox x:Name="Phone"  Margin="10  5" materialDesign:HintAssist.Hint="Phone" Text="{Binding SelectedEmployee.Phone}" IsEnabled="{Binding IsEditable}"/>
+            <TextBox x:Name="Cabinet" Margin="10  5" materialDesign:HintAssist.Hint="Cabinet"  Text="{Binding SelectedEmployee.Cabinet}" IsEnabled="{Binding IsEditable}"/>
+            <TextBox x:Name="Email_" Margin="10  5" materialDesign:HintAssist.Hint="E-mail" Text="{Binding SelectedEmployee.Email}" IsEnabled="{Binding IsEditable}"/>
+            <TextBox x:Name="Department_" Margin="10  5" materialDesign:HintAssist.Hint="Department" Text="{Binding SelectedEmployee.IdDepartment, Converter={StaticResource IdDepartmentToName}}" IsEnabled="{Binding IsEditable}"/>
+            <ComboBox x:Name="IdBoss" Margin="10 5" materialDesign:HintAssist.Hint="Boss"  IsEditable="True" ItemsSource="{Binding EmployeeList}" DisplayMemberPath="Surname" SelectedValuePath="IdEmployee" SelectedItem="{Binding BossId_}" IsEnabled="{Binding IsEditable}" />
+            <ComboBox x:Name="IdHelper" Margin="10 5" materialDesign:HintAssist.Hint="Helper"  IsEditable="True"  ItemsSource="{Binding EmployeeList}" DisplayMemberPath="Surname" SelectedValuePath="IdEmployee" SelectedItem="{Binding HelperId_}"  IsEnabled="{Binding IsEditable}"/>
+            <DatePicker  IsDropDownOpen="True" Margin="10 5" materialDesign:HintAssist.Hint="Birth Day" SelectedDate="{Binding SelectedEmployee.BirthDay}" SelectedDateFormat="Short" IsEnabled="{Binding IsEditable}"/>
+            <TextBox x:Name="Other" Margin="10 5" Height="40" materialDesign:HintAssist.Hint="Other" Text="{Binding SelectedEmployee.Other}"/>
         </StackPanel>
         <Button Grid.Row="2" Grid.Column="0" Content="Ок" Width="90" HorizontalAlignment="Right" Margin="10 5" Background="Green" Height="25" Command="{Binding AddEmp}" />
         <Button  Grid.Row="2" Grid.Column="0" Content="Отмена" Width="90" HorizontalAlignment="Left" Margin="10 5"  Height="25" Command="{Binding ResetCommand}"/>
@@ -150,7 +160,7 @@
                     <ComboBox x:Name="TypeOfEvent_" materialDesign:HintAssist.Hint="Type of event" SelectedItem="{Binding TypeOfEvent_}" ItemsSource="{Binding Types}"/>
                     <ComboBox x:Name="NameOfStudy_" materialDesign:HintAssist.Hint="Name of study" ItemsSource="{Binding NamesEvent}" DisplayMemberPath="EventName" SelectedValuePath="IdEvent" SelectedItem="{Binding NameOfStudy_}" />
                     <DatePicker x:Name="DateStart_" IsDropDownOpen="True" SelectedDateFormat="Short" materialDesign:HintAssist.Hint="Date start" SelectedDate="{Binding DateStart_}"/>
-                    <DatePicker x:Name="DateFinish_" IsDropDownOpen="True" SelectedDateFormat="Short" materialDesign:HintAssist.Hint="Date finish" SelectedDate="{Binding DateFinish_}"/>
+                    <DatePicker x:Name="DateFinish_" IsDropDownOpen="True" SelectedDateFormat="Short" materialDesign:HintAssist.Hint="Date finish" SelectedDate="{Binding DateFinish_}" />
                     <ComboBox x:Name="IdAlternate_" materialDesign:HintAssist.Hint="Alternate"  ItemsSource="{Binding EmployeeList}" DisplayMemberPath="Surname" SelectedValuePath="IdEmployee" SelectedItem="{Binding IdAlternate_}"/>
                     <TextBox  x:Name="TypeOfAbsence_" materialDesign:HintAssist.Hint="Type Of Absence" Text="{Binding Typeofabsence_}"/>
                     <StackPanel Orientation="Horizontal" Width="630" >

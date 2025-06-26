@@ -16,12 +16,31 @@ namespace Session2.ViewModel
 {
     public class PersonViewModel : ViewModelBase
     {
-        public Employee SelectedEmployee { get; set; }
+        private Employee _employee;
+        public Employee SelectedEmployee 
+        {
+            get { return _employee; }
+            set
+            {
+                _employee = value;
+                OnPropertyChanged(nameof(SelectedEmployee));
+            }
+        }
+        private Employee BackUpEmployee;
         public int SelectedDepartment { get; set; }
 
         public ObservableCollection<Employee> Employees { get; set; }
         public List<Calendar_> Calendars { get; set; }
-        public List<Employee> EmployeeList { get; set; }
+        private List<Employee> employeelist;
+        public List<Employee> EmployeeList 
+        {
+            get {  return employeelist; }
+            set
+            {
+                employeelist = value;
+                OnPropertyChanged();
+            }
+        }
         public ObservableCollection<Event> Events { get; set; }
         private bool iseditable;
         public bool IsEditable 
@@ -33,8 +52,7 @@ namespace Session2.ViewModel
                 OnPropertyChanged(nameof(iseditable));
             }
         }
-        public Employee SelectedBoss { get; set; }
-        public Employee SelectedHelper { get; set; }
+        
 
         
         private string visibilitybutton;
@@ -48,111 +66,7 @@ namespace Session2.ViewModel
             }
         }
 
-        //поля для карточки сотрудника
-        private string surname_;
-        public string Surname_
-        {
-            get
-            {
-                return surname_;
-            }
-            set
-            {
-                surname_ = value;
-                OnPropertyChanged(nameof(Surname_));
-
-            }
-        }
-        private string firstname_;
-        public string Firstname_
-        {
-            get { return firstname_; }
-            set { 
-                firstname_ = value;
-                OnPropertyChanged(nameof(Firstname_));
-            }
-        }
-        private string secondname_;
-        public string Secondname_
-        {
-            get { return secondname_; }
-            set { secondname_ = value; OnPropertyChanged(nameof(Secondname_)); }
-        }
-        private string position_;
-        public string Position_
-        {
-            get { return position_; }
-            set { position_ = value; OnPropertyChanged(nameof(Position_)); }
-        }
-        private string phonework_;
-        public string Phonework_
-        {
-            get { return phonework_; }
-            set { phonework_ = value; OnPropertyChanged(nameof(Phonework_)); }
-        }
-        private string phone_;
-        public string Phone_
-        {
-            get { return phone_; }
-            set { phone_ = value; OnPropertyChanged(nameof(Phone_)); }
-        }
-        private string cabinet_;
-        public string Cabinet_
-        {
-            get { return cabinet_; }
-            set { cabinet_ = value; OnPropertyChanged(nameof(Cabinet_)); }
-        }
-        private string email_;
-        public string Email_
-        {
-            get { return email_; }
-            set { email_ = value; OnPropertyChanged(nameof(Email_)); }
-        }
-        private string other_;
-        public string Other_
-        {
-            get { return other_; }
-            set { other_ = value; OnPropertyChanged(nameof(Other_)); }
-        }
-
-        private DateOnly? birthday_;
-        public DateOnly? Birthday_
-        {
-            get
-            {
-                if (birthday_ != null)
-                {
-                    return birthday_;
-                }
-                else return new DateOnly();
-
-            }
-            set
-            {
-                birthday_ = value;
-                OnPropertyChanged(nameof(Birthday_));
-            }
-        }
-        private Employee? bossid_;
-        public Employee? BossId_
-        {
-            get
-            {
-                if (bossid_ != null) return bossid_;
-                else return null;
-            }
-            set { bossid_ = value; OnPropertyChanged(nameof(BossId_)); }
-        }
-        private Employee? helperid_;
-        public Employee? HelperId_
-        {
-            get
-            {
-                if (helperid_ != null) return helperid_;
-                else return null;
-            }
-            set { helperid_ = value; OnPropertyChanged(nameof(HelperId_)); }
-        }
+        
 
         //КАЛЕНДАРЬ
 
@@ -286,6 +200,30 @@ namespace Session2.ViewModel
             }
         }
 
+
+        //поля для карточки сотрудника
+        private Employee? bossid_;
+        public Employee? BossId_
+        {
+            get
+            {
+                if (bossid_ != null) return bossid_;
+                else return null;
+            }
+            set { bossid_ = value; OnPropertyChanged(nameof(BossId_)); }
+        }
+        private Employee? helperid_;
+        public Employee? HelperId_
+        {
+            get
+            {
+                if (helperid_ != null) return helperid_;
+                else return null;
+            }
+            set { helperid_ = value; OnPropertyChanged(nameof(HelperId_)); }
+        }
+
+
         //поля для календаря сотрудника
         public int IdCalendar
         {
@@ -298,8 +236,8 @@ namespace Session2.ViewModel
             get { return typeofevent_; }
             set { typeofevent_ = value; OnPropertyChanged(nameof(TypeOfEvent_)); }
         }
-        private string? nameofstudy_;
-        public string? NameOfStudy_
+        private Event? nameofstudy_;
+        public Event? NameOfStudy_
         {
             get
             {
@@ -330,8 +268,9 @@ namespace Session2.ViewModel
             }
             set { idalternate_ = value; OnPropertyChanged(nameof(IdAlternate_)); }
         }
-        private DateOnly? datestart_;
-        public DateOnly? DateStart_
+        private DateTime? datestart_;
+       
+        public DateTime? DateStart_
         {
             get
             {
@@ -339,7 +278,7 @@ namespace Session2.ViewModel
                 {
                     return datestart_;
                 }
-                else return new DateOnly();
+                else return (DateTime.Now);
 
             }
             set
@@ -348,8 +287,8 @@ namespace Session2.ViewModel
                 OnPropertyChanged(nameof(DateStart_));
             }
         }
-        private DateOnly? datefinish_;
-        public DateOnly? DateFinish_
+        private DateTime? datefinish_;
+        public DateTime? DateFinish_
         {
             get
             {
@@ -357,7 +296,7 @@ namespace Session2.ViewModel
                 {
                     return datefinish_;
                 }
-                else return new DateOnly();
+                else return (DateTime.Now);
 
             }
             set
@@ -424,6 +363,23 @@ namespace Session2.ViewModel
                   (addEmp = new RelayCommand((o) =>
                   {
 
+                      if (BossId_ != null) 
+                      { 
+                          SelectedEmployee.IdBoss = BossId_.IdEmployee;
+                      }
+                      if (HelperId_ != null) 
+                      { 
+                           SelectedEmployee.IdHelper = HelperId_.IdEmployee;
+                          
+                      } 
+
+                      if (SelectedEmployee.IdEmployee == 0)
+                      {
+                          employeeService.Add(SelectedEmployee);
+                      }
+                      else employeeService.Update(SelectedEmployee);
+                      
+                      IsEditable = false;
                   }));
             }
         }
@@ -435,8 +391,13 @@ namespace Session2.ViewModel
                 return resetCommand ??
                   (resetCommand = new RelayCommand((o) =>
                   {
-                      var result = MessageBox.Show("Вы уверены, что хотите отменить изменения?","Подтверждение", MessageBoxButton.YesNo);
-                      if (result == MessageBoxResult.Yes) BrowseEmployee();
+                      var result = MessageBox.Show("Вы уверены, что хотите отменить изменения?", "Подтверждение", MessageBoxButton.YesNo);
+                      if (result == MessageBoxResult.Yes)
+                      {
+                          SelectedEmployee = (Employee)BackUpEmployee.Clone();
+                          BrowseEmployee();
+
+                      }
 
                   }));
             }
@@ -541,7 +502,7 @@ namespace Session2.ViewModel
                       if (result == MessageBoxResult.Yes)
                       {
                           TypeOfEvent_ = "";
-                          NameOfStudy_ = "";
+                          NameOfStudy_ = null;
                           Description_ = "";
                           Typeofabsence_ = "";
                           IdAlternate_ = null;
@@ -564,18 +525,23 @@ namespace Session2.ViewModel
                       var result = MessageBox.Show("Вы уверены, что хотите сохранить мероприятие?", "Подтверждение", MessageBoxButton.YesNo);
                       if (result == MessageBoxResult.Yes)
                       {
-                          var newCalendar = new
-                          {
-                              //TypeOfEvent = TypeOfEvent_,
-                              //IdEmployee = SelectedEmployee.IdEmployee,
-                              //DateStart = DateStart_.ToString(),
-                              //DateFinish = DateFinish_.ToString(),
-                              //IdEvent = NameOfStudy_,
-                              //TypeOfAbsense = Typeofabsence_,
-                              //IdAlternate = IdAlternate_.IdEmployee,
-                              //IdCalendar = 5
-                          };
-                          int x = 9;
+                          Calendar_ newCalendar = new Calendar_();
+                          newCalendar.IdEmployee = SelectedEmployee.IdEmployee;
+                          newCalendar.TypeOfEvent = TypeOfEvent_;
+                          if(NameOfStudy_ != null) newCalendar.IdEvent = NameOfStudy_.IdEvent;
+                          newCalendar.TypeOfAbsense = Typeofabsence_;
+                          if(IdAlternate_ != null) newCalendar.IdAlternate = IdAlternate_.IdEmployee;
+                          newCalendar.DateStart = DateOnly.FromDateTime((DateTime)DateStart_!).ToString();
+                          newCalendar.DateFinish = DateOnly.FromDateTime((DateTime)DateFinish_!).ToString();
+
+                          calendarService.Add(newCalendar);
+                          BrowseEvents();
+                          TypeOfEvent_ = " ";
+                          NameOfStudy_ = null;
+                          Typeofabsence_ = " ";
+                          IdAlternate_ = null;
+                          DateStart_ = null;
+                          DateFinish_ = null;
                       }
 
                   }));
@@ -586,10 +552,14 @@ namespace Session2.ViewModel
 
         public PersonViewModel(Employee employee, int departmentid)
         {
+            BackUpEmployee = (Employee)employee.Clone();
             SelectedEmployee = employee;
+            
             SelectedDepartment = departmentid;
             LoadEmpDep();
             EmployeeList = Employees!.Where(x => x.IdDepartment == SelectedDepartment && x.IdEmployee != SelectedEmployee.IdEmployee).ToList();
+            EmployeeList.Sort();
+            EmployeeList.Add(new Employee());
             LastShow = false;
             PresentShow = true;
             FutureShow = true;
@@ -603,40 +573,24 @@ namespace Session2.ViewModel
         {
             if (SelectedEmployee.IdEmployee != 0)
             {
-                Surname_ = SelectedEmployee.Surname;
-                Firstname_ = SelectedEmployee.FirstName;
-                Secondname_ = SelectedEmployee.SecondName;
-                Position_ = SelectedEmployee.Position;
-                Phonework_ = SelectedEmployee.PhoneWork;
-                Phone_ = SelectedEmployee.Phone;
-                Cabinet_ = SelectedEmployee.Cabinet;
-                Email_ = SelectedEmployee.Email;
-                Other_ = SelectedEmployee.Other;
                 BossId_ = EmployeeList.FirstOrDefault(x => x.IdEmployee == SelectedEmployee.IdBoss);
                 HelperId_ = EmployeeList.FirstOrDefault(x => x.IdEmployee == SelectedEmployee.IdHelper);
-                Birthday_ = DateOnly.FromDateTime(DateTime.Parse(SelectedEmployee.BirthDay));
                 IsEditable = false;
                 VisibilityButton = "Visible";
                 BrowseEvents();
             }
             else
             {
-                Surname_ = "";
-                Firstname_ = "";
-                Secondname_ = "";
-                Position_ = "";
-                Phonework_ = "";
-                Phone_ = "";
-                Cabinet_ = "";
-                Email_ = "";
-                Other_ = "";
+                BackUpEmployee.IdDepartment = SelectedDepartment;
+                SelectedEmployee.IdDepartment = SelectedDepartment;
                 BossId_ = null;
                 HelperId_ = null;
-                Birthday_ = null;
                 IsEditable = true;
                 SelectedDepartment = 888;
                 VisibilityButton = "Hidden";
             }
+            
+
         }
         private void LoadEmpDep()
         {
