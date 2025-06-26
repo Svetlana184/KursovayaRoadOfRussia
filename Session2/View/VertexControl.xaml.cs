@@ -1,4 +1,5 @@
 ﻿using Session2.Model;
+using Session2.ViewModel;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -23,6 +24,20 @@ namespace Session2.View
     /// </summary>
     public partial class VertexControl : UserControl
     {
-        
+        private NodeViewModel node;
+        public NodeViewModel NodeViewModel 
+        {
+            get { return node; }
+            set
+            {
+                node = value;
+            }
+        }
+        public VertexControl()
+        {
+            InitializeComponent();
+            NodeViewModel = new NodeViewModel();
+            DataContext = NodeViewModel;
+        }
     }
 }

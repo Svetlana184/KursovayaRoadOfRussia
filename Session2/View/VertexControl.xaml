@@ -5,15 +5,23 @@
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:vm="clr-namespace:Session2.ViewModel"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:local="clr-namespace:Session2.View"
              mc:Ignorable="d" 
-             d:DesignHeight="50" d:DesignWidth="150" Background="#78B24B">
+             d:DesignHeight="50" d:DesignWidth="150" Background="#78B24B" Foreground="White">
     <UserControl.DataContext>
-        <vm:VertexControlViewModel/>
+        <vm:NodeViewModel/>
     </UserControl.DataContext>
     <Grid>
-        <TextBlock VerticalAlignment="Center"
-               HorizontalAlignment="Center" TextWrapping="Wrap" Height="50" Width="150"/>
+        <Button VerticalAlignment="Center"
+               HorizontalAlignment="Center" Height="50" Width="150" Content="{Binding Title}" Background="#78B24B" Foreground="White">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="Click">
+                    <i:InvokeCommandAction Command="{Binding SelectVertexCommand}" 
+                        CommandParameter="{Binding Department}" />
+</i:EventTrigger>
+            </i:Interaction.Triggers>
+        </Button>
 
     </Grid>
 </UserControl>

@@ -14,7 +14,18 @@ namespace Session2.ViewModel
     
     public class MainViewModel : ViewModelBase
     {
-       private ObservableCollection<Employee> employees;
+        public NodeViewModel RootV;
+        private List<NodeViewModel> vertices;
+        public List<NodeViewModel> Vertices
+        {
+            get { return vertices; }
+            set
+            {
+                vertices = value;
+                OnPropertyChanged();
+            }
+        }
+        private ObservableCollection<Employee> employees;
         public ObservableCollection<Employee> Employees
         {
             get { return employees; }
@@ -41,12 +52,27 @@ namespace Session2.ViewModel
                 OnPropertyChanged(nameof(selectedemployee));
             }
         }
+        private GraphViewModel graphwm;
+        public GraphViewModel GraphVM
+        {
+            get
+            {
+                return graphwm;
+            }
+            set
+            {
+                graphwm = value;
+                OnPropertyChanged();
+            }
+        }
         public MainViewModel()
         {
-
+            Vertices = new List<NodeViewModel>();
             employeeService = new EmployeeService();
             departmentService = new DepartmentService();
             Load();
+            GraphVM = new GraphViewModel( RootV, Vertices);
+            int X = 0;
         }
         private void Load()
         {
@@ -55,7 +81,36 @@ namespace Session2.ViewModel
                 Employees = new ObservableCollection<Employee>(employeeService.GetAll());
                 Deps = new ObservableCollection<Department>(departmentService.GetAll());
             }
-            
+            foreach(Department dep in Deps)
+            {
+                if(dep.IdDepartmentParent != 0)
+                {
+                    NodeViewModel? vv =  new NodeViewModel
+                    {
+                        Department = dep.IdDepartment,
+                        Level = 1,
+                        ParentDepartment = dep.IdDepartmentParent,
+                        Title = dep.DepartmentName,
+                        X = 1,
+                        Y = 1
+                    };
+                    Vertices.Add(vv);
+                }
+                else
+                {
+                    RootV = new NodeViewModel
+                    {
+                        Department = dep.IdDepartment,
+                        Level = 1,
+                        ParentDepartment = 0,
+                        Title = dep.DepartmentName,
+                        X = 1,
+                        Y = 1
+                    };
+
+                }
+               
+            }
             EmployeesList = new List<Employee>();
             foreach(Employee emp in Employees)
             {

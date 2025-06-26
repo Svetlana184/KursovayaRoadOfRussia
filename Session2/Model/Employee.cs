@@ -196,13 +196,13 @@ public partial class Employee : IComparable<Employee>, INotifyPropertyChanged, I
                         error = "Поле не должно быть пустым";
                     }
                     break;
-                case "Phone":
-                    if (Phone != "")
-                    {
-                        if (!Regex.IsMatch(Phone!, @"^[\+\d\s\-\(\)]{5,20}$"))
-                            error = "Телефон может содержать только цифры, дефисы, скобки и плюс";
-                    }
-                    break;
+                //case "Phone":
+                //    if (Phone != "" || Phone != null)
+                //    {
+                //        if (!Regex.IsMatch(Phone!, @"^[\+\d\s\-\(\)]{5,20}$"))
+                //            error = "Телефон может содержать только цифры, дефисы, скобки и плюс";
+                //    }
+                //    break;
                 case "Cabinet":
                     if (Cabinet != null)
                     {
