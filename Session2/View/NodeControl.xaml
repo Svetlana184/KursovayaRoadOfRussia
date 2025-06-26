@@ -8,20 +8,22 @@
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:local="clr-namespace:Session2.View"
              mc:Ignorable="d" 
-             d:DesignHeight="50" d:DesignWidth="150" Background="#78B24B" Foreground="White">
-    <UserControl.DataContext>
-        <vm:NodeViewModel/>
-    </UserControl.DataContext>
-    <Grid>
-        <Button VerticalAlignment="Center"
-               HorizontalAlignment="Center" Height="50" Width="150" Background="#78B24B" Foreground="White">
-            <TextBlock Text="{Binding Title}" TextWrapping="Wrap" TextAlignment="Center"/>
-            <i:Interaction.Triggers>
-                <i:EventTrigger EventName="Click">
-                    <i:InvokeCommandAction Command="{Binding SelectVertexCommand}" 
-                        CommandParameter="{Binding Department}" />
-                </i:EventTrigger>
-            </i:Interaction.Triggers>
+             d:DesignHeight="180" d:DesignWidth="250">
+    <UserControl.Resources>
+        <vm:NodeViewModel x:Key="DesignViewModel" 
+                            Title="Design Title"
+                            Department="1"/>
+    </UserControl.Resources>
+
+    <Grid DataContext="{Binding}" >
+        <Button 
+                Background="#78B24B"
+                Foreground="White"
+                FontWeight="Bold"
+                BorderBrush="White"
+                BorderThickness="1"
+                 FontSize="10" Command="{Binding SelectVertexCommand}" CommandParameter="{Binding Department}">
+            <TextBlock TextWrapping="Wrap" Text="{Binding Title}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
         </Button>
     </Grid>
 </UserControl>

@@ -17,7 +17,14 @@ namespace Session2.ViewModel
         private double y_;
         public double Y { get { return y_; } set { y_ = value; OnPropertyChanged(nameof(Y)); } }
         private string title_;
-        public string Title { get { return title_; } set { title_ = value; OnPropertyChanged(nameof(Title)); } }
+        public string Title 
+        { 
+            get { return title_; } 
+            set { 
+                title_ = value;
+                OnPropertyChanged(nameof(Title)); 
+            } 
+        }
 
         private int level;
         public int Level { get { return level; } set { level = value; OnPropertyChanged(nameof(Level)); } }

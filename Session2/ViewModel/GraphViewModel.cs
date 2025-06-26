@@ -2,10 +2,12 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace Session2.ViewModel
@@ -28,6 +30,7 @@ namespace Session2.ViewModel
         public void InitializeGraph()
         {
             Nodes.Clear();
+            
             CountingLevels();
 
             //добавление узлов 
@@ -47,6 +50,14 @@ namespace Session2.ViewModel
                     }
                 }
             }
+            Application.Current.Dispatcher.Invoke(() => {
+                foreach (var node in Nodes)
+                {
+                    node.OnPropertyChanged(nameof(node.X));
+                    node.OnPropertyChanged(nameof(node.Y));
+                    node.OnPropertyChanged(nameof(node.Title));
+                }
+            });
         }
         public void AddNode(double x, double y, string title)
         {
