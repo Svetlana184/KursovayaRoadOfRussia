@@ -37,7 +37,16 @@ namespace Session2.ViewModel
             }
         }
         public ObservableCollection<Department> Deps{ get; set; }
-        public List<Employee> EmployeesList { get; set; }
+        private List<Employee> employeeslist;
+        public List<Employee> EmployeesList 
+        {
+            get { return employeeslist; }
+            set
+            {
+                employeeslist = value;
+                OnPropertyChanged(nameof(EmployeesList));
+            }
+        }
         private Employee selectedemployee;
         public EmployeeService employeeService;
         public DepartmentService departmentService;
@@ -130,6 +139,7 @@ namespace Session2.ViewModel
                
                 EmployeesList.Add(emp);
             }
+           
         }
         public void FilterEmployeesByDepartment(int departmentId)
         {
@@ -200,7 +210,7 @@ namespace Session2.ViewModel
                   (updateCommand = new RelayCommand((o) =>
                   {
                       Load();
-
+                      OnPropertyChanged(nameof(EmployeesList));
                   }));
             }
         }
