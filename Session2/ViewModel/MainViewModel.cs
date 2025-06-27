@@ -66,17 +66,29 @@ namespace Session2.ViewModel
                 OnPropertyChanged();
             }
         }
+        private int depid;
+        public int Depid
+        {
+            get { return depid; }
+            set
+            {
+                depid = value;
+                OnPropertyChanged(nameof(Depid));
+            }
+        }
         public MainViewModel()
         {
-            Vertices = new List<NodeViewModel>();
-            employeeService = new EmployeeService();
-            departmentService = new DepartmentService();
+            
             Load();
             GraphVM = new GraphViewModel( RootV, Vertices);
             int X = 0;
         }
         private void Load()
         {
+            Vertices = new List<NodeViewModel>();
+            employeeService = new EmployeeService();
+            departmentService = new DepartmentService();
+            Employees = new ObservableCollection<Employee>();
             using (RoadOfRussiaContext db = new RoadOfRussiaContext())
             {
                 Employees = new ObservableCollection<Employee>(employeeService.GetAll());
@@ -121,10 +133,10 @@ namespace Session2.ViewModel
         }
         public void FilterEmployeesByDepartment(int departmentId)
         {
-            int depId = departmentId;
+            Depid = departmentId;
             List<Department> depList = new List<Department>();
 
-            depList.Add(Deps.FirstOrDefault(p => p.IdDepartment == depId)!);
+            depList.Add(Deps.FirstOrDefault(p => p.IdDepartment == Depid)!);
 
             for(int i =0; i <=4; i++)
             {
@@ -157,7 +169,7 @@ namespace Session2.ViewModel
                 return addCommand ??
                   (addCommand = new RelayCommand((o) =>
                   {
-                     PersonWindow window = new PersonWindow(new Employee(), 893);
+                     PersonWindow window = new PersonWindow(new Employee(), Depid);
                      window.Show();
                   }));
             }
@@ -171,11 +183,31 @@ namespace Session2.ViewModel
                   (editCommand = new RelayCommand((o) =>
                   {
                       Employee employee = o as Employee;
+                      
                       PersonWindow window = new PersonWindow(employee, employee.IdDepartment);
+                      
                       window.Show();
                      
                   }));
             }
         }
+        private RelayCommand? updateCommand;
+        public RelayCommand UpdateCommand
+        {
+            get
+            {
+                return updateCommand ??
+                  (updateCommand = new RelayCommand((o) =>
+                  {
+                      Load();
+
+                  }));
+            }
+        }
+        private void OnPersonWindowClosed()
+        {
+            Load();
+        }
+
     }
 }

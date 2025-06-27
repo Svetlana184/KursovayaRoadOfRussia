@@ -322,6 +322,12 @@ namespace Session2.ViewModel
         public CalendarService calendarService;
         public EventService eventService;
 
+        public event Action WindowClosed;
+        private void CloseWindow()
+        {
+            WindowClosed?.Invoke();
+        }
+
 
         //КОМАНДЫ
         private RelayCommand? turnoffCommand;
