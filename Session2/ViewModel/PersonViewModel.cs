@@ -396,7 +396,7 @@ namespace Session2.ViewModel
                       else employeeService.Update(SelectedEmployee);
                       
                       IsEditable = false;
-                      var result = MessageBox.Show("для обновления списка сотрудников перезагрузите окно", "подтверждение", MessageBoxButton.OKCancel);
+                      var result = MessageBox.Show("для обновления списка сотрудников перезагрузите окно, нажав на кнопку перезагрузки в верхней правой части главного окна", "подтверждение", MessageBoxButton.OKCancel);
                   }));
             }
         }
