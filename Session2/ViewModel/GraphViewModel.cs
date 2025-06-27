@@ -20,9 +20,9 @@ namespace Session2.ViewModel
         public List<NodeViewModel> vertices { get; } = new List<NodeViewModel>();
         public ObservableCollection<NodeViewModel> Nodes { get; } = new ObservableCollection<NodeViewModel>();
 
-        public GraphViewModel(NodeViewModel v_, List<NodeViewModel> vertices_)
+        public GraphViewModel(List<NodeViewModel> vertices_)
         {
-            v = v_;
+            v = vertices_.FirstOrDefault(x => x.ParentDepartment == 0);
             vertices = vertices_;
             InitializeGraph();
             
@@ -34,7 +34,8 @@ namespace Session2.ViewModel
             CountingLevels();
 
             //добавление узлов 
-            AddNode(50, 20, v.Title);
+            //AddNode(50, 20, v.Title);
+            Nodes.Add(v);
             int y = 20;
             for (int i = 2; i <= MaxLevel; i++)
             {

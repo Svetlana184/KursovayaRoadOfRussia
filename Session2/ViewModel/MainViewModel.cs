@@ -1,15 +1,16 @@
-﻿using System;
+﻿using Session2.Model;
+using Session2.Services;
+using Session2.Utilits;
+using Session2.View;
+using System;
+using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Net;
+using System.Runtime.Intrinsics.Arm;
 using System.Text;
 using System.Threading.Tasks;
-using Session2.Model;
-using Session2.Utilits;
-using Session2.View;
-using Session2.Services;
-using System.Net;
-using System.Collections.Frozen;
 namespace Session2.ViewModel
 {
     
@@ -25,7 +26,6 @@ namespace Session2.ViewModel
                 OnPropertyChanged(nameof(TitleWindow));
             }
         }
-        public NodeViewModel RootV;
         private List<NodeViewModel> vertices;
         public List<NodeViewModel> Vertices
         {
@@ -115,7 +115,7 @@ namespace Session2.ViewModel
             }
             if(Deps.Count != 0)
             {
-                TitleWindow = "Ораганизацонная структура";
+                TitleWindow = "Организацонная структура";
                 foreach (Department dep in Deps)
                 {
                     if (dep.IdDepartmentParent != 0)
@@ -133,7 +133,7 @@ namespace Session2.ViewModel
                     }
                     else
                     {
-                        RootV = new NodeViewModel
+                        NodeViewModel v = new NodeViewModel
                         {
                             Department = dep.IdDepartment,
                             Level = 1,
@@ -142,7 +142,7 @@ namespace Session2.ViewModel
                             X = 1,
                             Y = 1
                         };
-
+                        Vertices.Insert(0, v);
                     }
 
                 }
@@ -152,11 +152,28 @@ namespace Session2.ViewModel
 
                     EmployeesList.Add(emp);
                 }
-                GraphVM = new GraphViewModel(RootV, Vertices);
+                GraphVM = new GraphViewModel(Vertices);
             }
             else
             {
-                TitleWindow = "Внесите в бд данные о отделах";
+                departmentService.Add(new Department
+                {
+                    DepartmentName = "Дороги России",
+                    IdDepartment = 1,
+                    IdDepartmentParent = 0
+                });
+                TitleWindow = "Внесите в бд данные о отделах для лучшего отображения графа";
+                NodeViewModel v = new NodeViewModel
+                {
+                    Department = 1,
+                    Level = 1,
+                    ParentDepartment = 0,
+                    Title = "Дороги России",
+                    X = 1,
+                    Y = 1
+                };
+                Vertices.Insert(0, v);
+                GraphVM = new GraphViewModel(Vertices);
             }
             
            
