@@ -15,6 +15,16 @@ namespace Session2.ViewModel
     
     public class MainViewModel : ViewModelBase
     {
+        private string titlewindow;
+        public string TitleWindow
+        {
+            get { return titlewindow; }
+            set
+            {
+                titlewindow = value;
+                OnPropertyChanged(nameof(TitleWindow));
+            }
+        }
         public NodeViewModel RootV;
         private List<NodeViewModel> vertices;
         public List<NodeViewModel> Vertices
@@ -89,7 +99,7 @@ namespace Session2.ViewModel
         {
             
             Load();
-            GraphVM = new GraphViewModel( RootV, Vertices);
+            
             int X = 0;
         }
         private void Load()
@@ -103,42 +113,52 @@ namespace Session2.ViewModel
                 Employees = new ObservableCollection<Employee>(employeeService.GetAll());
                 Deps = new ObservableCollection<Department>(departmentService.GetAll());
             }
-            foreach(Department dep in Deps)
+            if(Deps.Count != 0)
             {
-                if(dep.IdDepartmentParent != 0)
+                TitleWindow = "Ораганизацонная структура";
+                foreach (Department dep in Deps)
                 {
-                    NodeViewModel? vv =  new NodeViewModel
+                    if (dep.IdDepartmentParent != 0)
                     {
-                        Department = dep.IdDepartment,
-                        Level = 1,
-                        ParentDepartment = dep.IdDepartmentParent,
-                        Title = dep.DepartmentName,
-                        X = 1,
-                        Y = 1
-                    };
-                    Vertices.Add(vv);
-                }
-                else
-                {
-                    RootV = new NodeViewModel
+                        NodeViewModel? vv = new NodeViewModel
+                        {
+                            Department = dep.IdDepartment,
+                            Level = 1,
+                            ParentDepartment = dep.IdDepartmentParent,
+                            Title = dep.DepartmentName,
+                            X = 1,
+                            Y = 1
+                        };
+                        Vertices.Add(vv);
+                    }
+                    else
                     {
-                        Department = dep.IdDepartment,
-                        Level = 1,
-                        ParentDepartment = 0,
-                        Title = dep.DepartmentName,
-                        X = 1,
-                        Y = 1
-                    };
+                        RootV = new NodeViewModel
+                        {
+                            Department = dep.IdDepartment,
+                            Level = 1,
+                            ParentDepartment = 0,
+                            Title = dep.DepartmentName,
+                            X = 1,
+                            Y = 1
+                        };
+
+                    }
 
                 }
-               
+                EmployeesList = new List<Employee>();
+                foreach (Employee emp in Employees)
+                {
+
+                    EmployeesList.Add(emp);
+                }
+                GraphVM = new GraphViewModel(RootV, Vertices);
             }
-            EmployeesList = new List<Employee>();
-            foreach(Employee emp in Employees)
+            else
             {
-               
-                EmployeesList.Add(emp);
+                TitleWindow = "Внесите в бд данные о отделах";
             }
+            
            
         }
         public void FilterEmployeesByDepartment(int departmentId)
@@ -214,10 +234,7 @@ namespace Session2.ViewModel
                   }));
             }
         }
-        private void OnPersonWindowClosed()
-        {
-            Load();
-        }
+       
 
     }
 }
