@@ -19,7 +19,7 @@ namespace WebAPI.Services
 
         public async Task Delete(int id)
         {
-            var product = await roadOfRussiaContext.Departments.FindAsync(id);
+            var product = await roadOfRussiaContext.Departments.FirstOrDefaultAsync(p => p.IdDepartment == id);
             if (product != null)
             {
                 roadOfRussiaContext.Departments.Remove(product);
@@ -34,7 +34,7 @@ namespace WebAPI.Services
 
         public async Task<Department> GetById(int id)
         {
-            return await roadOfRussiaContext.Departments.FindAsync(id);
+            return await roadOfRussiaContext.Departments.FirstOrDefaultAsync(p=>p.IdDepartment==id);
         }
 
         public async Task Update(Department product)

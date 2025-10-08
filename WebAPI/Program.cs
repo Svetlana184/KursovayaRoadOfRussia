@@ -1,5 +1,6 @@
-using API_kursovaya.Data;
+
 using Microsoft.EntityFrameworkCore;
+using Session2.Model;
 
 var builder = WebApplication.CreateBuilder(args);
 
