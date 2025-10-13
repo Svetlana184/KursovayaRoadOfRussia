@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Session2.Model;
+namespace Session2;
 
 public partial class Event
 {
@@ -15,13 +15,13 @@ public partial class Event
 
     public string EventDescription { get; set; } = null!;
 
-    public string DateOfEvent { get; set; } = null!;
+    public DateTime DateOfEvent { get; set; }
 
     public string EventManagers { get; set; } = null!;
 
     public string TypeOfClass { get; set; } = null!;
 
-    public virtual ICollection<Calendar_> Calendars { get; set; } = new List<Calendar_>();
+    public virtual ICollection<Calendar> Calendars { get; set; } = new List<Calendar>();
 
     public virtual ICollection<EventMaterial> EventMaterials { get; set; } = new List<EventMaterial>();
 }
