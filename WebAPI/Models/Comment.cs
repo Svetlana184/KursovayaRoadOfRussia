@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Session2.Model;
+namespace Session2;
 
 public partial class Comment
 {
@@ -11,9 +11,9 @@ public partial class Comment
 
     public string CommentText { get; set; } = null!;
 
-    public string DateCreated { get; set; } = null!;
+    public DateTime DateCreated { get; set; }
 
-    public string? DateUpdated { get; set; }
+    public DateTime? DateUpdated { get; set; }
 
     public int AuthorOfComment { get; set; }
 

@@ -1,12 +1,11 @@
-﻿
-using Microsoft.EntityFrameworkCore;
-using Session2.Model;
+﻿using Microsoft.EntityFrameworkCore;
+using WebAPI;
 
 namespace WebAPI.Services
 {
     public class DepartmentService : IService<Department>
     {
-        private  readonly RoadOfRussiaContext roadOfRussiaContext;
+        private readonly RoadOfRussiaContext roadOfRussiaContext;
         public DepartmentService(RoadOfRussiaContext context)
         {
             roadOfRussiaContext = context;
@@ -34,7 +33,7 @@ namespace WebAPI.Services
 
         public async Task<Department> GetById(int id)
         {
-            return await roadOfRussiaContext.Departments.FirstOrDefaultAsync(p=>p.IdDepartment==id);
+            return await roadOfRussiaContext.Departments.FirstOrDefaultAsync(p => p.IdDepartment == id);
         }
 
         public async Task Update(Department product)

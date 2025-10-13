@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Session2.Model;
+namespace Session2;
 
 public partial class Candidate
 {
@@ -15,7 +15,7 @@ public partial class Candidate
 
     public string AreaOfActivity { get; set; } = null!;
 
-    public string DateOfReceipt { get; set; } = null!;
+    public DateOnly DateOfReceipt { get; set; }
 
     public string? Rezume { get; set; }
 }

@@ -1,6 +1,8 @@
 
 using Microsoft.EntityFrameworkCore;
-using Session2.Model;
+using WebAPI;
+
+
 
 var builder = WebApplication.CreateBuilder(args);
 
