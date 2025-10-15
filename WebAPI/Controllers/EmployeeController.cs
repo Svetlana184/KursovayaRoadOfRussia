@@ -4,6 +4,8 @@ using WebAPI.Services;
 
 namespace WebAPI.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class EmployeeController : ControllerBase
     {
         private readonly IService<Employee> _empService;

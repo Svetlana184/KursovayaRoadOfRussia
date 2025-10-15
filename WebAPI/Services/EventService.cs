@@ -13,7 +13,7 @@ namespace WebAPI.Services
 
         public async Task<IEnumerable<Event>> GetAll()
         {
-            return await roadOfRussiaContext.Events.ToArrayAsync();
+            return await roadOfRussiaContext.Events.ToListAsync();
         }
 
         public async Task<Event> GetById(int id_)
@@ -41,6 +41,7 @@ namespace WebAPI.Services
 
         public async Task Update(Event product)
         {
+            roadOfRussiaContext.Entry(product).State = EntityState.Modified;
             roadOfRussiaContext.Update(product);
             await roadOfRussiaContext.SaveChangesAsync();
         }

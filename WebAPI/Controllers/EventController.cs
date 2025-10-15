@@ -4,6 +4,8 @@ using WebAPI.Services;
 
 namespace WebAPI.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class EventController : ControllerBase
     {
         private readonly IService<Event> _evService;

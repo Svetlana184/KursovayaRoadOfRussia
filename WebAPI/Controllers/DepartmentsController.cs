@@ -6,6 +6,8 @@ using WebAPI.Models;
 
 namespace WebAPI.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class DepartmentsController : ControllerBase
     {
         private readonly IService<Department> _departmentService;

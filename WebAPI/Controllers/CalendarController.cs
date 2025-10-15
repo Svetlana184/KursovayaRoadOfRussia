@@ -5,6 +5,8 @@ using WebAPI.Services;
 
 namespace WebAPI.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class CalendarController : ControllerBase
     {
         private readonly IService<Calendar_> _calendarService;
