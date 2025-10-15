@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Session2;
-using WebAPI;
+using WebAPI.Models;
 
 namespace WebAPI.Services
 {
@@ -9,8 +8,20 @@ namespace WebAPI.Services
         private readonly RoadOfRussiaContext roadOfRussiaContext;
         public DepartmentService(RoadOfRussiaContext context)
         {
-            roadOfRussiaContext = context;
+            this.roadOfRussiaContext = context;
         }
+
+        public async Task<IEnumerable<Department>> GetAll()
+        {
+            return await roadOfRussiaContext.Departments.ToArrayAsync();
+        }
+
+        public async Task<Department> GetById(int id_)
+        {
+            return await roadOfRussiaContext.Departments.FindAsync(id_);
+        }
+
+
         public async Task Create(Department product)
 
         {
@@ -20,7 +31,7 @@ namespace WebAPI.Services
 
         public async Task Delete(int id)
         {
-            var product = await roadOfRussiaContext.Departments.FirstOrDefaultAsync(p => p.IdDepartment == id);
+            var product = await roadOfRussiaContext.Departments.FindAsync(id);
             if (product != null)
             {
                 roadOfRussiaContext.Departments.Remove(product);
@@ -28,16 +39,9 @@ namespace WebAPI.Services
             }
         }
 
-        public async Task<IEnumerable<Department>> GetAll()
-        {
-            return await roadOfRussiaContext.Departments.ToListAsync();
-        }
+        
 
-        public async Task<Department> GetById(int id)
-        {
-            return await roadOfRussiaContext.Departments.FirstOrDefaultAsync(p => p.IdDepartment == id);
-        }
-
+        
         public async Task Update(Department product)
         {
             roadOfRussiaContext.Update(product);

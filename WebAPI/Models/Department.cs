@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-
-namespace Session2;
-
+namespace WebAPI.Models;
 public partial class Department
 {
     public int IdDepartment { get; set; }

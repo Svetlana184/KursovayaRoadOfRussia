@@ -1,6 +1,7 @@
 
 using Microsoft.EntityFrameworkCore;
-using WebAPI;
+using WebAPI.Models;
+using WebAPI.Services;
 
 
 
@@ -16,6 +17,10 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<RoadOfRussiaContext>(options =>
 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddScoped<IService<Department>, DepartmentService>();
+builder.Services.AddScoped<IService<Employee>, EmployeeService>();
+builder.Services.AddScoped<IService<Event>, EventService>();
+builder.Services.AddScoped<IService<Calendar_>, CalendarService>();
 
 var app = builder.Build();
 

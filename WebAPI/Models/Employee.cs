@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-
-namespace Session2;
+namespace WebAPI.Models;
 
 public partial class Employee
 {
@@ -37,9 +36,9 @@ public partial class Employee
 
     public DateTime? IsFired { get; set; }
 
-    public virtual ICollection<Calendar> CalendarIdAlternateNavigations { get; set; } = new List<Calendar>();
+    public virtual ICollection<Calendar_> CalendarIdAlternateNavigations { get; set; } = new List<Calendar_>();
 
-    public virtual ICollection<Calendar> CalendarIdEmployeeNavigations { get; set; } = new List<Calendar>();
+    public virtual ICollection<Calendar_> CalendarIdEmployeeNavigations { get; set; } = new List<Calendar_>();
 
     public virtual ICollection<Comment> Comments { get; set; } = new List<Comment>();
 

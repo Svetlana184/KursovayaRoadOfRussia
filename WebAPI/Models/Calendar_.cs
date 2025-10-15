@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-
-namespace Session2;
-
-public partial class Calendar
+namespace WebAPI.Models;
+public partial class Calendar_
 {
     public int IdCalendar { get; set; }
 

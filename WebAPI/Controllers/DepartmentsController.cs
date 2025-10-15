@@ -2,7 +2,7 @@
 using WebAPI;
 using Microsoft.EntityFrameworkCore.Storage.Json;
 using WebAPI.Services;
-using Session2;
+using WebAPI.Models;
 
 namespace WebAPI.Controllers
 {
@@ -11,29 +11,29 @@ namespace WebAPI.Controllers
         private readonly IService<Department> _departmentService;
         public DepartmentsController(IService<Department> departmentService)
         {
-            _departmentService = departmentService;
+            this._departmentService = departmentService;
         }
-        [HttpGet]
+        [HttpGet("dep/all")]
         public async Task<ActionResult<IEnumerable<Department>>> GetAllDepartments()
         {
             var deps = await _departmentService.GetAll();
             return Ok(deps);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("dep/{id}")]
         public async Task<ActionResult<IEnumerable<Department>>> GetByIdDepartments(int id)
         {
             var dep = await _departmentService.GetById(id);
             if (dep == null) { return NotFound(); }
             return Ok(dep);
         }
-        [HttpPost]
+        [HttpPost("dep/post")]
         public async Task<ActionResult<IEnumerable<Department>>> CreateDepartment([FromBody] Department dep)
         {
             await _departmentService.Create(dep);
             return CreatedAtAction(nameof(GetByIdDepartments), new { id = dep.IdDepartment }, dep);
         }
-        [HttpPut("{id}")]
+        [HttpPut("dep/{id}")]
         public async Task<ActionResult<IEnumerable<Department>>> UpdateDepartment(int id, [FromBody] Department dep)
         {
             if (dep.IdDepartment != id)
@@ -43,7 +43,7 @@ namespace WebAPI.Controllers
             await _departmentService.Update(dep);
             return NoContent();
         }
-        [HttpDelete]
+        [HttpDelete("dep/delete")]
         public async Task<ActionResult> DeleteDepartment(int id)
         {
             await _departmentService.Delete(id);
