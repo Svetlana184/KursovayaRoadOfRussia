@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 namespace WebAPI.Models;
 public partial class Department
 {
@@ -12,7 +13,7 @@ public partial class Department
     public int? IdEmployee { get; set; }
 
     public int? IdDepartmentParent { get; set; }
-
+    [JsonIgnore]
     public virtual ICollection<Employee> Employees { get; set; } = new List<Employee>();
 
     public virtual Employee? IdEmployeeNavigation { get; set; }

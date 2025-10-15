@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 namespace WebAPI.Models;
 public partial class Calendar_
 {
@@ -19,6 +20,7 @@ public partial class Calendar_
 
     public int? IdAlternate { get; set; }
 
+    [JsonIgnore]
     public virtual Employee? IdAlternateNavigation { get; set; }
 
     public virtual Employee? IdEmployeeNavigation { get; set; }

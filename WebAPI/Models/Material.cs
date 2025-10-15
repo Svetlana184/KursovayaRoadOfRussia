@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace WebAPI.Models;
 
@@ -22,7 +23,7 @@ public partial class Material
     public string Author { get; set; } = null!;
 
     public int Comments { get; set; }
-
+    [JsonIgnore]
     public virtual ICollection<Comment> CommentsNavigation { get; set; } = new List<Comment>();
 
     public virtual ICollection<EventMaterial> EventMaterials { get; set; } = new List<EventMaterial>();

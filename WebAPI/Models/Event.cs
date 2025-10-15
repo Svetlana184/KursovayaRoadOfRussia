@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace WebAPI.Models;
 
@@ -20,7 +21,7 @@ public partial class Event
     public string EventManagers { get; set; } = null!;
 
     public string TypeOfClass { get; set; } = null!;
-
+    [JsonIgnore]
     public virtual ICollection<Calendar_> Calendars { get; set; } = new List<Calendar_>();
 
     public virtual ICollection<EventMaterial> EventMaterials { get; set; } = new List<EventMaterial>();

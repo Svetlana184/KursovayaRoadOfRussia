@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 namespace WebAPI.Models;
 public partial class Comment
 {
@@ -14,7 +15,7 @@ public partial class Comment
     public DateTime? DateUpdated { get; set; }
 
     public int AuthorOfComment { get; set; }
-
+    [JsonIgnore]
     public virtual Employee AuthorOfCommentNavigation { get; set; } = null!;
 
     public virtual Material IdMaterialNavigation { get; set; } = null!;
