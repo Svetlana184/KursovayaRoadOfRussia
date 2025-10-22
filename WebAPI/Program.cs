@@ -67,7 +67,7 @@ app.Map("/login", (Employee emp) => {
     var jwt = new JwtSecurityToken(issuer: AuthOptions.ISSUER, 
         audience: AuthOptions.AUDIENCE, 
         claims: claims, 
-        expires: DateTime.UtcNow.AddMinutes(30),
+        expires: DateTime.UtcNow.Add(TimeSpan.FromMinutes(10)),
         signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
     var encodedJWT = new JwtSecurityTokenHandler().WriteToken(jwt);
     var response = new

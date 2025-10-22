@@ -3,9 +3,11 @@ using WebAPI;
 using Microsoft.EntityFrameworkCore.Storage.Json;
 using WebAPI.Services;
 using WebAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebAPI.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class DepartmentsController : ControllerBase
