@@ -1,6 +1,8 @@
 
 using System.IdentityModel.Tokens.Jwt;
+using System.Runtime.Intrinsics.Arm;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -54,7 +56,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseAuthentication();
 
-app.Map("/login", (Employee emp) => {
+app.Map("/login", async (Employee emp) => {
 
     Employee employee = null;
     using (RoadOfRussiaContext db = new RoadOfRussiaContext())
@@ -85,6 +87,14 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+app.MapPost("/register", async (Employee user, RoadOfRussiaContext db) =>
+{
+    byte[] salt = AuthOptions.GenerateSalt();
+    byte[] sha256Hash = AuthOptions.GenerateSha256Hash(user.Password, salt);
+    db.Employees.Add(user);
+    await db.SaveChangesAsync();
+});
+
 app.Run();
 
 
@@ -95,4 +105,27 @@ public class AuthOptions
     const string KEY = "my_supersecret_secret_secret_secret_key_1111"; //ключ для шифрации
     public static SymmetricSecurityKey GetSymmetricSecurityKey()=> 
         new SymmetricSecurityKey(Encoding.UTF8.GetBytes(KEY));
+
+    public static byte[] GenerateSalt()
+    {
+        const int SaltLength = 64;
+        byte[] salt = new byte[SaltLength];
+
+        var rngRand = new RNGCryptoServiceProvider();
+        rngRand.GetBytes(salt);
+
+        return salt;
+    }
+    public static byte[] GenerateSha256Hash(string password, byte[] salt)
+    {
+        byte[] passwordBytes = Encoding.UTF8.GetBytes(password);
+        byte[] saltedPassword = new byte[salt.Length + passwordBytes.Length];
+
+        using var hash = new SHA256CryptoServiceProvider();
+
+        return hash.ComputeHash(saltedPassword);
+    }
 }
+
+//методы шифрования
+
