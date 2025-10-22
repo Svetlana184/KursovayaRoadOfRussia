@@ -17,6 +17,6 @@ public partial class Comment
     public int AuthorOfComment { get; set; }
     [JsonIgnore]
     public virtual Employee AuthorOfCommentNavigation { get; set; } = null!;
-
+    [JsonIgnore]
     public virtual Material IdMaterialNavigation { get; set; } = null!;
 }

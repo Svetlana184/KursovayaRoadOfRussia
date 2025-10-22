@@ -22,8 +22,8 @@ public partial class Calendar_
 
     [JsonIgnore]
     public virtual Employee? IdAlternateNavigation { get; set; }
-
+    [JsonIgnore]
     public virtual Employee? IdEmployeeNavigation { get; set; }
-
+    [JsonIgnore]
     public virtual Event? IdEventNavigation { get; set; }
 }

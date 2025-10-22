@@ -14,5 +14,6 @@ public partial class EventMaterial
     [JsonIgnore]
     public virtual Event IdEventNavigation { get; set; } = null!;
 
+    [JsonIgnore]
     public virtual Material IdMaterialNavigation { get; set; } = null!;
 }

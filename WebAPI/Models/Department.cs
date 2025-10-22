@@ -15,6 +15,6 @@ public partial class Department
     public int? IdDepartmentParent { get; set; }
     [JsonIgnore]
     public virtual ICollection<Employee> Employees { get; set; } = new List<Employee>();
-
+    [JsonIgnore]
     public virtual Employee? IdEmployeeNavigation { get; set; }
 }

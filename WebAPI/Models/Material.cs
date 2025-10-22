@@ -25,6 +25,6 @@ public partial class Material
     public int Comments { get; set; }
     [JsonIgnore]
     public virtual ICollection<Comment> CommentsNavigation { get; set; } = new List<Comment>();
-
+    [JsonIgnore]
     public virtual ICollection<EventMaterial> EventMaterials { get; set; } = new List<EventMaterial>();
 }
