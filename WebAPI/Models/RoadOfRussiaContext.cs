@@ -1,6 +1,7 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
+using System.Globalization;
 
 namespace WebAPI.Models;
 
@@ -37,7 +38,7 @@ public partial class RoadOfRussiaContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Data Source=TeacherPC;Initial Catalog=RoadOfRussiaKorushk;User ID=user12;Password='user12';Encrypt=False");
+        => optionsBuilder.UseSqlServer("Data Source=GOBLINSCOMP3;Initial Catalog=RoadOfRussiaKorushk;User ID=sa;Password=1234;Encrypt=False");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -47,19 +48,27 @@ public partial class RoadOfRussiaContext : DbContext
 
             entity.ToTable("Calendar");
 
+            entity.HasIndex(e => e.IdAlternate, "IX_Calendar_IdAlternate");
+
+            entity.HasIndex(e => e.IdEmployee, "IX_Calendar_IdEmployee");
+
+            entity.HasIndex(e => e.IdEvent, "IX_Calendar_IdEvent");
+
             entity.Property(e => e.TypeOfAbsense).HasMaxLength(20);
             entity.Property(e => e.TypeOfEvent).HasMaxLength(50);
 
             entity.HasOne(d => d.IdAlternateNavigation).WithMany(p => p.CalendarIdAlternateNavigations)
                 .HasForeignKey(d => d.IdAlternate)
-                .HasConstraintName("FK_Calendar_Employee1");
+                .OnDelete(DeleteBehavior.SetNull)
+                .HasConstraintName("FK_Calendar_Employee");
 
             entity.HasOne(d => d.IdEmployeeNavigation).WithMany(p => p.CalendarIdEmployeeNavigations)
                 .HasForeignKey(d => d.IdEmployee)
-                .HasConstraintName("FK_Calendar_Employee");
+                .HasConstraintName("FK_Calendar_Employee1");
 
             entity.HasOne(d => d.IdEventNavigation).WithMany(p => p.Calendars)
                 .HasForeignKey(d => d.IdEvent)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_Calendar_Event");
         });
 
@@ -84,18 +93,20 @@ public partial class RoadOfRussiaContext : DbContext
 
             entity.ToTable("Comment");
 
+            entity.HasIndex(e => e.AuthorOfComment, "IX_Comment_AuthorOfComment");
+
+            entity.HasIndex(e => e.IdMaterial, "IX_Comment_IdMaterial");
+
             entity.Property(e => e.CommentText).HasColumnType("ntext");
             entity.Property(e => e.DateCreated).HasColumnType("datetime");
             entity.Property(e => e.DateUpdated).HasColumnType("datetime");
 
             entity.HasOne(d => d.AuthorOfCommentNavigation).WithMany(p => p.Comments)
                 .HasForeignKey(d => d.AuthorOfComment)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Comment_Employee");
 
             entity.HasOne(d => d.IdMaterialNavigation).WithMany(p => p.CommentsNavigation)
                 .HasForeignKey(d => d.IdMaterial)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Comment_Material");
         });
 
@@ -105,11 +116,14 @@ public partial class RoadOfRussiaContext : DbContext
 
             entity.ToTable("Department");
 
+            entity.HasIndex(e => e.IdEmployee, "IX_Department_IdEmployee");
+
             entity.Property(e => e.DepartmentName).HasMaxLength(100);
             entity.Property(e => e.Description).HasColumnType("ntext");
 
             entity.HasOne(d => d.IdEmployeeNavigation).WithMany(p => p.Departments)
                 .HasForeignKey(d => d.IdEmployee)
+                .OnDelete(DeleteBehavior.SetNull)
                 .HasConstraintName("FK_Department_Employee");
         });
 
@@ -118,6 +132,8 @@ public partial class RoadOfRussiaContext : DbContext
             entity.HasKey(e => e.IdEmployee);
 
             entity.ToTable("Employee");
+
+            entity.HasIndex(e => e.IdDepartment, "IX_Employee_IdDepartment");
 
             entity.Property(e => e.Cabinet).HasMaxLength(10);
             entity.Property(e => e.Email).HasMaxLength(50);
@@ -161,14 +177,16 @@ public partial class RoadOfRussiaContext : DbContext
 
             entity.ToTable("EventMaterial");
 
+            entity.HasIndex(e => e.IdEvent, "IX_EventMaterial_IdEvent");
+
+            entity.HasIndex(e => e.IdMaterial, "IX_EventMaterial_IdMaterial");
+
             entity.HasOne(d => d.IdEventNavigation).WithMany(p => p.EventMaterials)
                 .HasForeignKey(d => d.IdEvent)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_EventMaterial_Event");
 
             entity.HasOne(d => d.IdMaterialNavigation).WithMany(p => p.EventMaterials)
                 .HasForeignKey(d => d.IdMaterial)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_EventMaterial_Material");
         });
 
