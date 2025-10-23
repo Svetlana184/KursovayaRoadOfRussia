@@ -108,13 +108,13 @@ namespace Session2.ViewModel
             employeeService = new EmployeeService();
             departmentService = new DepartmentService();
             Employees = new ObservableCollection<Employee>();
-            using (RoadOfRussiaContext db = new RoadOfRussiaContext())
-            {
+
+
                 Employees = new ObservableCollection<Employee>(employeeService.GetAll().Result);
                 Deps = new ObservableCollection<Department>(departmentService.GetAll().Result);
-            }
-            if(Deps.Count != 0)
-            {
+
+
+            
                 TitleWindow = "Организацонная структура";
                 foreach (Department dep in Deps)
                 {
@@ -153,28 +153,7 @@ namespace Session2.ViewModel
                     EmployeesList.Add(emp);
                 }
                 GraphVM = new GraphViewModel(Vertices);
-            }
-            else
-            {
-                departmentService.Add(new Department
-                {
-                    DepartmentName = "Дороги России",
-                    IdDepartment = 1,
-                    IdDepartmentParent = 0
-                });
-                TitleWindow = "Внесите в бд данные о отделах для лучшего отображения графа";
-                NodeViewModel v = new NodeViewModel
-                {
-                    Department = 1,
-                    Level = 1,
-                    ParentDepartment = 0,
-                    Title = "Дороги России",
-                    X = 1,
-                    Y = 1
-                };
-                Vertices.Insert(0, v);
-                GraphVM = new GraphViewModel(Vertices);
-            }
+            
             
            
         }

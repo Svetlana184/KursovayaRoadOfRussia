@@ -1,4 +1,5 @@
 ﻿using Session2.Model;
+using Session2.Services;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -11,6 +12,7 @@ namespace Session2.Helpers
 {
     public class IdEmployeeToName : IValueConverter
     {
+        public EmployeeService employeeService;
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
 
@@ -20,11 +22,10 @@ namespace Session2.Helpers
                 if (id != 0)
                 {
 
-                    using (RoadOfRussiaContext db = new RoadOfRussiaContext())
-                    {
-                        return db.Employees.FirstOrDefault(x => x.IdEmployee == id)!.Surname + " " +
-                            db.Employees.FirstOrDefault(x => x.IdEmployee == id)!.FirstName;
-                    }
+                 
+                        return employeeService.GetAll().Result.FirstOrDefault(x => x.IdEmployee == id)!.Surname + " " +
+                            employeeService.GetAll().Result.FirstOrDefault(x => x.IdEmployee == id)!.FirstName;
+                    
                 }
                 else return " ";
             }

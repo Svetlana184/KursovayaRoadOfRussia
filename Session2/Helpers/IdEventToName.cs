@@ -1,4 +1,5 @@
 ﻿using Session2.Model;
+using Session2.Services;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -11,13 +12,12 @@ namespace Session2.Helpers
 {
     public class IdEventToName : IValueConverter
     {
+        public EventService eventService;
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             int id = int.Parse(value.ToString()!);
-            using (RoadOfRussiaContext db = new RoadOfRussiaContext())
-            {
-                return db.Events.FirstOrDefault(x => x.IdEvent == id)!.EventName;
-            }
+            return eventService.GetAll().Result.FirstOrDefault(x => x.IdEvent == id)!.EventName;
+            
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
