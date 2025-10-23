@@ -6,7 +6,7 @@ using WebAPI.Services;
 
 namespace WebAPI.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class CalendarController : ControllerBase
