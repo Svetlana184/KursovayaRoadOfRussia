@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Json;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -32,12 +33,11 @@ namespace Session2.Services
             return true;
         }
 
-        public override List<Calendar_> GetAll()
+        public override async Task<List<Calendar_>> GetAll()
         {
-            using (RoadOfRussiaContext db = new RoadOfRussiaContext())
-            {
-                return db.Calendars.ToList();
-            }
+            client = new HttpClient();
+            List<Calendar_>? calendars = await client.GetFromJsonAsync<List<Calendar_>>("https://localhost:7013/api/Calendar/getall");
+            return calendars!;
         }
 
         public override bool Update(Calendar_ obj)

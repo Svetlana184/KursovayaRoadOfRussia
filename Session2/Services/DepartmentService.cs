@@ -2,6 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Json;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -9,6 +11,7 @@ namespace Session2.Services
 {
     public class DepartmentService : BaseService<Department>
     {
+        private HttpClient client;
         public override bool Add(Department obj)
         {
             using (RoadOfRussiaContext db = new RoadOfRussiaContext())
@@ -29,12 +32,11 @@ namespace Session2.Services
             return true;
         }
 
-        public override List<Department> GetAll()
+        public override async Task<List<Department>> GetAll()
         {
-            using (RoadOfRussiaContext db = new RoadOfRussiaContext())
-            {
-                return db.Departments.ToList();
-            }
+            client = new HttpClient();
+            List<Department>? deps = await client.GetFromJsonAsync<List<Department>>("https://localhost:7013/api/Departments/getall");
+            return deps!;
         }
 
         public override bool Update(Department obj)

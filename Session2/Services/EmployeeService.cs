@@ -1,15 +1,17 @@
-﻿using System;
+﻿using Session2.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Json;
 using System.Text;
 using System.Threading.Tasks;
-using Session2.Model;
 
 namespace Session2.Services
 {
     public class EmployeeService : BaseService<Employee>
     {
-
+        private HttpClient client;
         public override bool Add(Employee obj)
         {
             using (RoadOfRussiaContext db = new RoadOfRussiaContext())
@@ -30,13 +32,12 @@ namespace Session2.Services
             return true;
         }
 
-        public override List<Employee> GetAll()
+        public override async Task<List<Employee>> GetAll()
         {
-            using (RoadOfRussiaContext db = new RoadOfRussiaContext())
-            {
-                return db.Employees.ToList();
-            }
-            
+            client = new HttpClient();
+            List<Employee>? emps = await client.GetFromJsonAsync<List<Employee>>("https://localhost:7013/api/Employee/getall");
+            return emps!;
+
         }
 
         public override bool Update(Employee obj)
