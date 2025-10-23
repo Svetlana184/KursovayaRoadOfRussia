@@ -15,27 +15,27 @@ namespace WebAPI.Controllers
         {
             this._evService = evService;
         }
-        [HttpGet("events/all")]
+        [HttpGet("getall")]
         public async Task<ActionResult<IEnumerable<Event>>> GetAllEvents()
         {
             var evs = await _evService.GetAll();
             return Ok(evs);
         }
 
-        [HttpGet("events/{id}")]
+        [HttpGet("get/{id}")]
         public async Task<ActionResult<IEnumerable<Event>>> GetByIdEvents(int id)
         {
             var ev = await _evService.GetById(id);
             if (ev == null) { return NotFound(); }
             return Ok(ev);
         }
-        [HttpPost("events/post")]
+        [HttpPost("post")]
         public async Task<ActionResult<IEnumerable<Event>>> CreateEvent([FromBody] Event ev)
         {
             await _evService.Create(ev);
             return CreatedAtAction(nameof(GetByIdEvents), new { id = ev.IdEvent }, ev);
         }
-        [HttpPut("events/{id}")]
+        [HttpPut("update/{id}")]
         public async Task<ActionResult<IEnumerable<Event>>> UpdateEvent(int id, [FromBody] Event ev)
         {
             if (ev.IdEvent != id)
@@ -45,7 +45,7 @@ namespace WebAPI.Controllers
             await _evService.Update(ev);
             return NoContent();
         }
-        [HttpDelete("events/delete")]
+        [HttpDelete("delete/{id}")]
         public async Task<ActionResult> DeleteEvent(int id)
         {
             await _evService.Delete(id);

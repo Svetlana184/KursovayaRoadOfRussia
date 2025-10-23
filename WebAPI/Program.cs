@@ -44,6 +44,33 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
         };
     });
 
+using (RoadOfRussiaContext db = new RoadOfRussiaContext())
+{
+    if(db.Departments.Count() == 0)
+    {
+        Department dep_start = new Department()
+        {
+            DepartmentName = "start department"
+        };
+        await db.Departments.AddAsync(dep_start);
+        await db.SaveChangesAsync();
+        Employee admin_start = new Employee()
+        {
+            Surname = "ad",
+            FirstName = "start",
+            Position = "administrator",
+            PhoneWork = "+0",
+            Cabinet = "0",
+            Email = "start_admin@gmail.com",
+            IdDepartment = db.Departments.FirstOrDefault(p => p.IdDepartment == 1)!.IdDepartment
+
+        };
+        await db.Employees.AddAsync(admin_start);
+        await db.SaveChangesAsync();
+    }
+    
+}
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

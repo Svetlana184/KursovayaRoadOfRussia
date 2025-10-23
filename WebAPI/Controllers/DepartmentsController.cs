@@ -17,27 +17,27 @@ namespace WebAPI.Controllers
         {
             this._departmentService = departmentService;
         }
-        [HttpGet("dep/all")]
+        [HttpGet("getall")]
         public async Task<ActionResult<IEnumerable<Department>>> GetAllDepartments()
         {
             var deps = await _departmentService.GetAll();
             return Ok(deps);
         }
 
-        [HttpGet("dep/{id}")]
+        [HttpGet("get/{id}")]
         public async Task<ActionResult<IEnumerable<Department>>> GetByIdDepartments(int id)
         {
             var dep = await _departmentService.GetById(id);
             if (dep == null) { return NotFound(); }
             return Ok(dep);
         }
-        [HttpPost("dep/post")]
+        [HttpPost("post")]
         public async Task<ActionResult<IEnumerable<Department>>> CreateDepartment([FromBody] Department dep)
         {
             await _departmentService.Create(dep);
             return CreatedAtAction(nameof(GetByIdDepartments), new { id = dep.IdDepartment }, dep);
         }
-        [HttpPut("dep/{id}")]
+        [HttpPut("update/{id}")]
         public async Task<ActionResult<IEnumerable<Department>>> UpdateDepartment(int id, [FromBody] Department dep)
         {
             if (dep.IdDepartment != id)
@@ -47,7 +47,7 @@ namespace WebAPI.Controllers
             await _departmentService.Update(dep);
             return NoContent();
         }
-        [HttpDelete("dep/delete")]
+        [HttpDelete("delete/{id}")]
         public async Task<ActionResult> DeleteDepartment(int id)
         {
             await _departmentService.Delete(id);

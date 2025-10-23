@@ -1,18 +1,21 @@
-﻿using System;
+﻿using Session2.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using Session2.Model;
 
 namespace Session2.Services
 {
     public class CalendarService : BaseService<Calendar_>
     {
+        private HttpClient client;
         public override bool Add(Calendar_ obj)
         {
             using (RoadOfRussiaContext db = new RoadOfRussiaContext())
             {
+                client = new HttpClient();
                 db.Calendars.Add(obj);
                 db.SaveChangesAsync();
             }
