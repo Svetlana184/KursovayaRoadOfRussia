@@ -12,23 +12,17 @@ namespace Session2.Services
     public class EmployeeService : BaseService<Employee>
     {
         private HttpClient client;
-        public override bool Add(Employee obj)
+        public override async Task<bool> Add(Employee obj)
         {
-            using (RoadOfRussiaContext db = new RoadOfRussiaContext())
-            {
-                db.Employees.Add(obj);
-                db.SaveChangesAsync();
-            }
+            client = new HttpClient();
+            await client.PostAsJsonAsync<Employee>("https://localhost:7013/api/Employee/post", obj);
             return true;
         }
 
-        public override bool Delete(Employee obj)
+        public override async Task<bool> Delete(Employee obj)
         {
-            using (RoadOfRussiaContext db = new RoadOfRussiaContext())
-            {
-                db.Employees.Remove(obj);
-                db.SaveChangesAsync();
-            }
+            client = new HttpClient();
+            await client.DeleteFromJsonAsync<Employee>($"https://localhost:7013/api/Employee/update/{obj.IdEmployee}");
             return true;
         }
 
@@ -40,13 +34,10 @@ namespace Session2.Services
 
         }
 
-        public override bool Update(Employee obj)
+        public override async Task<bool> Update(Employee obj)
         {
-            using (RoadOfRussiaContext db = new RoadOfRussiaContext())
-            {
-                db.Employees.Update(obj);
-                db.SaveChangesAsync();
-            }
+            client = new HttpClient();
+            await client.PutAsJsonAsync<Employee>($"https://localhost:7013/api/Employee/update/{obj.IdEmployee}", obj);
             return true;
         }
     }

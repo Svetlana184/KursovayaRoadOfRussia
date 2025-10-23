@@ -12,23 +12,17 @@ namespace Session2.Services
     public class DepartmentService : BaseService<Department>
     {
         private HttpClient client;
-        public override bool Add(Department obj)
+        public override async Task<bool> Add(Department obj)
         {
-            using (RoadOfRussiaContext db = new RoadOfRussiaContext())
-            {
-                db.Departments.Add(obj);
-                db.SaveChangesAsync();
-            }
+            client = new HttpClient();
+            await client.PostAsJsonAsync<Department>("https://localhost:7013/api/Departments/post", obj);
             return true;
         }
 
-        public override bool Delete(Department obj)
+        public override async Task<bool> Delete(Department obj)
         {
-            using (RoadOfRussiaContext db = new RoadOfRussiaContext())
-            {
-                db.Departments.Remove(obj);
-                db.SaveChangesAsync();
-            }
+            client = new HttpClient();
+            await client.DeleteFromJsonAsync<Department>($"https://localhost:7013/api/Departments/delete/{obj.IdDepartment}");
             return true;
         }
 
@@ -39,13 +33,10 @@ namespace Session2.Services
             return deps!;
         }
 
-        public override bool Update(Department obj)
+        public override async Task<bool> Update(Department obj)
         {
-            using (RoadOfRussiaContext db = new RoadOfRussiaContext())
-            {
-                db.Departments.Update(obj);
-                db.SaveChangesAsync();
-            }
+            client = new HttpClient();
+            await client.PutAsJsonAsync<Department>($"https://localhost:7013/api/Departments/update/{obj.IdDepartment}", obj);
             return true;
         }
     }

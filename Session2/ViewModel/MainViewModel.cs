@@ -110,8 +110,8 @@ namespace Session2.ViewModel
             Employees = new ObservableCollection<Employee>();
             using (RoadOfRussiaContext db = new RoadOfRussiaContext())
             {
-                Employees = new ObservableCollection<Employee>(employeeService.GetAll());
-                Deps = new ObservableCollection<Department>(departmentService.GetAll());
+                Employees = new ObservableCollection<Employee>(employeeService.GetAll().Result);
+                Deps = new ObservableCollection<Department>(departmentService.GetAll().Result);
             }
             if(Deps.Count != 0)
             {

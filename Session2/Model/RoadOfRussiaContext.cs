@@ -9,13 +9,11 @@ public partial class RoadOfRussiaContext : DbContext
 {
     public RoadOfRussiaContext()
     {
-        Database.EnsureCreated();
     }
 
     public RoadOfRussiaContext(DbContextOptions<RoadOfRussiaContext> options)
         : base(options)
     {
-        Database.EnsureCreated();
     }
 
     public virtual DbSet<Calendar_> Calendars { get; set; }

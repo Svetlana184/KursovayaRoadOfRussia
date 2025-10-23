@@ -616,8 +616,8 @@ namespace Session2.ViewModel
             eventService = new EventService();
             calendarService = new CalendarService();
 
-            Employees = new ObservableCollection<Employee>(employeeService.GetAll());
-            Events = new ObservableCollection<Event>(eventService.GetAll());
+            Employees = new ObservableCollection<Employee>(employeeService.GetAll().Result);
+            Events = new ObservableCollection<Event>(eventService.GetAll().Result);
         }
 
         private void BrowseEvents()
@@ -625,7 +625,7 @@ namespace Session2.ViewModel
             Types = new List<string>() { "Обучение", "Временное отсутствие", "Отпуск" };
             NamesEvent = Events.Where(p => DateTime.Parse(p.DateOfEvent) >= DateTime.Now).ToList();
             NamesEvent.Add(new Event());
-            Calendars = new ObservableCollection<Calendar_>(calendarService.GetAll()).Where(x => x.IdEmployee == SelectedEmployee.IdEmployee).ToList();
+            Calendars = new ObservableCollection<Calendar_>(calendarService.GetAll().Result).Where(x => x.IdEmployee == SelectedEmployee.IdEmployee).ToList();
             Calendars.Sort();
             
             UpdateEvents();

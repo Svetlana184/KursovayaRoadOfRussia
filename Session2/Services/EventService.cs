@@ -12,23 +12,17 @@ namespace Session2.Services
     public class EventService : BaseService<Event>
     {
         private HttpClient client;
-        public override bool Add(Event obj)
+        public override async Task<bool> Add(Event obj)
         {
-            using (RoadOfRussiaContext db = new RoadOfRussiaContext())
-            {
-                db.Events.Add(obj);
-                db.SaveChangesAsync();
-            }
+            client = new HttpClient();
+            await client.PostAsJsonAsync<Event>("https://localhost:7013/api/Event/post", obj);
             return true;
         }
 
-        public override bool Delete(Event obj)
+        public override async Task<bool> Delete(Event obj)
         {
-            using (RoadOfRussiaContext db = new RoadOfRussiaContext())
-            {
-                db.Events.Remove(obj);
-                db.SaveChangesAsync();
-            }
+            client = new HttpClient();
+            await client.DeleteFromJsonAsync<Event>($"https://localhost:7013/api/Event/delete/{obj.IdEvent}");
             return true;
         }
 
@@ -39,13 +33,10 @@ namespace Session2.Services
             return evs!;
         }
 
-        public override bool Update(Event obj)
+        public override async Task<bool> Update(Event obj)
         {
-            using (RoadOfRussiaContext db = new RoadOfRussiaContext())
-            {
-                db.Events.Update(obj);
-                db.SaveChangesAsync();
-            }
+            client = new HttpClient();
+            await client.PutAsJsonAsync<Event>($"https://localhost:7013/api/Event/update/{obj.IdEvent}", obj);
             return true;
         }
     }

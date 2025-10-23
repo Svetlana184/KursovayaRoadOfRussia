@@ -12,24 +12,17 @@ namespace Session2.Services
     public class CalendarService : BaseService<Calendar_>
     {
         private HttpClient client;
-        public override bool Add(Calendar_ obj)
+        public override async Task<bool> Add(Calendar_ obj)
         {
-            using (RoadOfRussiaContext db = new RoadOfRussiaContext())
-            {
-                client = new HttpClient();
-                db.Calendars.Add(obj);
-                db.SaveChangesAsync();
-            }
+            client = new HttpClient();
+            await client.PostAsJsonAsync<Calendar_>("https://localhost:7013/api/Calendar/post", obj);
             return true;
         }
 
-        public override bool Delete(Calendar_ obj)
+        public override async Task<bool> Delete(Calendar_ obj)
         {
-            using (RoadOfRussiaContext db = new RoadOfRussiaContext())
-            {
-                db.Calendars.Remove(obj);
-                db.SaveChangesAsync();
-            }
+            client = new HttpClient();
+            await client.DeleteFromJsonAsync<Calendar_>($"https://localhost:7013/api/Calendar/delete/{obj.IdCalendar}");
             return true;
         }
 
@@ -40,13 +33,10 @@ namespace Session2.Services
             return calendars!;
         }
 
-        public override bool Update(Calendar_ obj)
+        public override async Task<bool> Update(Calendar_ obj)
         {
-            using (RoadOfRussiaContext db = new RoadOfRussiaContext())
-            {
-                db.Calendars.Update(obj);
-                db.SaveChangesAsync();
-            }
+            client = new HttpClient();
+            await client.PutAsJsonAsync<Calendar_>($"https://localhost:7013/api/Calendar/update/{obj.IdCalendar}", obj);
             return true;
         }
     }
