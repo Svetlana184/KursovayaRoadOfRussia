@@ -4,7 +4,7 @@
              xmlns:local="clr-namespace:Session2"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:materialIcons ="clr-namespace:Material.Icons.WPF;assembly=Material.Icons.WPF"
-             StartupUri="View\MainWindow.xaml">
+             StartupUri="View/LoginWindow.xaml">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
