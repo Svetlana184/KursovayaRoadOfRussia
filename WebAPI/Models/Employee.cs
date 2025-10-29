@@ -36,6 +36,7 @@ public partial class Employee
     public string? Password { get; set; }
 
     public DateTime? IsFired { get; set; }
+
     [JsonIgnore]
     public virtual ICollection<Calendar_> CalendarIdAlternateNavigations { get; set; } = new List<Calendar_>();
     [JsonIgnore]

@@ -1,4 +1,5 @@
 
+using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Runtime.Intrinsics.Arm;
 using System.Security.Claims;
@@ -88,7 +89,15 @@ app.Map("/login", async (Employee emp) => {
     Employee employee = null;
     using (RoadOfRussiaContext db = new RoadOfRussiaContext())
     {
-        employee = db.Employees.FirstOrDefault(p=>p.Email == emp.Email&&p.Password == emp.Password)!;
+
+        employee = await db.Employees.FirstOrDefaultAsync(p => p.Email == emp.Email)!;
+        if (employee != null)
+        {
+            string password = AuthOptions.GenerateSha256Hash(emp.Password);
+            employee = db.Employees.FirstOrDefault(p => p.Email == emp.Email && emp.Password == password)!;
+        }
+       
+
         if (employee == null) return Results.Unauthorized();
     }
     
@@ -116,14 +125,36 @@ app.MapControllers();
 
 app.MapPost("/register", async (Employee user, RoadOfRussiaContext db) =>
 {
-    byte[] salt = AuthOptions.GenerateSalt();
-    byte[] sha256Hash = AuthOptions.GenerateSha256Hash(user.Password, salt);
+   
+    user.Password = AuthOptions.GenerateSha256Hash(user.Password);
     db.Employees.Add(user);
     await db.SaveChangesAsync();
+    Employee createdUser = db.Employees.FirstOrDefault(p => p.Email == user.Email)!;
+    return Results.Ok(createdUser);
 });
 
 app.Run();
 
+byte[] StringToByte(string str)
+{
+    string[] strings = str.Trim().Split(" ");
+    byte[] bytes = new byte[strings.Length];
+    for(int i = 0; i < strings.Length; i++)
+    {
+        bytes[i] = byte.Parse(strings[i]);
+    }
+    return bytes;
+}
+
+string ByteToString(byte[] bytes)
+{
+    string result = "";
+    for (int i = 0; i < bytes.Length; i++)
+    {
+        result+= bytes[i]+" ";
+    }
+    return result;
+}
 
 public class AuthOptions
 {
@@ -133,24 +164,12 @@ public class AuthOptions
     public static SymmetricSecurityKey GetSymmetricSecurityKey()=> 
         new SymmetricSecurityKey(Encoding.UTF8.GetBytes(KEY));
 
-    public static byte[] GenerateSalt()
+    
+    public static string GenerateSha256Hash(string password)
     {
-        const int SaltLength = 64;
-        byte[] salt = new byte[SaltLength];
-
-        var rngRand = new RNGCryptoServiceProvider();
-        rngRand.GetBytes(salt);
-
-        return salt;
-    }
-    public static byte[] GenerateSha256Hash(string password, byte[] salt)
-    {
-        byte[] passwordBytes = Encoding.UTF8.GetBytes(password);
-        byte[] saltedPassword = new byte[salt.Length + passwordBytes.Length];
-
-        using var hash = new SHA256CryptoServiceProvider();
-
-        return hash.ComputeHash(saltedPassword);
+        var sha = new SHA1Managed();
+        byte[] hash = sha.ComputeHash(Encoding.UTF8.GetBytes(password));
+        return Convert.ToBase64String(hash);
     }
 }
 
