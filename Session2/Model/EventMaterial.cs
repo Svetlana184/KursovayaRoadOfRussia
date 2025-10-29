@@ -11,7 +11,5 @@ public partial class EventMaterial
 
     public int IdMaterial { get; set; }
 
-    public virtual Event IdEventNavigation { get; set; } = null!;
-
-    public virtual Material IdMaterialNavigation { get; set; } = null!;
+   
 }

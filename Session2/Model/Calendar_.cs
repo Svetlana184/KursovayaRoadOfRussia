@@ -84,11 +84,7 @@ public partial class Calendar_ :  INotifyPropertyChanged, IComparable<Calendar_>
         }
     }
 
-    public virtual Employee? IdAlternateNavigation { get; set; }
-
-    public virtual Employee? IdEmployeeNavigation { get; set; }
-
-    public virtual Event? IdEventNavigation { get; set; }
+   
 
     public event PropertyChangedEventHandler PropertyChanged;
     public void OnPropertyChanged([CallerMemberName] string propName = null)

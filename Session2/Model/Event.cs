@@ -21,7 +21,5 @@ public partial class Event
 
     public string TypeOfClass { get; set; } = null!;
 
-    public virtual ICollection<Calendar_> Calendars { get; set; } = new List<Calendar_>();
-
-    public virtual ICollection<EventMaterial> EventMaterials { get; set; } = new List<EventMaterial>();
+    
 }

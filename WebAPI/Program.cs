@@ -94,9 +94,6 @@ app.Map("/login", async (Employee emp) => {
 
         string password = AuthOptions.GenerateSha256Hash(emp.Password);
         if (employee == null || employee.Password != password) return Results.Unauthorized();
-       
-
-        
     }
     
     var claims = new List<Claim> { new Claim(ClaimTypes.Name, employee.Email) };

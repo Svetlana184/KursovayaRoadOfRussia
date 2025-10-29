@@ -23,7 +23,5 @@ public partial class Material
 
     public int Comments { get; set; }
 
-    public virtual ICollection<Comment> CommentsNavigation { get; set; } = new List<Comment>();
-
-    public virtual ICollection<EventMaterial> EventMaterials { get; set; } = new List<EventMaterial>();
+  
 }

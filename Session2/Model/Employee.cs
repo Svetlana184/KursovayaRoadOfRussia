@@ -226,16 +226,6 @@ public partial class Employee : IComparable<Employee>, INotifyPropertyChanged, I
         }
     }
 
-    public virtual ICollection<Calendar_> CalendarIdAlternateNavigations { get; set; } = new List<Calendar_>();
-
-    public virtual ICollection<Calendar_> CalendarIdEmployeeNavigations { get; set; } = new List<Calendar_>();
-
-    public virtual ICollection<Comment> Comments { get; set; } = new List<Comment>();
-
-    public virtual ICollection<Department> Departments { get; set; } = new List<Department>();
-
-    public virtual Department IdDepartmentNavigation { get; set; } = null!;
-
     
 
     public int CompareTo(Employee? other)
