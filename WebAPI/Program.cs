@@ -91,14 +91,12 @@ app.Map("/login", async (Employee emp) => {
     {
 
         employee = await db.Employees.FirstOrDefaultAsync(p => p.Email == emp.Email)!;
-        if (employee != null)
-        {
-            string password = AuthOptions.GenerateSha256Hash(emp.Password);
-            employee = db.Employees.FirstOrDefault(p => p.Email == emp.Email && emp.Password == password)!;
-        }
+
+        string password = AuthOptions.GenerateSha256Hash(emp.Password);
+        if (employee == null || employee.Password != password) return Results.Unauthorized();
        
 
-        if (employee == null) return Results.Unauthorized();
+        
     }
     
     var claims = new List<Claim> { new Claim(ClaimTypes.Name, employee.Email) };
