@@ -47,7 +47,7 @@
             </TextBlock>
         </StackPanel>
        
-        <Button  Grid.Column="1" Grid.Row="11" Margin="10 5" Click="Button_Click">
+        <Button  Grid.Column="1" Grid.Row="11" Margin="10 5" Click="Button_Click" >
             Зарегистрироваться
         </Button>
     </Grid>

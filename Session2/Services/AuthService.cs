@@ -15,14 +15,13 @@ namespace Desktop.Services
     public class AuthService
     {
         private HttpClient client = new HttpClient();
-        public async Task<string> Register(Employee employee)
+        public async Task<String> Register(Employee employee)
         {
             JsonContent content = JsonContent.Create(employee);
             using var response = await client.PostAsync("https://localhost:7013/register", content);
             string responseText = await response.Content.ReadAsStringAsync();
             if (responseText != "")
             {
-                Response resp = JsonSerializer.Deserialize<Response>(responseText)!;
                 return $"Пользователь {employee.Email} успешно создан";
             }
             return $"Пользователь {employee.Email} существует!";
@@ -34,10 +33,10 @@ namespace Desktop.Services
             string responseText = await response.Content.ReadAsStringAsync();
             if (responseText != "")
             {
-                Response resp = JsonSerializer.Deserialize<Response>(responseText);
+                Response resp = JsonSerializer.Deserialize<Response>(responseText)!;
                 return resp;
             }
-            return null;
+            return null!;
         }
     }
 }
