@@ -9,7 +9,7 @@ namespace Session2.Model;
 
 public partial class Employee : IComparable<Employee>, INotifyPropertyChanged, IDataErrorInfo, ICloneable, IEquatable<Employee>
 {
-
+    
 
     private int idemployee;
     public int IdEmployee
@@ -105,8 +105,8 @@ public partial class Employee : IComparable<Employee>, INotifyPropertyChanged, I
         get { return idboss; }
         set { idboss = value; OnPropertyChanged(nameof(IdBoss)); }
     }
-    private int? password;
-    public int? Password
+    private string? password;
+    public string? Password
     {
         get { return password; }
         set { password = value; OnPropertyChanged(nameof(Password)); }

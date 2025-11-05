@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Desktop.View"
         mc:Ignorable="d"
-        Title="Авторизация" Height="450" Width="450">
+        Title="Авторизация" Height="550" Width="450">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*"/>
@@ -27,7 +27,7 @@
             <TextBlock>Ещё нет аккаунта?</TextBlock>
             <TextBlock HorizontalAlignment="Center" VerticalAlignment="Top">
    
-         <Hyperlink MouseDown="Hyperlink_MouseDown_1" >Регистрация</Hyperlink>
+         <Hyperlink Click="Hyperlink_MouseDown_1" >Регистрация</Hyperlink>
             </TextBlock>
         </StackPanel>
         <Button Grid.Column="1" Grid.Row="3" Margin="10">

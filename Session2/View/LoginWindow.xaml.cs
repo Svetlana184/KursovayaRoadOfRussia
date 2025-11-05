@@ -26,10 +26,11 @@ namespace Desktop.View
 
    
 
-        private void Hyperlink_MouseDown_1(object sender, MouseButtonEventArgs e)
+        
+        private void Hyperlink_MouseDown_1(object sender, RoutedEventArgs e)
         {
-            RegistWindow registWindow = new RegistWindow();
-            registWindow.Show();
+            RegistWindow regWindow = new RegistWindow();
+            regWindow.Show();
         }
     }
 }
