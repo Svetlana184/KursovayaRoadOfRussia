@@ -9,6 +9,6 @@ namespace Desktop.Model
     public class Response
     {
         public string? access_token { get; set; }
-        public string? username { get; set; }
+        public string? email { get; set; }
     }
 }

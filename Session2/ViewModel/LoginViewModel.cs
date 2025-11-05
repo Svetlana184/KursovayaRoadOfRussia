@@ -21,6 +21,8 @@ namespace Desktop.ViewModel
         public LoginViewModel()
         {
             authService = new AuthService();
+            Visibility = Visibility.Visible;
+            int x = 0;
         }
 
 
@@ -34,14 +36,14 @@ namespace Desktop.ViewModel
                 OnPropertyChanged("Visibility");
             }
         }
-        private string? login;
-        public string Login
+        private string? email;
+        public string Email
         {
-            get { return login!; }
+            get { return email!; }
             set
             {
-                login = value;
-                OnPropertyChanged(nameof(Login));
+                email = value;
+                OnPropertyChanged(nameof(Email));
             }
         }
         private string? password;
@@ -64,13 +66,13 @@ namespace Desktop.ViewModel
                   {
                       PasswordBox? password = obj as PasswordBox;
                       HttpClient client = new HttpClient();
-                      Employee user = new Employee { Email = Login, Password = password!.Password };
+                      Employee user = new Employee { Email = Email, Password = password!.Password };
                       Response response = await authService.SignIn(user);
                       if (response != null)
                       {
-                          RegisterUser.UserName = response.username;
+                          RegisterUser.email= response.email;
                           RegisterUser.access_token = response.access_token;
-                          Visibility = Visibility.Hidden;
+                          Visibility = Visibility.Hidden; 
                           MainWindow window = new MainWindow();
                           window.Show();
                       }

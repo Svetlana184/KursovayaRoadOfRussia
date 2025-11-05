@@ -8,7 +8,7 @@ namespace Desktop.Model
 {
     public class RegisterUser
     {
-        public static string? UserName { get; set; }
+        public static string? email { get; set; }
         public static string? access_token { get; set; }
     }
 }
