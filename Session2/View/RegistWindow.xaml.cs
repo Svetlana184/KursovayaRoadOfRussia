@@ -21,11 +21,10 @@ namespace Desktop.View
     /// </summary>
     public partial class RegistWindow : Window
     {
-        public AuthService authService { get; set; }
+       
         public RegistWindow()
         {
             InitializeComponent();
-            authService = new AuthService();
         }
 
        
@@ -36,32 +35,6 @@ namespace Desktop.View
             
         }
 
-        private async void Button_Click(object sender, RoutedEventArgs e)
-        {
-            if (Password.Password == RepeatPassword.Password)
-            {
-                Employee employee = new Employee
-                {
-                    Password = Password.Password,
-                    Email = Login.Text,
-                    Surname = "ad",
-                    FirstName = "start",
-                    Position = "administrator",
-                    PhoneWork = "+0",
-                    Cabinet = "0",
-                    IdDepartment = 1
-                };
-                Task<string> message = Task.Run(() => Register(employee));
-                MessageBox.Show(message.Result);
-                this.Close();
-
-            }
-                
-        }
-        private async Task<string> Register(Employee employee)
-        {
-          
-                return await authService.Register(employee);
-        }
+        
     }
 }
