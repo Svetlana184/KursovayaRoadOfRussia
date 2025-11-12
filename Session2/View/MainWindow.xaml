@@ -7,7 +7,7 @@
         xmlns:materialIcons ="clr-namespace:Material.Icons.WPF;assembly=Material.Icons.WPF"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:converter ="clr-namespace:Desktop.Helpers"
-        xmlns:vm="clr-namespace:Desktop.ViewModel"
+        xmlns:vm ="clr-namespace:Desktop.ViewModel"
         xmlns:view ="clr-namespace:Desktop.View" 
         xmlns:local="clr-namespace:Desktop.View"
         mc:Ignorable="d"
