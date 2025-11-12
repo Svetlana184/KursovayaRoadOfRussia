@@ -1,4 +1,4 @@
-﻿using Session2.Utilits;
+﻿using Desktop.Utilits;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace Session2.ViewModel
+namespace Desktop.ViewModel
 {
     public class GraphViewModel : ViewModelBase
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Session2.Model;
+namespace Desktop.Model;
 
 /// <summary>
 /// Список дней исключений в производственном календаре

@@ -6,7 +6,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Session2.Model
+namespace Desktop.Model
 {
     public class NodeControl : INotifyPropertyChanged
     {

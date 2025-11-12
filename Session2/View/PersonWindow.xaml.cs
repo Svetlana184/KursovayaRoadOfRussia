@@ -19,10 +19,10 @@ using System.Windows.Shapes;
 using MaterialDesignThemes.Wpf;
 using Microsoft.EntityFrameworkCore;
 
-using Session2.Model;
-using Session2.ViewModel;
+using Desktop.Model;
+using Desktop.ViewModel;
 
-namespace Session2.View
+namespace Desktop.View
 {
     /// <summary>
     /// Логика взаимодействия для PersonWindow.xaml

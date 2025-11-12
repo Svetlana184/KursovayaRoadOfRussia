@@ -1,6 +1,6 @@
-﻿using Session2.Model;
-using Session2.Services;
-using Session2.Utilits;
+﻿using Desktop.Utilits;
+using Desktop.Model;
+using Desktop.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace Session2.ViewModel
+namespace Desktop.ViewModel
 {
     public class NodeViewModel : ViewModelBase
     {

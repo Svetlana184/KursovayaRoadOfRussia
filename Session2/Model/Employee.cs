@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 
-namespace Session2.Model;
+namespace Desktop.Model;
 
 public partial class Employee : IComparable<Employee>, INotifyPropertyChanged, ICloneable, IEquatable<Employee>
 {

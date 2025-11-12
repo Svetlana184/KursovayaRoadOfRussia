@@ -1,6 +1,6 @@
 ﻿using Microsoft.Identity.Client;
-using Session2.Model;
-using Session2.View;
+using Desktop.Model;
+using Desktop.View;
 using System.ComponentModel;
 using System.Net.Http;
 using System.Net.Http.Json;
@@ -15,7 +15,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Session2
+namespace Desktop.View
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -24,7 +24,7 @@ namespace Session2
     
     public partial class MainWindow : Window
     {
-        private void Close_Click(object sender, RoutedEventArgs e)
+        private void Close_Clic(object sender, EventArgs e)
         {
             Close();
         }

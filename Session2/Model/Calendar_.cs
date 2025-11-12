@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace Session2.Model;
+namespace Desktop.Model;
 
 public partial class Calendar_ :  INotifyPropertyChanged, IComparable<Calendar_>
 {

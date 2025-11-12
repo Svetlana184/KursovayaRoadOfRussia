@@ -1,4 +1,4 @@
-﻿using Session2.View;
+﻿using Desktop.View;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 
-namespace Session2.Model
+namespace Desktop.Model
 {
     struct Paint
     {

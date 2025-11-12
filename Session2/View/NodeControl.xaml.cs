@@ -1,5 +1,5 @@
-﻿using Session2.Model;
-using Session2.ViewModel;
+﻿using Desktop.Model;
+using Desktop.ViewModel;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -18,7 +18,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Session2.View
+namespace Desktop.View
 {
     /// <summary>
     /// Логика взаимодействия для VertexControl.xaml

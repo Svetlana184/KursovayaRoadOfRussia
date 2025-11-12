@@ -1,5 +1,5 @@
-﻿using Session2.Model;
-using Session2.Services;
+﻿using Desktop.Model;
+using Desktop.Services;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Data;
 
-namespace Session2.Helpers
+namespace Desktop.Helpers
 {
     public class IdEventToName : IValueConverter
     {

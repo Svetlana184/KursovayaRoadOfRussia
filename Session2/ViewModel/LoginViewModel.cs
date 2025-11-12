@@ -8,9 +8,7 @@ using System.Windows;
 using System.Windows.Controls;
 using Desktop.Model;
 using Desktop.Services;
-using Session2;
-using Session2.Model;
-using Session2.Utilits;
+using Desktop.Utilits;
 
 namespace Desktop.ViewModel
 {

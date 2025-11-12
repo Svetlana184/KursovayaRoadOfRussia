@@ -1,7 +1,7 @@
-﻿using Session2.Model;
-using Session2.Services;
-using Session2.Utilits;
-using Session2.View;
+﻿using Desktop.Model;
+using Desktop.Services;
+using Desktop.Utilits;
+using Desktop.View;
 using System;
 using System.Collections.Frozen;
 using System.Collections.Generic;
@@ -11,7 +11,10 @@ using System.Net;
 using System.Runtime.Intrinsics.Arm;
 using System.Text;
 using System.Threading.Tasks;
-namespace Session2.ViewModel
+using System.Windows;
+
+
+namespace Desktop.ViewModel
 {
     
     public class MainViewModel : ViewModelBase
@@ -97,22 +100,33 @@ namespace Session2.ViewModel
         }
         public MainViewModel()
         {
-            
+            LoadData();
             Load();
-            
-            int X = 0;
+        }
+        private void LoadData()
+        {
+            employeeService = new EmployeeService();
+            departmentService = new DepartmentService();
+
+            try
+            {
+                Employees = null;
+                Task<List<Employee>> task_emp = Task.Run(() => employeeService.GetAll());
+                Employees = new ObservableCollection<Employee>(task_emp.Result);
+                Deps = null;
+                Task<List<Department>> task_dep = Task.Run(() => departmentService.GetAll());
+                Deps = new ObservableCollection<Department>(task_dep.Result);
+
+            }
+            catch(Exception ex) 
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
         private void Load()
         {
             Vertices = new List<NodeViewModel>();
-            employeeService = new EmployeeService();
-            departmentService = new DepartmentService();
-            Employees = new ObservableCollection<Employee>();
-
-
-                Employees = new ObservableCollection<Employee>(employeeService.GetAll().Result);
-                Deps = new ObservableCollection<Department>(departmentService.GetAll().Result);
-
+           
 
             
                 TitleWindow = "Организацонная структура";

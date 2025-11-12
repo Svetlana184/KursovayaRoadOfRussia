@@ -1,4 +1,4 @@
-﻿<Window x:Class="Session2.MainWindow"
+﻿<Window x:Class="Desktop.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -6,10 +6,10 @@
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:materialIcons ="clr-namespace:Material.Icons.WPF;assembly=Material.Icons.WPF"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-        xmlns:converter ="clr-namespace:Session2.Helpers"
-        xmlns:vm="clr-namespace:Session2.ViewModel"
-        xmlns:view ="clr-namespace:Session2.View" 
-        xmlns:local="clr-namespace:Session2"
+        xmlns:converter ="clr-namespace:Desktop.Helpers"
+        xmlns:vm="clr-namespace:Desktop.ViewModel"
+        xmlns:view ="clr-namespace:Desktop.View" 
+        xmlns:local="clr-namespace:Desktop.View"
         mc:Ignorable="d"
         Title="Организационная структура" Height="450" Width="800" WindowState="Maximized" WindowStyle="None">
     <Window.DataContext>
@@ -42,7 +42,7 @@
                 </TextBox.Resources>
             </TextBox>
             <StackPanel Grid.Column="2">
-                <Button  Width="60" Height="50" Background="Transparent" BorderBrush="Transparent" Foreground="White" Content="{materialIcons:MaterialIconExt Kind=Close, Size=20}" VerticalContentAlignment="Top" HorizontalContentAlignment="Right" HorizontalAlignment="Right" VerticalAlignment="Top" Click="Close_Click"></Button>
+                <Button  Width="60" Height="50" Background="Transparent" BorderBrush="Transparent" Foreground="White" Content="{materialIcons:MaterialIconExt Kind=Close, Size=20}" VerticalContentAlignment="Top" HorizontalContentAlignment="Right" HorizontalAlignment="Right" VerticalAlignment="Top" Click="Close_Clic"></Button>
                 <Button Width="60" Height="60" Command="{Binding UpdateCommand}" Background="Transparent" BorderBrush="Transparent" Foreground="White" Content="{materialIcons:MaterialIconExt Kind=Update, Size=20}"  HorizontalContentAlignment="Right" HorizontalAlignment="Right" Margin="0 0 0 10"/>
             </StackPanel>
             

@@ -9,6 +9,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="db\**" />
+    <EmbeddedResource Remove="db\**" />
+    <None Remove="db\**" />
+    <Page Remove="db\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="Logo.png" />
   </ItemGroup>
 
@@ -29,10 +36,6 @@
 
   <ItemGroup>
     <Resource Include="Assets\Logo.png" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="db\" />
   </ItemGroup>
 
 </Project>

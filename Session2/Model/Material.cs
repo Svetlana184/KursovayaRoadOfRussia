@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Session2.Model;
+namespace Desktop.Model;
 
 public partial class Material
 {

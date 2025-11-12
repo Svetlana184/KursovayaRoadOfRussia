@@ -1,5 +1,4 @@
-﻿using Session2.Model;
-using Session2.Services;
+﻿
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -7,8 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Data;
+using Desktop.Services;
 
-namespace Session2.Helpers
+namespace Desktop.Helpers
 {
     public class IdCalendarToHeader : IValueConverter
     {

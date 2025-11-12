@@ -1,8 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Session2.Model;
-using Session2.Services;
-using Session2.Utilits;
-using Session2.View;
+﻿using Desktop.Model;
+using Desktop.Services;
+using Desktop.Utilits;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -12,7 +11,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 
-namespace Session2.ViewModel
+namespace Desktop.ViewModel
 {
     public class PersonViewModel : ViewModelBase
     {

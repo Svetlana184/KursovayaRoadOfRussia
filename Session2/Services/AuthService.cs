@@ -8,7 +8,6 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Desktop.Model;
 using Microsoft.Extensions.DependencyInjection;
-using Session2.Model;
 
 namespace Desktop.Services
 {
