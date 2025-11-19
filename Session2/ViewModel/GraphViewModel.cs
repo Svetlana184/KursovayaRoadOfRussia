@@ -22,7 +22,7 @@ namespace Desktop.ViewModel
 
         public GraphViewModel(List<NodeViewModel> vertices_)
         {
-            v = vertices_.FirstOrDefault(x => x.ParentDepartment == 1);
+            v = vertices_.FirstOrDefault(x => x.ParentDepartment == null);
             vertices = vertices_;
             InitializeGraph();
             
@@ -34,7 +34,6 @@ namespace Desktop.ViewModel
             CountingLevels();
 
             //добавление узлов 
-            //AddNode(50, 20, v.Title);
             Nodes.Add(v);
             int y = 20;
             for (int i = 2; i <= MaxLevel; i++)
