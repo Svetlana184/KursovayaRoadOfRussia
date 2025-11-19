@@ -1,0 +1,29 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text.Json.Serialization;
+namespace WebAPI.Models;
+public partial class Calendar_
+{
+    public int IdCalendar { get; set; }
+
+    public string TypeOfEvent { get; set; } = null!;
+
+    public int? IdEmployee { get; set; }
+
+    public DateOnly DateStart { get; set; }
+
+    public DateOnly DateFinish { get; set; }
+
+    public int? IdEvent { get; set; }
+
+    public string? TypeOfAbsense { get; set; }
+
+    public int? IdAlternate { get; set; }
+
+    [JsonIgnore]
+    public virtual Employee? IdAlternateNavigation { get; set; }
+    [JsonIgnore]
+    public virtual Employee? IdEmployeeNavigation { get; set; }
+    [JsonIgnore]
+    public virtual Event? IdEventNavigation { get; set; }
+}
