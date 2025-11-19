@@ -166,7 +166,7 @@ namespace Desktop.ViewModel
 
                     EmployeesList.Add(emp);
                 }
-                //GraphVM = new GraphViewModel(Vertices);
+                GraphVM = new GraphViewModel(Vertices);
             
             
            

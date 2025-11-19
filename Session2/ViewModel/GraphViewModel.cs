@@ -22,7 +22,7 @@ namespace Desktop.ViewModel
 
         public GraphViewModel(List<NodeViewModel> vertices_)
         {
-            v = vertices_.FirstOrDefault(x => x.ParentDepartment == 0);
+            v = vertices_.FirstOrDefault(x => x.ParentDepartment == 1);
             vertices = vertices_;
             InitializeGraph();
             

@@ -28,7 +28,8 @@ namespace Desktop.View
         {
             InitializeComponent();
         }
-        private void Close_Clic(object sender, EventArgs e)
+      
+        private void Button_Click(object sender, RoutedEventArgs e)
         {
             Close();
         }

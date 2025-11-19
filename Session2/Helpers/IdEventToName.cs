@@ -2,6 +2,7 @@
 using Desktop.Services;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -16,7 +17,20 @@ namespace Desktop.Helpers
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             int id = int.Parse(value.ToString()!);
-            return eventService.GetAll().Result.FirstOrDefault(x => x.IdEvent == id)!.EventName;
+            ObservableCollection<Event> evs;
+            eventService = new EventService();
+            try
+            {
+                evs = null!;
+                Task<List<Event>> task = Task.Run(() => eventService.GetAll());
+                evs = new ObservableCollection<Event>(task.Result);
+                return evs.FirstOrDefault(x => x.IdEvent == id)!.EventName;
+            }
+            catch
+            {
+                return "хз брат";
+            }
+            
             
         }
 
