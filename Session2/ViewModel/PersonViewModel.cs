@@ -39,6 +39,7 @@ namespace Desktop.ViewModel
         public int SelectedDepartment { get; set; }
 
         public ObservableCollection<Employee> Employees { get; set; }
+        public ObservableCollection<Calendar_> Calendars_collection { get; set; }
         public List<Calendar_> Calendars { get; set; }
         private List<Employee> employeelist;
         public List<Employee> EmployeeList 
@@ -614,17 +615,42 @@ namespace Desktop.ViewModel
             employeeService = new EmployeeService();
             eventService = new EventService();
             calendarService = new CalendarService();
+            try
+            {
+                Employees = null;
+                Task<List<Employee>> task_emp = Task.Run(() => employeeService.GetAll());
+                Employees = new ObservableCollection<Employee>(task_emp.Result);
+                Events = null;
+                Task<List<Event>> task_ev = Task.Run(() => eventService.GetAll());
+                Events = new ObservableCollection<Event>(task_ev.Result);
 
-            Employees = new ObservableCollection<Employee>(employeeService.GetAll().Result);
-            Events = new ObservableCollection<Event>(eventService.GetAll().Result);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
-
+        private void LoadCalendars()
+        {
+            try
+            {
+                Calendars_collection = null;
+                Task<List<Calendar_>> task_c = Task.Run(() => calendarService.GetAll());
+                Calendars_collection = new ObservableCollection<Calendar_>(task_c.Result);
+               
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
         private void BrowseEvents()
         {
             Types = new List<string>() { "Обучение", "Временное отсутствие", "Отпуск" };
             NamesEvent = Events.Where(p => DateTime.Parse(p.DateOfEvent) >= DateTime.Now).ToList();
             NamesEvent.Add(new Event());
-            Calendars = new ObservableCollection<Calendar_>(calendarService.GetAll().Result).Where(x => x.IdEmployee == SelectedEmployee.IdEmployee).ToList();
+            LoadCalendars();    
+            Calendars = Calendars_collection.Where(x => x.IdEmployee == SelectedEmployee.IdEmployee).ToList();
             Calendars.Sort();
             
             UpdateEvents();

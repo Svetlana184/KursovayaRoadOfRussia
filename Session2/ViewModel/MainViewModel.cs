@@ -209,7 +209,9 @@ namespace Desktop.ViewModel
                 return addCommand ??
                   (addCommand = new RelayCommand((o) =>
                   {
-                     PersonWindow window = new PersonWindow(new Employee(), Depid);
+                      Employee new_emp = new Employee();
+                      new_emp.IdDepartment = Deps.FirstOrDefault(p => p.IdDepartmentParent == null)!.IdDepartment;
+                     PersonWindow window = new PersonWindow(new_emp, Depid);
                       int x = 0;
                      window.Show();
                   }));

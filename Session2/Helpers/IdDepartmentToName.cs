@@ -29,7 +29,7 @@ namespace Desktop.Helpers
             }
             catch
             {
-                return "хз брат";
+                return "отдел неизвестен";
             }
             
         }
