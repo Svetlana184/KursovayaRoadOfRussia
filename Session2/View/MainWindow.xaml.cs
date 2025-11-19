@@ -24,6 +24,10 @@ namespace Desktop.View
     
     public partial class MainWindow : Window
     {
+        public MainWindow()
+        {
+            InitializeComponent();
+        }
         private void Close_Clic(object sender, EventArgs e)
         {
             Close();

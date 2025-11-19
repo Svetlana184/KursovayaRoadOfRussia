@@ -22,18 +22,21 @@ namespace Desktop.Services
         }
         public override async Task<bool> Add(Employee obj)
         {
+           
             await client.PostAsJsonAsync<Employee>("https://localhost:7013/api/Employee/post", obj);
             return true;
         }
 
         public override async Task<bool> Delete(Employee obj)
         {
+            
             await client.DeleteFromJsonAsync<Employee>($"https://localhost:7013/api/Employee/update/{obj.IdEmployee}");
             return true;
         }
 
         public override async Task<List<Employee>> GetAll()
         {
+           
             List<Employee>? emps = await client.GetFromJsonAsync<List<Employee>>("https://localhost:7013/api/Employee/getall");
             return emps!;
 
@@ -41,6 +44,7 @@ namespace Desktop.Services
 
         public override async Task<bool> Update(Employee obj)
         {
+            
             await client.PutAsJsonAsync<Employee>($"https://localhost:7013/api/Employee/update/{obj.IdEmployee}", obj);
             return true;
         }

@@ -160,13 +160,13 @@ namespace Desktop.ViewModel
                     }
 
                 }
-                EmployeesList = new List<Employee>();
+            EmployeesList = new List<Employee>();
                 foreach (Employee emp in Employees)
                 {
 
                     EmployeesList.Add(emp);
                 }
-                GraphVM = new GraphViewModel(Vertices);
+                //GraphVM = new GraphViewModel(Vertices);
             
             
            
