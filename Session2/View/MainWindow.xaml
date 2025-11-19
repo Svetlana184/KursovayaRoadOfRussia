@@ -11,7 +11,7 @@
         xmlns:view ="clr-namespace:Desktop.View" 
         xmlns:local="clr-namespace:Desktop.View"
         mc:Ignorable="d"
-        Title="Организационная структура" Height="450" Width="800" WindowState="Maximized" WindowStyle="None">
+        Title="Организационная структура" Height="450" Width="800"  WindowStyle="None">
     <Window.DataContext>
         <vm:MainViewModel/>
     </Window.DataContext>

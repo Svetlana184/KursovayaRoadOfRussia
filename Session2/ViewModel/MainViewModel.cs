@@ -210,6 +210,7 @@ namespace Desktop.ViewModel
                   (addCommand = new RelayCommand((o) =>
                   {
                      PersonWindow window = new PersonWindow(new Employee(), Depid);
+                      int x = 0;
                      window.Show();
                   }));
             }
