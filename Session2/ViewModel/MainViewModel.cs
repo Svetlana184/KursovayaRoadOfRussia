@@ -201,6 +201,9 @@ namespace Desktop.ViewModel
             OnPropertyChanged(nameof(EmployeesList));
 
         }
+
+        
+
         private RelayCommand? addCommand;
         public RelayCommand AddEmployeeCommand
         {

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using Desktop.View;
 
 namespace Desktop.ViewModel
 {
@@ -43,7 +44,7 @@ namespace Desktop.ViewModel
                   {
                       if (o is int depId)
                       {
-                          var mainVm = (MainViewModel)Application.Current.MainWindow.DataContext;
+                          var mainVm = (MainViewModel)MainWindow.Instance.DataContext;
                           mainVm.FilterEmployeesByDepartment(depId);
                       }
                   }));

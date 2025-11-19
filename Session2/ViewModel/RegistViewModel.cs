@@ -15,6 +15,15 @@ namespace Desktop.ViewModel
     public class RegistViewModel : ViewModelBase
     {
         private AuthService authService;
+        private string repeatPassword;
+        public string RepeatPassword
+        {
+            get { return repeatPassword; }
+            set { 
+                repeatPassword = value; 
+                OnPropertyChanged(nameof(RepeatPassword));
+            }
+        }
         private Employee _employee;
         public Employee SelectedEmployee
         {
@@ -37,7 +46,7 @@ namespace Desktop.ViewModel
                 return createCommand ??
                   (createCommand = new RelayCommand(async obj =>
                   {
-                      if (SelectedEmployee.Password == RepeatPassword.Password)
+                      if (SelectedEmployee.Password == RepeatPassword)
                       {
                          
                           Task<string> message = Task.Run(() => Register(SelectedEmployee));

@@ -24,11 +24,13 @@ namespace Desktop.View
     
     public partial class MainWindow : Window
     {
+        public static MainWindow Instance { get; private set; }
         public MainWindow()
         {
             InitializeComponent();
+            Instance = this;
         }
-      
+        
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             Close();
