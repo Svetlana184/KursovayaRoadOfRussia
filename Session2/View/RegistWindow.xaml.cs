@@ -34,6 +34,7 @@ namespace Desktop.View
         {
             LoginWindow loginWindow = new LoginWindow();
             loginWindow.Show();
+            Close();
             
         }
 
@@ -55,6 +56,7 @@ namespace Desktop.View
                 };
                 Task<string> message = Task.Run(() => Register(employee));
             }
+            Close();
         }
         private async Task<string> Register(Employee employee)
         {

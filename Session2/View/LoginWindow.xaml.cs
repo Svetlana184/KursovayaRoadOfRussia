@@ -31,6 +31,7 @@ namespace Desktop.View
         {
             RegistWindow regWindow = new RegistWindow();
             regWindow.Show();
+            Close();
         }
     }
 }
