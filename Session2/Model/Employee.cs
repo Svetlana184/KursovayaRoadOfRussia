@@ -202,7 +202,7 @@ public partial class Employee : IComparable<Employee>, INotifyPropertyChanged, I
     //                    error = "Поле не должно быть пустым";
     //                }
     //                break;
-               
+
     //            case "Cabinet":
     //                if (Cabinet != null)
     //                {
@@ -226,7 +226,7 @@ public partial class Employee : IComparable<Employee>, INotifyPropertyChanged, I
     //    }
     //}
 
-    
+
 
     public int CompareTo(Employee? other)
     {

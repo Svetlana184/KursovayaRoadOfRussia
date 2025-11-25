@@ -11,7 +11,12 @@
         xmlns:converter ="clr-namespace:Desktop.Helpers"
         d:DataContext="{d:DesignInstance Type=vm:PersonViewModel}"
         mc:Ignorable="d"
-        Title="PersonWindow" Height="590" Width="800">
+        Title="PersonWindow" Height="590" Width="900"
+        Left="250"
+        Top="100"
+        WindowState="{Binding WindowState}"
+        >
+   
     <Window.Resources>
         <converter:IdDepartmentToName x:Key="IdDepartmentToName"/>
         <converter:IdEventToName x:Key="IdEventToName"/>
@@ -27,18 +32,19 @@
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="0.75*"/>
+            <RowDefinition Height="0.75*"/>
             <RowDefinition Height="9.5*"/>
             <RowDefinition Height="0.75*"/>
         </Grid.RowDefinitions>
-        <Button  Width="50" HorizontalAlignment="Right" Height="25" Margin="10 5" Content="{materialIcons:MaterialIconExt Kind=Pencil}" ToolTip="Перейти в режим редактирования" Visibility="{Binding VisibilityButton}">
+        <Button Grid.Row="1"  Width="50" HorizontalAlignment="Right" Height="25" Margin="10 5" Content="{materialIcons:MaterialIconExt Kind=Pencil}" ToolTip="Перейти в режим редактирования" Visibility="{Binding VisibilityButton}">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="Click">
                     <i:InvokeCommandAction Command="{Binding ChangeEditabilityCommand}"/>
                 </i:EventTrigger>
             </i:Interaction.Triggers>
         </Button>
-        <Button x:Name="ButtonFire" Width="100" HorizontalAlignment="Left" Height="25" Margin="10 5" Content="{materialIcons:MaterialIconExt Kind=Fire}" ToolTip="Уволить сотрудника" Command="{Binding TurnoffCommand}" Visibility="{Binding VisibilityButton}"/>
-        <StackPanel Grid.Row="1" Grid.Column="0" IsEnabled="{Binding IsEditable}">
+        <Button Grid.Row="1" x:Name="ButtonFire" Width="100" HorizontalAlignment="Left" Height="25" Margin="10 5" Content="{materialIcons:MaterialIconExt Kind=Fire}" ToolTip="Уволить сотрудника" Command="{Binding TurnoffCommand}" Visibility="{Binding VisibilityButton}"/>
+        <StackPanel Grid.Row="2" Grid.Column="0" IsEnabled="{Binding IsEditable}">
             <TextBox x:Name="SurName" Margin="10  5" materialDesign:HintAssist.Hint="Surname" Text="{Binding SelectedEmployee.Surname, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsEditable}" />
 
             <TextBox x:Name="FirstName" Margin="10  5" materialDesign:HintAssist.Hint="First Name" Text="{Binding SelectedEmployee.FirstName, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsEditable}"/>
@@ -54,16 +60,36 @@
             <DatePicker  IsDropDownOpen="True" Margin="10 5" materialDesign:HintAssist.Hint="Birth Day" SelectedDate="{Binding SelectedEmployee.BirthDay}" SelectedDateFormat="Short" IsEnabled="{Binding IsEditable}"/>
             <TextBox x:Name="Other" Margin="10 5" Height="40" materialDesign:HintAssist.Hint="Other" Text="{Binding SelectedEmployee.Other}"/>
         </StackPanel>
-        <Button Grid.Row="2" Grid.Column="0" Content="Ок" Width="90" HorizontalAlignment="Right" Margin="10 5" Background="Green" Height="25" Command="{Binding AddEmp}" />
-        <Button  Grid.Row="2" Grid.Column="0" Content="Отмена" Width="90" HorizontalAlignment="Left" Margin="10 5"  Height="25" Command="{Binding ResetCommand}"/>
+        <Button Grid.Row="3" Grid.Column="0" Content="Ок" Width="90" HorizontalAlignment="Right" Margin="10 5" Background="Green" Height="25" Command="{Binding AddEmp}" />
+        <Button  Grid.Row="3" Grid.Column="0" Content="Отмена" Width="90" HorizontalAlignment="Left" Margin="10 5"  Height="25" Command="{Binding ResetCommand}"/>
+        <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0 0 0 0 ">
+            <Button Width="45" Height="60" Command="{Binding StateminCommand}" 
+            Background="Transparent" BorderBrush="Transparent" 
+            Foreground="Green" Content="{materialIcons:MaterialIconExt Kind=Minus, Size=15}" 
+            VerticalContentAlignment="Top" VerticalAlignment="Top" HorizontalContentAlignment="Right" 
+            HorizontalAlignment="Right" Margin="0 0 0 0"/>
 
-        <StackPanel Grid.Column="1" Grid.Row="0" Orientation="Horizontal" >
+            <Button Width="45" Height="60" Command="{Binding StatemaxCommand}" 
+            Background="Transparent" BorderBrush="Transparent" 
+            Foreground="Green" Content="{materialIcons:MaterialIconExt Kind=Maximize, Size=15}" 
+            VerticalContentAlignment="Top" VerticalAlignment="Top" HorizontalContentAlignment="Right" 
+            HorizontalAlignment="Right" Margin="0 0 0 0"/>
+
+            <Button x:Name="CloseButton" Height="35" Width="45" Background="Transparent" 
+                BorderBrush="Transparent" FontSize="9" Foreground="Green" Margin="0 0 0 0" 
+                Content="{materialIcons:MaterialIconExt Kind=Close,Size=15}" HorizontalAlignment="Right" 
+                VerticalAlignment="Top" HorizontalContentAlignment="Center" VerticalContentAlignment="Top" 
+                Click="CloseButton_Click"/> 
+        </StackPanel>
+        <StackPanel Grid.Column="1" Grid.Row="1" Orientation="Horizontal" >
             <Button x:Name="LastButton" Content="Прошедшие" Height="25" Width="85" Background="{Binding ColorLast}" FontSize="9" Foreground="White" Margin="10 0" Command="{Binding ActiveLast}"/>
             <Button x:Name="PresentButton" Content="Текущие" Height="25" Width="85" Background="{Binding ColorPresent}" FontSize="9" Foreground="White" Margin="10 0" Command="{Binding ActivePresent}"/>
             <Button x:Name="FutureButton" Content="Будущие" Height="25" Width="85" Background="{Binding ColorFuture}" FontSize="9" Foreground="White" Margin="10 0" Command="{Binding ActiveFuture}"/>
-            <Button x:Name="CloseButton" Height="35" Width="50" Background="Transparent" BorderBrush="Transparent" FontSize="9" Foreground="Green" Margin="50 0 0 0" Content="{materialIcons:MaterialIconExt Kind=Close,Size=10}" HorizontalAlignment="Right" VerticalAlignment="Top" HorizontalContentAlignment="Center" VerticalContentAlignment="Top" Click="CloseButton_Click"/>
+
+            
+            
         </StackPanel>
-        <ListView x:Name="EventList" Grid.Column="1" Grid.Row="1">
+        <ListView x:Name="EventList" Grid.Column="1" Grid.Row="2">
             <Label Content="Обучения" FontSize="20"/>
             <ListBox  x:Name="StudyList"  ItemsSource="{Binding StudyList}">
                 <ListBox.ItemTemplate>

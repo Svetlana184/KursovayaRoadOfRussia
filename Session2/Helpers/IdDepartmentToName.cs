@@ -20,18 +20,17 @@ namespace Desktop.Helpers
             int id = int.Parse(value.ToString()!);
             ObservableCollection<Department> departments;
             departmentService = new DepartmentService();
-            try
-            {
+
                 departments = null!;
                 Task<List<Department>> task = Task.Run(() => departmentService.GetAll());
                 departments = new ObservableCollection<Department>(task.Result);
-                return departments.FirstOrDefault(x => x.IdDepartment == id)!.DepartmentName;
-            }
-            catch
-            {
-                return "отдел неизвестен";
-            }
+                if(departments.FirstOrDefault(x => x.IdDepartment == id) != null)
+                {
+                    return departments.FirstOrDefault(x => x.IdDepartment == id)!.DepartmentName;
+                }
+                return departments.First().DepartmentName;
             
+             
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

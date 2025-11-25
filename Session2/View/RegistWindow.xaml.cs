@@ -62,5 +62,10 @@ namespace Desktop.View
         {
             return await authService.Register(employee);
         }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            Close();        
+        }
     }
 }

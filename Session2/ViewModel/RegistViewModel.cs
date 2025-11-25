@@ -15,6 +15,16 @@ namespace Desktop.ViewModel
     public class RegistViewModel : ViewModelBase
     {
         private AuthService authService;
+        private string windowstate;
+        public string WindowState
+        {
+            get { return windowstate; }
+            set
+            {
+                windowstate = value;
+                OnPropertyChanged(nameof(WindowState));
+            }
+        }
         private string repeatPassword;
         public string RepeatPassword
         {
@@ -22,6 +32,16 @@ namespace Desktop.ViewModel
             set { 
                 repeatPassword = value; 
                 OnPropertyChanged(nameof(RepeatPassword));
+            }
+        }
+        private string password;
+        public string Password
+        {
+            get { return password; }
+            set
+            {
+                Password = value;
+                OnPropertyChanged(nameof(Password));
             }
         }
         private Employee _employee;
@@ -36,6 +56,7 @@ namespace Desktop.ViewModel
         }
         public RegistViewModel() 
         {
+            WindowState = "Normal";
             authService = new AuthService();
         }
         private RelayCommand? createCommand;
@@ -52,6 +73,37 @@ namespace Desktop.ViewModel
                           Task<string> message = Task.Run(() => Register(SelectedEmployee));
                       }
 
+                  }));
+            }
+        }
+        private RelayCommand? stateminCommand;
+        public RelayCommand StateminCommand
+        {
+            get
+            {
+                return stateminCommand ??
+                  (stateminCommand = new RelayCommand((o) =>
+                  {
+                      WindowState = "Minimized";
+                  }));
+            }
+        }
+        private RelayCommand? statemaxCommand;
+        public RelayCommand StatemaxCommand
+        {
+            get
+            {
+                return statemaxCommand ??
+                  (statemaxCommand = new RelayCommand((o) =>
+                  {
+                      if (WindowState == "Normal")
+                      {
+                          WindowState = "Maximized";
+                      }
+                      else
+                      {
+                          WindowState = "Normal";
+                      }
                   }));
             }
         }

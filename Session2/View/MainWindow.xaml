@@ -11,7 +11,11 @@
         xmlns:view ="clr-namespace:Desktop.View" 
         xmlns:local="clr-namespace:Desktop.View"
         mc:Ignorable="d"
-        Title="Организационная структура" Height="450" Width="800"  WindowStyle="None">
+        Title="Организационная структура" Height="450" Width="900"  WindowStyle="None"
+        Left="250"
+        Top="100"
+        WindowState="{Binding WindowState}"
+        >
     <Window.DataContext>
         <vm:MainViewModel/>
     </Window.DataContext>
@@ -28,22 +32,43 @@
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         <Grid Grid.Row="0" Grid.ColumnSpan="2" Background="#78B24B">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="1*"/>
-                <ColumnDefinition Width="9*"/>
-                <ColumnDefinition Width="1*"/>
-            </Grid.ColumnDefinitions>
-            <Image Grid.Column="0" Source="/Assets/Logo.png" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
-            <TextBox Grid.Column="1" Margin="30 0 0 0 " Width="900" Height="60" BorderThickness="0" Text="{Binding TitleWindow}" FontSize="20" HorizontalAlignment="Left" VerticalAlignment="Center" Background="White">
-                <TextBox.Resources >
-                    <Style TargetType="{x:Type Border}">
-                        <Setter Property="CornerRadius" Value="10"  />
-                    </Style>
-                </TextBox.Resources>
-            </TextBox>
-            <StackPanel Grid.Column="2">
-                <Button  Width="60" Height="50" Background="Transparent" BorderBrush="Transparent" Foreground="White" Content="{materialIcons:MaterialIconExt Kind=Close, Size=20}" VerticalContentAlignment="Top" HorizontalContentAlignment="Right" HorizontalAlignment="Right" VerticalAlignment="Top" Click="Button_Click" ></Button>
-                <Button Width="60" Height="60" Command="{Binding UpdateCommand}" Background="Transparent" BorderBrush="Transparent" Foreground="White" Content="{materialIcons:MaterialIconExt Kind=Update, Size=20}"  HorizontalContentAlignment="Right" HorizontalAlignment="Right" Margin="0 0 0 10"/>
+            
+            <Grid.RowDefinitions>
+                <RowDefinition Height="3*"/>
+                <RowDefinition Height="5.5*"/>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="8*"/>
+                </Grid.ColumnDefinitions>
+                <Image Grid.Column="0"  Margin="10 10 10 10 " Source="/Assets/Logo.png" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                <Border Grid.Column="1" Margin="30 0 40 10" Height="50"
+                Background="White" CornerRadius="10">
+                        <TextBox Padding="15 0 0 0" BorderThickness="0" Text="{Binding TitleWindow}" 
+                     FontSize="20" Background="Transparent"
+                     HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>    
+                </Border> 
+            </Grid>
+            
+            <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right">
+               
+                <Button Width="50" Height="60" Command="{Binding UpdateCommand}" Background="Transparent" BorderBrush="Transparent" Foreground="White" Content="{materialIcons:MaterialIconExt Kind=Update, Size=20}" VerticalContentAlignment="Top" VerticalAlignment="Top" HorizontalContentAlignment="Right" HorizontalAlignment="Right" Margin="0 0 0 10"/>
+
+                <Button Width="50" Height="60" Command="{Binding StateminCommand}" 
+                    Background="Transparent" BorderBrush="Transparent" 
+                    Foreground="White" Content="{materialIcons:MaterialIconExt Kind=Minus, Size=20}" 
+                    VerticalContentAlignment="Top" VerticalAlignment="Top" HorizontalContentAlignment="Right" 
+                    HorizontalAlignment="Right" Margin="0 0 0 10"/>
+                <Button Width="50" Height="60" Command="{Binding StatemaxCommand}" 
+                    Background="Transparent" BorderBrush="Transparent" 
+                    Foreground="White" Content="{materialIcons:MaterialIconExt Kind=Maximize, Size=20}" 
+                    VerticalContentAlignment="Top" VerticalAlignment="Top" HorizontalContentAlignment="Right" 
+                    HorizontalAlignment="Right" Margin="0 0 0 10"/>     
+                
+                <Button  Width="50" Height="50" Background="Transparent" BorderBrush="Transparent" Foreground="White" Content="{materialIcons:MaterialIconExt Kind=Close, Size=20}" VerticalContentAlignment="Top" HorizontalContentAlignment="Right" HorizontalAlignment="Right" VerticalAlignment="Top" Click="Button_Click" ></Button>
+                
+                
             </StackPanel>
             
         </Grid>

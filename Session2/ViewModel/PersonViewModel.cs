@@ -25,6 +25,16 @@ namespace Desktop.ViewModel
                 OnPropertyChanged(nameof(SelectedEmployee));
             }
         }
+        private string windowstate;
+        public string WindowState
+        {
+            get { return windowstate; }
+            set
+            {
+                windowstate = value;
+                OnPropertyChanged(nameof(WindowState));
+            }
+        }
         private Employee BackUpEmployee;
         private Event newEvent;
         public Event NewEvent
@@ -566,10 +576,41 @@ namespace Desktop.ViewModel
             }
         }
 
-
+        private RelayCommand? stateminCommand;
+        public RelayCommand StateminCommand
+        {
+            get
+            {
+                return stateminCommand ??
+                  (stateminCommand = new RelayCommand((o) =>
+                  {
+                      WindowState = "Minimized";
+                  }));
+            }
+        }
+        private RelayCommand? statemaxCommand;
+        public RelayCommand StatemaxCommand
+        {
+            get
+            {
+                return statemaxCommand ??
+                  (statemaxCommand = new RelayCommand((o) =>
+                  {
+                      if (WindowState == "Normal")
+                      {
+                          WindowState = "Maximized";
+                      }
+                      else
+                      {
+                          WindowState = "Normal";
+                      }
+                  }));
+            }
+        }
 
         public PersonViewModel(Employee employee, int departmentid)
         {
+            WindowState = "Normal";
             BackUpEmployee = (Employee)employee.Clone();
             SelectedEmployee = employee;
             
@@ -694,4 +735,6 @@ namespace Desktop.ViewModel
             VacationList = new ObservableCollection<Calendar_>(listAll.Where(x => x.TypeOfEvent == "Отпуск"));
         }
     }
+
+
 }

@@ -29,6 +29,16 @@ namespace Desktop.ViewModel
                 OnPropertyChanged(nameof(TitleWindow));
             }
         }
+        private string windowstate;
+        public string WindowState
+        {
+            get { return windowstate; }
+            set
+            {
+                windowstate = value;
+                OnPropertyChanged(nameof(WindowState));
+            }
+        }
         private List<NodeViewModel> vertices;
         public List<NodeViewModel> Vertices
         {
@@ -100,6 +110,7 @@ namespace Desktop.ViewModel
         }
         public MainViewModel()
         {
+            WindowState = "Normal";
             LoadData();
             Load();
         }
@@ -129,7 +140,7 @@ namespace Desktop.ViewModel
            
 
             
-                TitleWindow = "Организацонная структура";
+                TitleWindow = "Организационная структура";
                 foreach (Department dep in Deps)
                 {
                     if (dep.IdDepartmentParent != 0)
@@ -250,7 +261,37 @@ namespace Desktop.ViewModel
                   }));
             }
         }
-       
+        private RelayCommand? stateminCommand;
+        public RelayCommand StateminCommand
+        {
+            get
+            {
+                return stateminCommand ??
+                  (stateminCommand = new RelayCommand((o) =>
+                  {
+                      WindowState = "Minimized";
+                  }));
+            }
+        }
+        private RelayCommand? statemaxCommand;
+        public RelayCommand StatemaxCommand
+        {
+            get
+            {
+                return statemaxCommand ??
+                  (statemaxCommand = new RelayCommand((o) =>
+                  {
+                      if(WindowState == "Normal")
+                      {
+                          WindowState = "Maximized";
+                      }
+                      else
+                      {
+                          WindowState = "Normal";
+                      }
+                  }));
+            }
+        }
 
     }
 }

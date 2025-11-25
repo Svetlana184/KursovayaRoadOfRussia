@@ -19,11 +19,21 @@ namespace Desktop.ViewModel
 
         public LoginViewModel()
         {
+            WindowState = "Normal";
             authService = new AuthService();
             Visibility = Visibility.Visible;
             int x = 0;
         }
-
+        private string windowstate;
+        public string WindowState
+        {
+            get { return windowstate; }
+            set
+            {
+                windowstate = value;
+                OnPropertyChanged(nameof(WindowState));
+            }
+        }
 
         private Visibility visibility;
         public Visibility Visibility
@@ -79,6 +89,37 @@ namespace Desktop.ViewModel
                           MessageBox.Show("Пользователь с таким именем или паролем " +
                                   "не существует!");
 
+                  }));
+            }
+        }
+        private RelayCommand? stateminCommand;
+        public RelayCommand StateminCommand
+        {
+            get
+            {
+                return stateminCommand ??
+                  (stateminCommand = new RelayCommand((o) =>
+                  {
+                      WindowState = "Minimized";
+                  }));
+            }
+        }
+        private RelayCommand? statemaxCommand;
+        public RelayCommand StatemaxCommand
+        {
+            get
+            {
+                return statemaxCommand ??
+                  (statemaxCommand = new RelayCommand((o) =>
+                  {
+                      if (WindowState == "Normal")
+                      {
+                          WindowState = "Maximized";
+                      }
+                      else
+                      {
+                          WindowState = "Normal";
+                      }
                   }));
             }
         }
