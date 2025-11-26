@@ -41,7 +41,7 @@ namespace Desktop.ViewModel
             get { return password; }
             set
             {
-                Password = value;
+                password = value;
                 OnPropertyChanged(nameof(Password));
             }
         }
@@ -70,19 +70,19 @@ namespace Desktop.ViewModel
 
         public RegistViewModel() 
         {
-            LoadData();
+            SelectedEmployee = new Employee();
+            Deps = new ObservableCollection<Department>();
             WindowState = "Normal";
             authService = new AuthService();
+            departmentService = new DepartmentService();
+
+            LoadData();
         }
 
         private void LoadData()
         {
-            
-            departmentService = new DepartmentService();
-
             try
             {
-               
                 Task<List<Department>> task_dep = Task.Run(() => departmentService.GetAll());
                 Deps = new ObservableCollection<Department>(task_dep.Result);
 
@@ -102,10 +102,35 @@ namespace Desktop.ViewModel
                 return createCommand ??
                   (createCommand = new RelayCommand(async obj =>
                   {
-                      if (SelectedEmployee.Password == RepeatPassword)
+                      if (SelectedEmployee == null)
                       {
-                         
-                          Task<string> message = Task.Run(() => Register(SelectedEmployee));
+                          MessageBox.Show("Данные сотрудника не заполнены!");
+                          return;
+                      }
+
+                      if (string.IsNullOrEmpty(SelectedEmployee.Password) || string.IsNullOrEmpty(RepeatPassword))
+                      {
+                          MessageBox.Show("Пожалуйста, заполните пароль и подтверждение пароля!");
+                          return;
+                      }
+
+                      if (SelectedEmployee.Password != RepeatPassword)
+                      {
+                          MessageBox.Show("Пароли не совпадают!");
+                          return;
+                      }
+
+                      try
+                      {
+                          string result = await Register(SelectedEmployee);
+                          if (!string.IsNullOrEmpty(result))
+                          {
+                              MessageBox.Show(result);
+                          }
+                      }
+                      catch (Exception ex)
+                      {
+                          MessageBox.Show($"Ошибка при регистрации: {ex.Message}");
                       }
 
                   }));
@@ -131,14 +156,7 @@ namespace Desktop.ViewModel
                 return statemaxCommand ??
                   (statemaxCommand = new RelayCommand((o) =>
                   {
-                      if (WindowState == "Normal")
-                      {
-                          WindowState = "Maximized";
-                      }
-                      else
-                      {
-                          WindowState = "Normal";
-                      }
+                      WindowState = WindowState == "Normal" ? "Maximized" : "Normal";
                   }));
             }
         }

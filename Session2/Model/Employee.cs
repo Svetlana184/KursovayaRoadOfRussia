@@ -7,7 +7,7 @@ using System.Text.RegularExpressions;
 
 namespace Desktop.Model;
 
-public partial class Employee : IComparable<Employee>, INotifyPropertyChanged, ICloneable, IEquatable<Employee>
+public partial class Employee : IComparable<Employee>, IDataErrorInfo, INotifyPropertyChanged, ICloneable, IEquatable<Employee>
 {
     
 
@@ -144,7 +144,26 @@ public partial class Employee : IComparable<Employee>, INotifyPropertyChanged, I
     {
         get
         {
-            throw new NotImplementedException();
+            if (string.IsNullOrEmpty(Surname?.Trim()))
+                return "Фамилия обязательна для заполнения";
+
+            if (string.IsNullOrEmpty(FirstName?.Trim()))
+                return "Имя обязательно для заполнения";
+
+            if (string.IsNullOrEmpty(PhoneWork?.Trim()))
+                return "Рабочий телефон обязателен для заполнения";
+
+            if (string.IsNullOrEmpty(Email?.Trim()))
+                return "Email обязателен для заполнения";
+
+
+            var properties = new[] { "Surname", "FirstName", "SecondName", "Position", "PhoneWork", "Cabinet", "Email" };
+            var errors = properties
+                .Select(prop => this[prop])
+                .Where(error => !string.IsNullOrEmpty(error))
+                .ToArray();
+
+            return string.Join(Environment.NewLine, errors);
         }
     }
 

@@ -22,7 +22,6 @@ namespace Desktop.ViewModel
             WindowState = "Normal";
             authService = new AuthService();
             Visibility = Visibility.Visible;
-            int x = 0;
         }
         private string windowstate;
         public string WindowState
@@ -42,7 +41,7 @@ namespace Desktop.ViewModel
             set 
             { 
                 visibility = value;
-                OnPropertyChanged("Visibility");
+                OnPropertyChanged(nameof(Visibility));
             }
         }
         private string? email;
@@ -73,21 +72,40 @@ namespace Desktop.ViewModel
                 return loginCommand ??
                   (loginCommand = new RelayCommand(async obj =>
                   {
-                      PasswordBox? password = obj as PasswordBox;
-                      HttpClient client = new HttpClient();
-                      Employee user = new Employee { Surname= "дефолт", FirstName= "дефолт", SecondName = "дефолт", Position = "дефолт", PhoneWork="70000000000", Cabinet="000", IdDepartment=1, Email = Email, Password = password!.Password };
-                      Response response = await authService.SignIn(user);
-                      if (response != null)
+                      PasswordBox passwordBox = obj as PasswordBox;
+                      if (string.IsNullOrEmpty(Email) || passwordBox == null || string.IsNullOrEmpty(passwordBox.Password))
                       {
-                          RegisterUser.email= response.email;
+                          MessageBox.Show("Пожалуйста, заполните все поля!");
+                          return;
+                      }
+
+                      HttpClient client = new HttpClient();
+                      Employee user = new Employee
+                      {
+                          Surname = "дефолт",
+                          FirstName = "дефолт",
+                          SecondName = "дефолт",
+                          Position = "дефолт",
+                          PhoneWork = "70000000000",
+                          Cabinet = "000",
+                          IdDepartment = 1,
+                          Email = Email,
+                          Password = passwordBox.Password
+                      };
+
+                      Response response = await authService.SignIn(user);
+                      if (response != null && !string.IsNullOrEmpty(response.access_token))
+                      {
+                          RegisterUser.email = response.email;
                           RegisterUser.access_token = response.access_token;
-                          Visibility = Visibility.Hidden; 
+                          Visibility = Visibility.Hidden;
                           MainWindow window = new MainWindow();
                           window.Show();
                       }
                       else
-                          MessageBox.Show("Пользователь с таким именем или паролем " +
-                                  "не существует!");
+                      {
+                          MessageBox.Show("Пользователь с таким именем или паролем не существует!");
+                      }
 
                   }));
             }
