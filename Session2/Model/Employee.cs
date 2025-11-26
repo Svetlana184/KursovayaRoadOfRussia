@@ -140,91 +140,91 @@ public partial class Employee : IComparable<Employee>, INotifyPropertyChanged, I
     }
 
 
-    //public string Error
-    //{
-    //    get
-    //    {
-    //        throw new NotImplementedException();
-    //    }
-    //}
+    public string Error
+    {
+        get
+        {
+            throw new NotImplementedException();
+        }
+    }
 
-    //public string this[string columnName]
-    //{
-    //    get
-    //    {
-    //        string error = String.Empty;
-    //        switch (columnName)
-    //        {
-    //            case "Surname":
-    //                if (Surname != null)
-    //                {
-    //                    if (!Regex.IsMatch(Surname!, @"[а-яА-ЯёЁ]+$"))
-    //                        error = "Фамилия должна быть написано кириллицей";
-    //                }
-    //                else
-    //                {
-    //                    error = "Поле не должно быть пустым";
-    //                }
-    //                break;
-    //            case "FirstName":
-    //                if (FirstName != null)
-    //                {
-    //                    if (!Regex.IsMatch(FirstName!, @"[а-яА-ЯёЁ]+$"))
-    //                        error = "Имя должно быть написано кириллицей";
-    //                }
-    //                else
-    //                {
-    //                    error = "Поле не должно быть пустым";
-    //                }
-    //                break;
-    //            case "SecondName":
-    //                if (SecondName != null)
-    //                {
-    //                    if (!Regex.IsMatch(SecondName!, @"[а-яА-ЯёЁ]+$"))
-    //                        error = "Отчество должно быть написано кириллицей";
-    //                }
-    //                break;
-    //            case "Position":
-    //                if (Position != null)
-    //                {
-    //                    if (!Regex.IsMatch(Position!, @"[а-яА-ЯёЁ]+$"))
-    //                        error = "Должность должна быть написана кириллицей";
-    //                }
-    //                break;
-    //            case "PhoneWork":
-    //                if (PhoneWork != null)
-    //                {
-    //                    if (!Regex.IsMatch(PhoneWork!, @"^[\+\d\s\-\(\)]{5,20}$"))
-    //                        error = "Телефон может содержать только цифры, дефисы, скобки и плюс";
-    //                }
-    //                else
-    //                {
-    //                    error = "Поле не должно быть пустым";
-    //                }
-    //                break;
+    public string this[string columnName]
+    {
+        get
+        {
+            string error = String.Empty;
+            switch (columnName)
+            {
+                case "Surname":
+                    if (Surname != null)
+                    {
+                        if (!Regex.IsMatch(Surname!, @"[а-яА-ЯёЁ]+$"))
+                            error = "Фамилия должна быть написана кириллицей";
+                    }
+                    else
+                    {
+                        error = "Поле не должно быть пустым";
+                    }
+                    break;
+                case "FirstName":
+                    if (FirstName != null)
+                    {
+                        if (!Regex.IsMatch(FirstName!, @"[а-яА-ЯёЁ]+$"))
+                            error = "Имя должно быть написано кириллицей";
+                    }
+                    else
+                    {
+                        error = "Поле не должно быть пустым";
+                    }
+                    break;
+                case "SecondName":
+                    if (SecondName != null)
+                    {
+                        if (!Regex.IsMatch(SecondName!, @"[а-яА-ЯёЁ]+$"))
+                            error = "Отчество должно быть написано кириллицей";
+                    }
+                    break;
+                case "Position":
+                    if (Position != null)
+                    {
+                        if (!Regex.IsMatch(Position!, @"[а-яА-ЯёЁ]+$"))
+                            error = "Должность должна быть написана кириллицей";
+                    }
+                    break;
+                case "PhoneWork":
+                    if (PhoneWork != null)
+                    {
+                        if (!Regex.IsMatch(PhoneWork!, @"^[\+\d\s\-\(\)]{5,20}$"))
+                            error = "Телефон может содержать только цифры, дефисы, скобки и плюс";
+                    }
+                    else
+                    {
+                        error = "Поле не должно быть пустым";
+                    }
+                    break;
 
-    //            case "Cabinet":
-    //                if (Cabinet != null)
-    //                {
-    //                    if (!Regex.IsMatch(Cabinet!, @"^[a-zA-Zа-яА-ЯёЁ0-9\s\-]{1,10}$"))
-    //                        error = "Номер кабинета может содержать только буквы и цифры";
-    //                }
-    //                break;
-    //            case "Email":
-    //                if (Email != null)
-    //                {
-    //                    if (!Regex.IsMatch(Email!, @"^[a-zA-Zа-яА-ЯёЁ0-9._%+-]+@[a-zA-Zа-яА-ЯёЁ0-9.-]+\.[a-zA-Zа-яА-ЯёЁ]{2,}$"))
-    //                        error = "напишите корректную почту";
-    //                }
-    //                else
-    //                {
-    //                    error = "Поле не должно быть пустым";
-    //                }
-    //                break;
-    //        }
-    //        return error;
-    //    }
-    //}
+                case "Cabinet":
+                    if (Cabinet != null)
+                    {
+                        if (!Regex.IsMatch(Cabinet!, @"^[a-zA-Zа-яА-ЯёЁ0-9\s\-]{1,10}$"))
+                            error = "Номер кабинета может содержать только буквы и цифры";
+                    }
+                    break;
+                case "Email":
+                    if (Email != null)
+                    {
+                        if (!Regex.IsMatch(Email!, @"^[a-zA-Zа-яА-ЯёЁ0-9._%+-]+@[a-zA-Zа-яА-ЯёЁ0-9.-]+\.[a-zA-Zа-яА-ЯёЁ]{2,}$"))
+                            error = "Напишите корректную почту";
+                    }
+                    else
+                    {
+                        error = "Поле не должно быть пустым";
+                    }
+                    break;
+            }
+            return error;
+        }
+    }
 
 
 

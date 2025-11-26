@@ -20,6 +20,10 @@ namespace Desktop.Services
             client.DefaultRequestHeaders.Add("Authorization",
                 "Bearer" + RegisterUser.access_token);
         }
+        public override Task<List<Employee>> Search(string str)
+        {
+            throw new NotImplementedException();
+        }
         public override async Task<bool> Add(Employee obj)
         {
            

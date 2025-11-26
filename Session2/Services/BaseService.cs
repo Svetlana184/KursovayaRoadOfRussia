@@ -9,8 +9,9 @@ namespace Desktop.Services
     public abstract class BaseService<T>
     {
         public abstract Task<List<T>> GetAll();
-        public abstract Task<bool> Add(T obj);
-        public abstract Task<bool> Update(T obj);
-        public abstract Task<bool> Delete(T obj);
+        public abstract Task Add(T obj);
+        public abstract Task Update(T obj);
+        public abstract Task Delete(T obj);
+        public abstract Task<List<T>> Search(string str);
     }
 }

@@ -75,7 +75,7 @@ namespace Desktop.ViewModel
                   {
                       PasswordBox? password = obj as PasswordBox;
                       HttpClient client = new HttpClient();
-                      Employee user = new Employee { Email = Email, Password = password!.Password };
+                      Employee user = new Employee { Surname= "дефолт", FirstName= "дефолт", SecondName = "дефолт", Position = "дефолт", PhoneWork="70000000000", Cabinet="000", IdDepartment=1, Email = Email, Password = password!.Password };
                       Response response = await authService.SignIn(user);
                       if (response != null)
                       {

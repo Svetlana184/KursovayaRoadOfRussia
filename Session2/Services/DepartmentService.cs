@@ -21,6 +21,10 @@ namespace Desktop.Services
                 "Bearer" + RegisterUser.access_token);
         }
 
+        public override Task<List<Department>> Search(string str)
+        {
+            throw new NotImplementedException();
+        }
         public override async Task<bool> Add(Department obj)
         {
            

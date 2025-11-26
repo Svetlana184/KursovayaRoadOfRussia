@@ -6,41 +6,70 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace Desktop.Services
 {
     public class EventService : BaseService<Event>
     {
-        private HttpClient client;
+       
+        private HttpClient httpClient;
         public EventService()
         {
-            client = new HttpClient();
-            client.DefaultRequestHeaders.Add("Authorization",
-                "Bearer" + RegisterUser.access_token);
+            httpClient = new HttpClient();
+            httpClient.DefaultRequestHeaders.Add("Authorization",
+               "Bearer " + RegisterUser.access_token);
         }
-        public override async Task<bool> Add(Event obj)
+        public override async Task Add(Event obj)
         {
-            await client.PostAsJsonAsync<Event>("https://localhost:7013/api/Event/post", obj);
-            return true;
+            try
+            {
+                JsonContent content = JsonContent.Create(obj);
+                using var response = await httpClient.PostAsync("https://localhost:7013/api/Event/post", content);
+                string responseText = await response.Content.ReadAsStringAsync();
+                if (responseText != null)
+                {
+                    Event resp = JsonSerializer.Deserialize<Event>(responseText!)!;
+                    if (resp == null) MessageBox.Show(responseText);
+                }
+            }
+            catch { }
         }
 
-        public override async Task<bool> Delete(Event obj)
+        public override async Task Delete(Event obj)
         {
-            await client.DeleteFromJsonAsync<Event>($"https://localhost:7013/api/Event/delete/{obj.IdEvent}");
-            return true;
+            using var response = await httpClient.DeleteAsync($"https://localhost:7013/api/Event/delete/{obj.IdEvent}");
+
         }
 
         public override async Task<List<Event>> GetAll()
         {
-            List<Event>? evs = await client.GetFromJsonAsync<List<Event>>("https://localhost:7013/api/Event/getall");
-            return evs!;
+            return (await httpClient.GetFromJsonAsync<List<Event>>("https://localhost:7013/api/Event/getall"))!;
         }
 
-        public override async Task<bool> Update(Event obj)
+
+        public override Task<List<Event>> Search(string str)
         {
-            await client.PutAsJsonAsync<Event>($"https://localhost:7013/api/Event/update/{obj.IdEvent}", obj);
-            return true;
+            throw new NotImplementedException();
+        }
+
+        public override async Task Update(Event obj)
+        {
+            try
+            {
+                JsonContent content = JsonContent.Create(obj);
+                using var response = await httpClient.PutAsync($"https://localhost:7013/api/Event/update/{obj.IdEvent}", content);
+                string responseText = await response.Content.ReadAsStringAsync();
+                if (responseText != null)
+                {
+                    Calendar_ resp = JsonSerializer.Deserialize<Calendar_>(responseText!)!;
+                    if (resp == null) MessageBox.Show(responseText);
+                }
+
+            }
+            catch { }
         }
     }
 }

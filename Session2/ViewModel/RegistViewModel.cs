@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
@@ -54,11 +55,45 @@ namespace Desktop.ViewModel
                 OnPropertyChanged(nameof(SelectedEmployee));
             }
         }
+        public DepartmentService departmentService;
+        public ObservableCollection<Department> Deps { get; set; }
+        private List<Department> deplist;
+        public List<Department> DepList
+        {
+            get { return deplist; }
+            set
+            {
+                deplist = value;
+                OnPropertyChanged();
+            }
+        }
+
         public RegistViewModel() 
         {
+            LoadData();
             WindowState = "Normal";
             authService = new AuthService();
         }
+
+        private void LoadData()
+        {
+            
+            departmentService = new DepartmentService();
+
+            try
+            {
+               
+                Task<List<Department>> task_dep = Task.Run(() => departmentService.GetAll());
+                Deps = new ObservableCollection<Department>(task_dep.Result);
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+
         private RelayCommand? createCommand;
         public RelayCommand CreateCommand
         {
