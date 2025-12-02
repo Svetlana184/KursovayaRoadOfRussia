@@ -39,12 +39,16 @@ public partial class Employee
 
     [JsonIgnore]
     public virtual ICollection<Calendar_> CalendarIdAlternateNavigations { get; set; } = new List<Calendar_>();
+   
     [JsonIgnore]
     public virtual ICollection<Calendar_> CalendarIdEmployeeNavigations { get; set; } = new List<Calendar_>();
+    
     [JsonIgnore]
     public virtual ICollection<Comment> Comments { get; set; } = new List<Comment>();
+    
     [JsonIgnore]
     public virtual ICollection<Department> Departments { get; set; } = new List<Department>();
+   
     [JsonIgnore]
-    public virtual Department IdDepartmentNavigation { get; set; } = null!;
+    public virtual Department? IdDepartmentNavigation { get; set; }
 }
