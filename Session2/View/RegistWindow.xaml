@@ -42,15 +42,17 @@
                 <Button Width="50" Height="60" Command="{Binding StateminCommand}" 
             Background="Transparent" BorderBrush="Transparent" 
             Foreground="BlueViolet" Content="{materialIcons:MaterialIconExt Kind=Minus, Size=20}" 
-            VerticalContentAlignment="Top" VerticalAlignment="Top" HorizontalContentAlignment="Right" 
+            VerticalContentAlignment="Top" VerticalAlignment="Top" HorizontalContentAlignment="Center" 
             HorizontalAlignment="Right" Margin="0 0 0 10"/>
                 <Button Width="50" Height="60" Command="{Binding StatemaxCommand}" 
             Background="Transparent" BorderBrush="Transparent" 
             Foreground="BlueViolet" Content="{materialIcons:MaterialIconExt Kind=Maximize, Size=20}" 
-            VerticalContentAlignment="Top" VerticalAlignment="Top" HorizontalContentAlignment="Right" 
+            VerticalContentAlignment="Top" VerticalAlignment="Top" HorizontalContentAlignment="Center" 
             HorizontalAlignment="Right" Margin="0 0 0 10"/>
-                <Button  Width="60" Height="50" Background="Transparent" BorderBrush="Transparent" Foreground="BlueViolet" Content="{materialIcons:MaterialIconExt Kind=Close, Size=20}" VerticalContentAlignment="Top" HorizontalContentAlignment="Right" 
-            HorizontalAlignment="Right" VerticalAlignment="Top" Click="Button_Click" ></Button>
+                <Button  Width="50" Height="60" Background="Transparent" BorderBrush="Transparent" Foreground="BlueViolet" 
+                         Content="{materialIcons:MaterialIconExt Kind=Close, Size=20}" 
+                         VerticalContentAlignment="Top" HorizontalContentAlignment="Center" 
+            HorizontalAlignment="Right" VerticalAlignment="Top" Click="Button_Click_1" ></Button>
             </StackPanel>
 
         </Grid>
@@ -78,7 +80,7 @@
         <TextBox Grid.Column="1" Grid.Row="8" Margin="10" x:Name="Email" 
                  materialDesign:HintAssist.Hint="Электронная почта"
                  Text="{Binding SelectedEmployee.Email, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
-        <ComboBox Grid.Column="1" Grid.Row="9" x:Name="Department" materialDesign:HintAssist.Hint="Department"  ItemsSource="{Binding Deps}" 
+        <ComboBox Margin="10" Grid.Column="1" Grid.Row="9" x:Name="Department" materialDesign:HintAssist.Hint="Department"  ItemsSource="{Binding Deps}" 
                   DisplayMemberPath="DepartmentName" SelectedValuePath="IdDepartment"  />
         <PasswordBox Grid.Column="1" Grid.Row="10" Margin="10" x:Name="Password" 
                      materialDesign:HintAssist.Hint="Пароль"

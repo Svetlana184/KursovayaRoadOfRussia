@@ -58,6 +58,7 @@ namespace Desktop.View
             }
             Close();
         }
+        
         private async Task<string> Register(Employee employee)
         {
             return await authService.Register(employee);

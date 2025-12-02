@@ -36,14 +36,14 @@
                 <Button Width="50" Height="60" Command="{Binding StateminCommand}" 
                     Background="Transparent" BorderBrush="Transparent" 
                     Foreground="BlueViolet" Content="{materialIcons:MaterialIconExt Kind=Minus, Size=20}" 
-                    VerticalContentAlignment="Top" VerticalAlignment="Top" HorizontalContentAlignment="Right" 
+                    VerticalContentAlignment="Top" VerticalAlignment="Top" HorizontalContentAlignment="Center" 
                     HorizontalAlignment="Right" Margin="0 0 0 10"/>
                 <Button Width="50" Height="60" Command="{Binding StatemaxCommand}" 
                     Background="Transparent" BorderBrush="Transparent" 
                     Foreground="BlueViolet" Content="{materialIcons:MaterialIconExt Kind=Maximize, Size=20}" 
-                    VerticalContentAlignment="Top" VerticalAlignment="Top" HorizontalContentAlignment="Right" 
+                    VerticalContentAlignment="Top" VerticalAlignment="Top" HorizontalContentAlignment="Center" 
                     HorizontalAlignment="Right" Margin="0 0 0 10"/>
-                <Button  Width="60" Height="50" Background="Transparent" BorderBrush="Transparent" Foreground="BlueViolet" Content="{materialIcons:MaterialIconExt Kind=Close, Size=20}" VerticalContentAlignment="Top" HorizontalContentAlignment="Right" 
+                <Button  Width="50" Height="60" Background="Transparent" BorderBrush="Transparent" Foreground="BlueViolet" Content="{materialIcons:MaterialIconExt Kind=Close, Size=20}" VerticalContentAlignment="Top" HorizontalContentAlignment="Center" 
                     HorizontalAlignment="Right" VerticalAlignment="Top" Click="Button_Click" ></Button>
             </StackPanel>
            
