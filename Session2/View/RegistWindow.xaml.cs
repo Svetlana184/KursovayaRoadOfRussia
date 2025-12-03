@@ -42,21 +42,34 @@ namespace Desktop.View
         {
             if(Password.Password == RepeatPassword.Password)
             {
-                Employee employee = new Employee
+                    
+                if (Surname.Text!=null && Firstname.Text !=null && Position.Text != null 
+                    && Phone.Text != null && Cabinet.Text != null && Email.Text != null && Department.SelectedValue != null )
                 {
-                    Surname = Surname.Text,
-                    FirstName = Firstname.Text,
-                    SecondName = Secondname.Text,
-                    Position = Position.Text,
-                    PhoneWork = Phone.Text,
-                    Cabinet = Cabinet.Text,
-                    Email = Email.Text,
-                    IdDepartment = int.Parse(Department.SelectedValuePath),
-                    Password = Password.Password
-                };
-                Task<string> message = Task.Run(() => Register(employee));
+                    Employee employee = new Employee
+                    {
+                        Surname = Surname.Text,
+                        FirstName = Firstname.Text,
+                        SecondName = Secondname.Text,
+                        Position = Position.Text,
+                        PhoneWork = Phone.Text,
+                        Cabinet = Cabinet.Text,
+                        Email = Email.Text,
+                        IdDepartment = int.Parse(Department.SelectedValuePath),
+                        Password = Password.Password
+                    };
+                    Task<string> message = Task.Run(() => Register(employee));
+                }
+                else
+                {
+                    MessageBox.Show("Заполните все обязательные поля");
+                }
             }
-            Close();
+            else
+            {
+                MessageBox.Show("Неправильно повторен пароль");
+            }
+                Close();
         }
         
         private async Task<string> Register(Employee employee)
