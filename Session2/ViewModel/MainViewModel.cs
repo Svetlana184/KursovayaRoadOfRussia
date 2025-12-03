@@ -178,6 +178,7 @@ namespace Desktop.ViewModel
                     EmployeesList.Add(emp);
                 }
                 GraphVM = new GraphViewModel(Vertices);
+            Depid = Deps.First().IdDepartment;
             
             
            

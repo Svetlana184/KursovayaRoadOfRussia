@@ -16,19 +16,6 @@ namespace WebAPI.Models
                 };
                 context.Departments.Add(dep_start);
                 context.SaveChanges();
-                Employee admin_start = new Employee()
-                {
-                    Surname = "ad",
-                    FirstName = "start",
-                    Position = "administrator",
-                    PhoneWork = "+0",
-                    Cabinet = "0",
-                    Email = "start_admin@gmail.com",
-                    IdDepartment = context.Departments.FirstOrDefault(p => p.IdDepartment == 1)!.IdDepartment
-
-                };
-                context.Employees.Add(admin_start);
-                context.SaveChanges();
             }
         }
     }

@@ -361,6 +361,7 @@ namespace Desktop.ViewModel
                             {
                                 SelectedEmployee.IsFired = DateTime.Now.ToString();
                                 employeeService.Update(SelectedEmployee);
+                                MessageBox.Show("Сотрудник уволен");
                             }
                         }
 

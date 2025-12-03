@@ -51,7 +51,7 @@ namespace Desktop.View
                     PhoneWork = Phone.Text,
                     Cabinet = Cabinet.Text,
                     Email = Email.Text,
-                    IdDepartment = int.Parse(Department.Text),
+                    IdDepartment = int.Parse(Department.SelectedValuePath),
                     Password = Password.Password
                 };
                 Task<string> message = Task.Run(() => Register(employee));

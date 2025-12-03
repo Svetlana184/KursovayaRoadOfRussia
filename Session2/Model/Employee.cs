@@ -213,7 +213,7 @@ public partial class Employee : IComparable<Employee>, IDataErrorInfo, INotifyPr
                 case "PhoneWork":
                     if (PhoneWork != null)
                     {
-                        if (!Regex.IsMatch(PhoneWork!, @"^[\+\d\s\-\(\)]{5,20}$"))
+                        if (!Regex.IsMatch(PhoneWork!, @"^((8|\+7)[\- ]?)?(\(?\d{3}\)?[\- ]?)?[\d\- ]{7,10}$"))
                             error = "Телефон может содержать только цифры, дефисы, скобки и плюс";
                     }
                     else
