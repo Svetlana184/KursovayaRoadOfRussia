@@ -17,8 +17,6 @@ namespace Desktop.Services
         public EmployeeService()
         {
             client = new HttpClient();
-            client.DefaultRequestHeaders.Add("Authorization",
-                "Bearer" + RegisterUser.access_token);
         }
         public override Task<List<Employee>> Search(string str)
         {

@@ -12,6 +12,7 @@ using System.Runtime.Intrinsics.Arm;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Media;
 
 
 namespace Desktop.ViewModel
@@ -60,8 +61,8 @@ namespace Desktop.ViewModel
             }
         }
         public ObservableCollection<Department> Deps{ get; set; }
-        private List<Employee> employeeslist;
-        public List<Employee> EmployeesList 
+        private List<EmployeeCard> employeeslist;
+        public List<EmployeeCard> EmployeesList 
         {
             get { return employeeslist; }
             set
@@ -70,10 +71,10 @@ namespace Desktop.ViewModel
                 OnPropertyChanged(nameof(EmployeesList));
             }
         }
-        private Employee selectedemployee;
+        private EmployeeCard selectedemployee;
         public EmployeeService employeeService;
         public DepartmentService departmentService;
-        public Employee SelectedEmployee
+        public EmployeeCard SelectedEmployee
         {
             get
             {
@@ -171,13 +172,38 @@ namespace Desktop.ViewModel
                     }
 
                 }
-            EmployeesList = new List<Employee>();
+            EmployeesList = new List<EmployeeCard>();
                 foreach (Employee emp in Employees)
                 {
+                    if (emp.IsFired == null || DateTime.Now - DateTime.Parse(emp.IsFired).AddDays(30) < TimeSpan.Zero)
+                    {
+                        EmployeeCard cardEmp = new EmployeeCard
+                        {
+                            IdEmployee = emp.IdEmployee,
+                            Surname = emp.Surname,
+                            FirstName = emp.FirstName,
+                            SecondName = emp.SecondName,
+                            Position = emp.Position,
+                            PhoneWork = emp.PhoneWork,
+                            Cabinet = emp.Cabinet,
+                            Email = emp.Email,
+                            IdDepartment = emp.IdDepartment
+                        };
+                        if (emp.IsFired != null)
+                        {
 
-                    EmployeesList.Add(emp);
+                            cardEmp.Color = new SolidColorBrush(Color.FromRgb(128, 128, 128));
+                        }
+                        else
+                        {
+                            cardEmp.Color = new SolidColorBrush(Color.FromRgb(120, 178, 75));
+                        }
+                        EmployeesList.Add(cardEmp);
+                    }
+                    
                 }
-                GraphVM = new GraphViewModel(Vertices);
+                
+            GraphVM = new GraphViewModel(Vertices);
             Depid = Deps.First().IdDepartment;
             
             
@@ -209,7 +235,32 @@ namespace Desktop.ViewModel
                 listMain.AddRange(Employees.Where(p => p.IdDepartment == d.IdDepartment));
             }
             listMain.Sort();
-            EmployeesList = listMain.Distinct().ToList();
+            List<Employee> empsTemp = listMain.Distinct().ToList();
+            foreach (Employee emp in empsTemp)
+            {
+                EmployeeCard cardEmp = new EmployeeCard
+                {
+                    IdEmployee = emp.IdEmployee,
+                    Surname = emp.Surname,
+                    FirstName = emp.FirstName,
+                    SecondName = emp.SecondName,
+                    Position = emp.Position,
+                    PhoneWork = emp.PhoneWork,
+                    Cabinet = emp.Cabinet,
+                    Email = emp.Email,
+                    IdDepartment = emp.IdDepartment
+                };
+
+                if (emp.IsFired != null)
+                {
+                    cardEmp.Color = new SolidColorBrush(Color.FromRgb(128, 128, 128));
+                }
+                else
+                {   
+                    cardEmp.Color = new SolidColorBrush(Color.FromRgb(120, 178, 75));
+                }
+                EmployeesList.Add(cardEmp);
+            }
             OnPropertyChanged(nameof(EmployeesList));
 
         }
@@ -240,9 +291,9 @@ namespace Desktop.ViewModel
                 return editCommand ??
                   (editCommand = new RelayCommand((o) =>
                   {
-                      Employee employee = o as Employee;
+                      EmployeeCard employee = o as EmployeeCard;
                       
-                      PersonWindow window = new PersonWindow(employee, employee.IdDepartment);
+                      PersonWindow window = new PersonWindow(employees.FirstOrDefault(p=>p.IdEmployee == employee!.IdEmployee)!, employee!.IdDepartment);
                       
                       window.Show();
                      
@@ -257,6 +308,7 @@ namespace Desktop.ViewModel
                 return updateCommand ??
                   (updateCommand = new RelayCommand((o) =>
                   {
+                      LoadData();
                       Load();
                       OnPropertyChanged(nameof(EmployeesList));
                   }));

@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Desktop.Model;
+using Desktop.Services;
+using Microsoft.IdentityModel.Tokens;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,8 +14,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using Desktop.Model;
-using Desktop.Services;
 
 namespace Desktop.View
 {
@@ -21,65 +22,33 @@ namespace Desktop.View
     /// </summary>
     public partial class RegistWindow : Window
     {
-        private AuthService authService;
-
         public RegistWindow()
         {
             InitializeComponent();
-            authService = new AuthService();
         }
-
-       
         private void Hyperlink_MouseDown_1(object sender, RoutedEventArgs e)
         {
             LoginWindow loginWindow = new LoginWindow();
             loginWindow.Show();
             Close();
-            
-        }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            if(Password.Password == RepeatPassword.Password)
-            {
-                    
-                if (Surname.Text!=null && Firstname.Text !=null && Position.Text != null 
-                    && Phone.Text != null && Cabinet.Text != null && Email.Text != null && Department.SelectedValue != null )
-                {
-                    Employee employee = new Employee
-                    {
-                        Surname = Surname.Text,
-                        FirstName = Firstname.Text,
-                        SecondName = Secondname.Text,
-                        Position = Position.Text,
-                        PhoneWork = Phone.Text,
-                        Cabinet = Cabinet.Text,
-                        Email = Email.Text,
-                        IdDepartment = int.Parse(Department.SelectedValuePath),
-                        Password = Password.Password
-                    };
-                    Task<string> message = Task.Run(() => Register(employee));
-                }
-                else
-                {
-                    MessageBox.Show("Заполните все обязательные поля");
-                }
-            }
-            else
-            {
-                MessageBox.Show("Неправильно повторен пароль");
-            }
-                Close();
         }
-        
-        private async Task<string> Register(Employee employee)
-        {
-            return await authService.Register(employee);
-        }
-
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            Close();        
+            var result = MessageBox.Show("При закрытии программы несохраненные изменения не сохранятся. " +
+                "Выйти из программы?",
+            "Подтверждение выхода",
+            MessageBoxButton.YesNo,
+            MessageBoxImage.Warning);
+
+            switch (result)
+            {
+                case MessageBoxResult.Yes:
+                    Close();
+                    break;
+                case MessageBoxResult.No:
+                    return;
+            }
         }
     }
 }

@@ -102,37 +102,46 @@ namespace Desktop.ViewModel
                 return createCommand ??
                   (createCommand = new RelayCommand(async obj =>
                   {
-                      if (SelectedEmployee == null)
+                      if (!string.IsNullOrEmpty(SelectedEmployee.Error))
                       {
-                          MessageBox.Show("Данные сотрудника не заполнены!");
+                          MessageBox.Show(SelectedEmployee.Error);
                           return;
                       }
-
-                      if (string.IsNullOrEmpty(SelectedEmployee.Password) || string.IsNullOrEmpty(RepeatPassword))
+                      else
                       {
-                          MessageBox.Show("Пожалуйста, заполните пароль и подтверждение пароля!");
-                          return;
-                      }
-
-                      if (SelectedEmployee.Password != RepeatPassword)
-                      {
-                          MessageBox.Show("Пароли не совпадают!");
-                          return;
-                      }
-
-                      try
-                      {
-                          string result = await Register(SelectedEmployee);
-                          if (!string.IsNullOrEmpty(result))
+                          if (string.IsNullOrEmpty(Password) || string.IsNullOrEmpty(RepeatPassword))
                           {
-                              MessageBox.Show(result);
+                              MessageBox.Show("Пожалуйста, заполните пароль и подтверждение пароля!");
+                              return;
                           }
-                      }
-                      catch (Exception ex)
-                      {
-                          MessageBox.Show($"Ошибка при регистрации: {ex.Message}");
-                      }
+                          else
+                          {
+                              if (Password != RepeatPassword)
+                              {
+                                  MessageBox.Show("Пароли не совпадают!");
+                                  return;
+                              }
+                              else
+                              {
+                                  try
+                                  {
+                                      SelectedEmployee.Password = Password;
+                                   
+                                      string result = await Register(SelectedEmployee);
+                                      MessageBox.Show($"{result}");
 
+                                      SelectedEmployee = new Employee();
+                                      Password = string.Empty;
+                                      RepeatPassword = string.Empty;
+                                  }
+                                  catch (Exception ex)
+                                  {
+                                      MessageBox.Show($"Ошибка при регистрации: {ex.Message}");
+                                  }
+                              }
+                          }
+                          
+                      }
                   }));
             }
         }

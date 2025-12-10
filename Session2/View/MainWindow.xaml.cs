@@ -33,7 +33,20 @@ namespace Desktop.View
         
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            Close();
+            var result = MessageBox.Show("При закрытии программы несохраненные изменения не сохранятся. " +
+                "Выйти из программы?",
+            "Подтверждение выхода",
+            MessageBoxButton.YesNo,
+            MessageBoxImage.Warning);
+
+            switch (result)
+            {
+                case MessageBoxResult.Yes:
+                    Application.Current.Shutdown();
+                    break;
+                case MessageBoxResult.No:
+                    return;
+            }
         }
     }
 }

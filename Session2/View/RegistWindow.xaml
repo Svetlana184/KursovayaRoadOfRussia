@@ -7,6 +7,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm ="clr-namespace:Desktop.ViewModel"
         xmlns:local="clr-namespace:Desktop.View"
+        xmlns:util="clr-namespace:Desktop.Utilits"
         mc:Ignorable="d"
         Title="RegistWindow" Height="800" Width="450"
         Left="450"
@@ -84,9 +85,13 @@
                   DisplayMemberPath="DepartmentName" SelectedValuePath="IdDepartment"  />
         <PasswordBox Grid.Column="1" Grid.Row="10" Margin="10" x:Name="Password" 
                      materialDesign:HintAssist.Hint="Пароль"
+                     util:PasswordBoxHelper.Attach="True"
+                     util:PasswordBoxHelper.Password="{Binding Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                      />
         <PasswordBox Grid.Column="1" Grid.Row="11" Margin="10" x:Name="RepeatPassword" 
                      materialDesign:HintAssist.Hint="Повтор пароля"
+                     util:PasswordBoxHelper.Attach="True"
+                     util:PasswordBoxHelper.Password="{Binding RepeatPassword, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                      />
         <StackPanel Orientation="Horizontal"  Grid.Column="1" Grid.Row="13" Margin="5" 
                     HorizontalAlignment="Center">
@@ -96,8 +101,8 @@
                 <Hyperlink Click="Hyperlink_MouseDown_1" >Войти</Hyperlink>
             </TextBlock>
         </StackPanel>
-       
-        <Button  Grid.Column="1" Grid.Row="12" Margin="10 5" Click="Button_Click" >
+
+        <Button  Grid.Column="1" Grid.Row="12" Margin="10 5" Command="{Binding CreateCommand}">
             Зарегистрироваться
         </Button>
     </Grid>

@@ -117,7 +117,7 @@
                 </i:Interaction.Triggers>
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <StackPanel Width="900" Background="#78B24B">
+                        <StackPanel Width="900" Background="{Binding Color}">
                             <StackPanel Orientation="Horizontal">
                                 <Label Content="{Binding IdDepartment, Converter={StaticResource IdDepartmenttoName}}" Foreground="white"/>
                                 <Label Content=" - " Foreground="white"/>

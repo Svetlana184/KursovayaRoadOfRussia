@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -360,7 +361,8 @@ namespace Desktop.ViewModel
                             else
                             {
                                 SelectedEmployee.IsFired = DateTime.Now.ToString();
-                                employeeService.Update(SelectedEmployee);
+                                //employeeService.Update(SelectedEmployee);
+                                Task.Run(() => employeeService.Update(SelectedEmployee));
                                 MessageBox.Show("Сотрудник уволен");
                             }
                         }
@@ -402,10 +404,11 @@ namespace Desktop.ViewModel
 
                       if (SelectedEmployee.IdEmployee == 0)
                       {
-                          employeeService.Add(SelectedEmployee);
+                          //employeeService.Add(SelectedEmployee);
+                          Task.Run(() => employeeService.Add(SelectedEmployee));
                       }
-                      else employeeService.Update(SelectedEmployee);
-                      
+                      //else employeeService.Update(SelectedEmployee);
+                      else Task.Run(() => employeeService.Update(SelectedEmployee));
                       IsEditable = false;
                       var result = MessageBox.Show("для обновления списка сотрудников перезагрузите окно, нажав на кнопку перезагрузки в верхней правой части главного окна", "подтверждение", MessageBoxButton.OKCancel);
                   }));
