@@ -111,8 +111,8 @@ public partial class Employee : IComparable<Employee>, IDataErrorInfo, INotifyPr
         get { return password; }
         set { password = value; OnPropertyChanged(nameof(Password)); }
     }
-    private string? isFired;
-    public string? IsFired
+    private DateTime? isFired;
+    public DateTime? IsFired
     {
         get { return isFired; }
         set { isFired = value; OnPropertyChanged(nameof(IsFired)); }
@@ -156,6 +156,14 @@ public partial class Employee : IComparable<Employee>, IDataErrorInfo, INotifyPr
             if (string.IsNullOrEmpty(Email?.Trim()))
                 return "Email обязателен для заполнения";
 
+            if (string.IsNullOrEmpty(Position?.Trim()))
+                return "Email обязателен для заполнения";
+
+            if (string.IsNullOrEmpty(Cabinet?.Trim()))
+                return "Email обязателен для заполнения";
+
+            if (IdDepartment <= 0)
+                return "Выберите отдел";
 
             var properties = new[] { "Surname", "FirstName", "SecondName", "Position", "PhoneWork", "Cabinet", "Email" };
             var errors = properties
@@ -209,6 +217,10 @@ public partial class Employee : IComparable<Employee>, IDataErrorInfo, INotifyPr
                         if (!Regex.IsMatch(Position!, @"[а-яА-ЯёЁ]+$"))
                             error = "Должность должна быть написана кириллицей";
                     }
+                    else
+                    {
+                        error = "Поле не должно быть пустым";
+                    }
                     break;
                 case "PhoneWork":
                     if (PhoneWork != null)
@@ -227,6 +239,10 @@ public partial class Employee : IComparable<Employee>, IDataErrorInfo, INotifyPr
                     {
                         if (!Regex.IsMatch(Cabinet!, @"^[a-zA-Zа-яА-ЯёЁ0-9\s\-]{1,10}$"))
                             error = "Номер кабинета может содержать только буквы и цифры";
+                    }
+                    else
+                    {
+                        error = "Поле не должно быть пустым";
                     }
                     break;
                 case "Email":

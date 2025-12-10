@@ -11,7 +11,7 @@
         xmlns:converter ="clr-namespace:Desktop.Helpers"
         d:DataContext="{d:DesignInstance Type=vm:PersonViewModel}"
         mc:Ignorable="d"
-        Title="PersonWindow" Height="590" Width="900"
+        Title="PersonWindow" Height="650" Width="900"
         Left="250"
         Top="100"
         WindowState="{Binding WindowState}"

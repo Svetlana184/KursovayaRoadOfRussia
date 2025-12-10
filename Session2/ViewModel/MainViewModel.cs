@@ -175,7 +175,7 @@ namespace Desktop.ViewModel
             EmployeesList = new List<EmployeeCard>();
                 foreach (Employee emp in Employees)
                 {
-                    if (emp.IsFired == null || DateTime.Now - DateTime.Parse(emp.IsFired).AddDays(30) < TimeSpan.Zero)
+                    if (emp.IsFired == null || DateTime.Now - DateTime.Parse(emp.IsFired.ToString()).AddDays(30) < TimeSpan.Zero)
                     {
                         EmployeeCard cardEmp = new EmployeeCard
                         {

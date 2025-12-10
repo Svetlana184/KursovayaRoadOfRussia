@@ -348,7 +348,7 @@ namespace Desktop.ViewModel
             get
             {
                 return turnoffCommand ??
-                    (turnoffCommand = new RelayCommand((o) =>
+                    (turnoffCommand = new RelayCommand(async (o) =>
                     {
                         var result = MessageBox.Show("Вы уверены, что хотите уволить данного сотрудника?", "Подтверждение", MessageBoxButton.YesNo);
                         if (result == MessageBoxResult.Yes)
@@ -360,10 +360,25 @@ namespace Desktop.ViewModel
                             }
                             else
                             {
-                                SelectedEmployee.IsFired = DateTime.Now.ToString();
-                                //employeeService.Update(SelectedEmployee);
-                                Task.Run(() => employeeService.Update(SelectedEmployee));
-                                MessageBox.Show("Сотрудник уволен");
+                                try
+                                {
+                                    SelectedEmployee.IsFired = DateTime.Now;
+
+                                    var updateResult = await Task.Run(() => employeeService.Update(SelectedEmployee));
+
+                                    if (updateResult == true)
+                                    {
+                                        MessageBox.Show("Сотрудник уволен", "Успешно", MessageBoxButton.OK, MessageBoxImage.Information);
+                                    }
+                                    else
+                                    {
+                                        MessageBox.Show($"Ошибка при увольнении: {updateResult}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                                    }
+                                }
+                                catch (Exception ex)
+                                {
+                                    MessageBox.Show($"Ошибка при увольнении: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                                }
                             }
                         }
 
@@ -404,13 +419,12 @@ namespace Desktop.ViewModel
 
                       if (SelectedEmployee.IdEmployee == 0)
                       {
-                          //employeeService.Add(SelectedEmployee);
                           Task.Run(() => employeeService.Add(SelectedEmployee));
                       }
-                      //else employeeService.Update(SelectedEmployee);
                       else Task.Run(() => employeeService.Update(SelectedEmployee));
                       IsEditable = false;
-                      var result = MessageBox.Show("для обновления списка сотрудников перезагрузите окно, нажав на кнопку перезагрузки в верхней правой части главного окна", "подтверждение", MessageBoxButton.OKCancel);
+                      var result = MessageBox.Show("Для обновления списка сотрудников перезагрузите окно, нажав на кнопку перезагрузки в верхней правой части главного окна", 
+                          "Подтверждение", MessageBoxButton.OKCancel, MessageBoxImage.Information);
                   }));
             }
         }
@@ -422,7 +436,7 @@ namespace Desktop.ViewModel
                 return resetCommand ??
                   (resetCommand = new RelayCommand((o) =>
                   {
-                      var result = MessageBox.Show("Вы уверены, что хотите отменить изменения?", "Подтверждение", MessageBoxButton.YesNo);
+                      var result = MessageBox.Show("Вы уверены, что хотите отменить изменения?", "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Warning);
                       if (result == MessageBoxResult.Yes)
                       {
                           SelectedEmployee = (Employee)BackUpEmployee.Clone();
@@ -443,7 +457,7 @@ namespace Desktop.ViewModel
                   {
                       int calendarid = (int)(o);
                       Calendar_ calendar_ = Calendars.FirstOrDefault(x => x.IdCalendar == calendarid)!;
-                      var result = MessageBox.Show("Вы уверены, что хотите удалить это мероприятие?", "Подтверждение", MessageBoxButton.YesNo);
+                      var result = MessageBox.Show("Вы уверены, что хотите удалить это мероприятие?", "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Warning);
                       if (result == MessageBoxResult.Yes)
                       {
                           calendarService.Delete(calendar_);
@@ -529,7 +543,7 @@ namespace Desktop.ViewModel
                 return resetEvent ??
                   (resetEvent = new RelayCommand((o) =>
                   {
-                      var result = MessageBox.Show("Вы уверены, что хотите отменить изменения?", "Подтверждение", MessageBoxButton.YesNo);
+                      var result = MessageBox.Show("Вы уверены, что хотите отменить изменения?", "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Warning);
                       if (result == MessageBoxResult.Yes)
                       {
                           TypeOfEvent_ = "";
@@ -553,7 +567,7 @@ namespace Desktop.ViewModel
                 return saveEvent ??
                   (saveEvent = new RelayCommand((o) =>
                   {
-                      var result = MessageBox.Show("Вы уверены, что хотите сохранить мероприятие?", "Подтверждение", MessageBoxButton.YesNo);
+                      var result = MessageBox.Show("Cохранить мероприятие?", "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Warning);
                       if (result == MessageBoxResult.Yes)
                       {
                           

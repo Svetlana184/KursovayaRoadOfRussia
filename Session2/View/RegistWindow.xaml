@@ -81,8 +81,12 @@
         <TextBox Grid.Column="1" Grid.Row="8" Margin="10" x:Name="Email" 
                  materialDesign:HintAssist.Hint="Электронная почта"
                  Text="{Binding SelectedEmployee.Email, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
-        <ComboBox Margin="10" Grid.Column="1" Grid.Row="9" x:Name="Department" materialDesign:HintAssist.Hint="Department"  ItemsSource="{Binding Deps}" 
-                  DisplayMemberPath="DepartmentName" SelectedValuePath="IdDepartment"  />
+        
+        <ComboBox Margin="10" Grid.Column="1" Grid.Row="9" x:Name="Department" materialDesign:HintAssist.Hint="Department"  
+                  ItemsSource="{Binding Deps}" 
+                  DisplayMemberPath="DepartmentName" SelectedValuePath="IdDepartment"  
+                  SelectedValue="{Binding SelectedEmployee.IdDepartment, Mode=TwoWay}"
+                  />
         <PasswordBox Grid.Column="1" Grid.Row="10" Margin="10" x:Name="Password" 
                      materialDesign:HintAssist.Hint="Пароль"
                      util:PasswordBoxHelper.Attach="True"
