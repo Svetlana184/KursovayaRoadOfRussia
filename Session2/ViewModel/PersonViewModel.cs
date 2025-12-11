@@ -595,28 +595,122 @@ namespace Desktop.ViewModel
                       var result = MessageBox.Show("Cохранить мероприятие?", "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Warning);
                       if (result == MessageBoxResult.Yes)
                       {
-                          
-                          Calendar_ newCalendar = new Calendar_();
-                          newCalendar.IdEmployee = SelectedEmployee.IdEmployee;
-                          newCalendar.TypeOfEvent = TypeOfEvent_;
-                          if(NameOfStudy_ != null) newCalendar.IdEvent = NameOfStudy_.IdEvent;
-                          newCalendar.TypeOfAbsense = Typeofabsence_;
-                          if(IdAlternate_ != null) newCalendar.IdAlternate = IdAlternate_.IdEmployee;
-                          newCalendar.DateStart = DateOnly.FromDateTime((DateTime)DateStart_!);
-                          newCalendar.DateFinish = DateOnly.FromDateTime((DateTime)DateFinish_!);
+                          if (TypeOfEvent_ == null || DateStart_ == null || DateFinish_ == null)
+                          {
+                              MessageBox.Show("Заполните поле названия мероприятия и даты его проведения",
+                                  "Обязательные поля", MessageBoxButton.OKCancel, MessageBoxImage.Warning);
+                          }
+                          else
+                          {
+                              List<DateTime> dateRange = GenerateDateRange(DateStart_.Value, DateFinish_.Value);
+                              if (DateStart_ < DateFinish_)
+                              {
+                                  switch (TypeOfEvent_)
+                                  {
+                                      case "Отпуск":
+                                      case "Обучение":
+                                          {
+                                              List<Calendar_> conflictingEvents = GetConflictingEvents(dateRange, skipList.ToList());
+                                              if (conflictingEvents.Any())
+                                              {
+                                                  ShowConflictMessage(conflictingEvents);
+                                                  return;
+                                              }
+                                              break;
+                                          }    
+                                      case "Временное отсутствие":
+                                          {
+                                              List<Calendar_> conflictingEvents = new List<Calendar_>();
+                                              conflictingEvents.AddRange(GetConflictingEvents(dateRange, vacationList.ToList()));
+                                              conflictingEvents.AddRange(GetConflictingEvents(dateRange, studyList.ToList()));
+                                              if (conflictingEvents.Any())
+                                              {
+                                                  ShowConflictMessage(conflictingEvents);
+                                                  return;
+                                              }
+                                              break;
+                                          }     
+                                  }
+                                  Calendar_ newCalendar = new Calendar_();
+                                  newCalendar.IdEmployee = SelectedEmployee.IdEmployee;
+                                  newCalendar.TypeOfEvent = TypeOfEvent_;
+                                  if (NameOfStudy_ != null) newCalendar.IdEvent = NameOfStudy_.IdEvent;
+                                  newCalendar.TypeOfAbsense = Typeofabsence_;
+                                  if (IdAlternate_ != null) newCalendar.IdAlternate = IdAlternate_.IdEmployee;
+                                  newCalendar.DateStart = DateOnly.FromDateTime((DateTime)DateStart_!);
+                                  newCalendar.DateFinish = DateOnly.FromDateTime((DateTime)DateFinish_!);
 
-                          await calendarService.Add(newCalendar);
-                          BrowseEvents();
-                          TypeOfEvent_ = " ";
-                          NameOfStudy_ = null;
-                          Typeofabsence_ = " ";
-                          IdAlternate_ = null;
-                          DateStart_ = null;
-                          DateFinish_ = null;
+                                  await calendarService.Add(newCalendar);
+
+                                  LoadCalendars();
+                                  BrowseEvents();
+                                  TypeOfEvent_ = " ";
+                                  NameOfStudy_ = null;
+                                  Typeofabsence_ = " ";
+                                  IdAlternate_ = null;
+                                  DateStart_ = null;
+                                  DateFinish_ = null;
+
+
+                              }
+                              else
+                              {
+                                  MessageBox.Show("Дата окончания мероприятия не может быть раньше даты окончания", "Даты мероприятия",
+                                      MessageBoxButton.OKCancel, MessageBoxImage.Warning);
+                              }
+                          }
+                          
                       }
 
                   }));
             }
+        }
+
+        private void ShowConflictMessage(List<Calendar_> conflicts)
+        {
+            StringBuilder message = new StringBuilder();
+
+            message.AppendLine("Обнаружены конфликтующие события:");
+
+            foreach (var conflict in conflicts)
+            {
+                message.AppendLine($"• {conflict.TypeOfEvent}: {conflict.DateStart} - {conflict.DateFinish}"); 
+            }
+
+            MessageBox.Show(message.ToString(), "Конфликт планирования",
+                MessageBoxButton.OK, MessageBoxImage.Warning);
+        }
+
+        private List<Calendar_> GetConflictingEvents(List<DateTime> dateRange,
+                                           List<Calendar_> calendars)
+        {
+            List<Calendar_> conflicts = new List<Calendar_>();
+
+            foreach (var calendar in calendars)
+            {
+                DateTime calStart = DateTime.Parse(calendar.DateStart.ToString());
+                DateTime calEnd = DateTime.Parse(calendar.DateFinish.ToString());
+                bool hasConflict = false;
+                hasConflict = dateRange.Any(date => date >= calStart && date <= calEnd);
+                if (hasConflict)
+                {
+                    conflicts.Add(calendar);
+                }
+            }
+
+            return conflicts;
+        }
+
+        private List<DateTime> GenerateDateRange(DateTime startDate, DateTime endDate)
+        {
+            List<DateTime> dates = new List<DateTime>();
+
+            for (DateTime date = startDate; date <= endDate; date = date.AddDays(1))
+            {
+                dates.Add(date);
+            }
+
+            return dates;
         }
 
         private RelayCommand? stateminCommand;

@@ -11,7 +11,7 @@ namespace WebAPI.Models
                 {
                     Department dep_start = new Department()
                     {
-                        DepartmentName = "start department"
+                        DepartmentName = "Компания \"Дороги России\""
                     };
                     context.Departments.Add(dep_start);
                     context.SaveChanges();
