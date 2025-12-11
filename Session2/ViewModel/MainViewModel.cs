@@ -285,7 +285,7 @@ namespace Desktop.ViewModel
                       Employee new_emp = new Employee();
                       new_emp.IdDepartment = Deps.FirstOrDefault(p => p.IdDepartmentParent == null)!.IdDepartment;
                      PersonWindow window = new PersonWindow(new_emp, Depid);
-                     window.Show();
+                      window.Show();
                   }));
             }
         }
@@ -300,7 +300,6 @@ namespace Desktop.ViewModel
                       EmployeeCard employee = o as EmployeeCard;
                       
                       PersonWindow window = new PersonWindow(employees.FirstOrDefault(p=>p.IdEmployee == employee!.IdEmployee)!, employee!.IdDepartment);
-                      
                       window.Show();
                      
                   }));

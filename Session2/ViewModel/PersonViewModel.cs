@@ -2,6 +2,7 @@
 using Desktop.Services;
 using Desktop.Utilits;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -404,9 +405,14 @@ namespace Desktop.ViewModel
             get
             {
                 return addEmp ??
-                  (addEmp = new RelayCommand((o) =>
+                  (addEmp = new RelayCommand(async (o) =>
                   {
-
+                      if (!string.IsNullOrEmpty(SelectedEmployee.Error))
+                      {
+                          MessageBox.Show(SelectedEmployee.Error, "Ошибка валидации",
+                              MessageBoxButton.OK, MessageBoxImage.Error);
+                          return;
+                      }
                       if (BossId_ != null) 
                       { 
                           SelectedEmployee.IdBoss = BossId_.IdEmployee;
@@ -415,16 +421,35 @@ namespace Desktop.ViewModel
                       { 
                            SelectedEmployee.IdHelper = HelperId_.IdEmployee;
                           
-                      } 
-
-                      if (SelectedEmployee.IdEmployee == 0)
-                      {
-                          Task.Run(() => employeeService.Add(SelectedEmployee));
                       }
-                      else Task.Run(() => employeeService.Update(SelectedEmployee));
-                      IsEditable = false;
-                      var result = MessageBox.Show("Для обновления списка сотрудников перезагрузите окно, нажав на кнопку перезагрузки в верхней правой части главного окна", 
-                          "Подтверждение", MessageBoxButton.OKCancel, MessageBoxImage.Information);
+
+                      try
+                      {
+                          bool result;
+                          if (SelectedEmployee.IdEmployee == 0)
+                          {
+                              result = await employeeService.Add(SelectedEmployee);
+                              if (result)
+                              {
+                                  MessageBox.Show("Сотрудник добавлен", "Успешно");
+                                  CloseWindow(); 
+                              }
+                          }
+                          else
+                          {
+                              result = await employeeService.Update(SelectedEmployee);
+                              if (result)
+                              {
+                                  MessageBox.Show("Изменения сохранены", "Успешно");
+                                  CloseWindow(); 
+                              }
+                          }
+                      }
+                      catch (Exception ex)
+                      {
+                          MessageBox.Show($"Ошибка: {ex.Message}", "Ошибка");
+                      }
+                     
                   }));
             }
         }
@@ -633,17 +658,13 @@ namespace Desktop.ViewModel
             SelectedEmployee = employee;
             
             SelectedDepartment = departmentid;
-            LoadEmpDep();
-            EmployeeList = Employees!.Where(x => x.IdDepartment == SelectedDepartment && x.IdEmployee != SelectedEmployee.IdEmployee).ToList();
-            EmployeeList.Sort();
-            EmployeeList.Add(new Employee());
-            LastShow = false;
-            PresentShow = true;
-            FutureShow = true;
-            ColorPresent = "Green";
-            ColorLast = "LightGreen";
-            ColorFuture = "Green";
-            BrowseEmployee(); 
+
+            Employees = new ObservableCollection<Employee>();
+            EmployeeList = new List<Employee>();
+
+            LoadData();
+
+           
 
         }
         private void BrowseEmployee()
@@ -663,13 +684,36 @@ namespace Desktop.ViewModel
                 BossId_ = null;
                 HelperId_ = null;
                 IsEditable = true;
-                SelectedDepartment = 888;
                 VisibilityButton = "Hidden";
             }
             
 
         }
-        private void LoadEmpDep()
+        
+        private async void LoadData()
+        {
+            try
+            {
+                await LoadEmpDep();
+                EmployeeList = Employees!.Where(x => x.IdDepartment == SelectedDepartment && x.IdEmployee != SelectedEmployee.IdEmployee).ToList();
+                EmployeeList.Sort();
+                EmployeeList.Add(new Employee());
+                LastShow = false;
+                PresentShow = true;
+                FutureShow = true;
+                ColorPresent = "Green";
+                ColorLast = "LightGreen";
+                ColorFuture = "Green";
+                BrowseEmployee();
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка загрузки данных: {ex.Message}", "Ошибка",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+        private async Task LoadEmpDep()
         {
             employeeService = new EmployeeService();
             eventService = new EventService();
@@ -681,12 +725,16 @@ namespace Desktop.ViewModel
                 Employees = new ObservableCollection<Employee>(task_emp.Result);
                 Events = null;
                 Task<List<Event>> task_ev = Task.Run(() => eventService.GetAll());
+
+                await Task.WhenAll(task_emp, task_ev);
+
                 Events = new ObservableCollection<Event>(task_ev.Result);
 
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message, "Ошибка загрузки",
+                MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
         private void LoadCalendars()
