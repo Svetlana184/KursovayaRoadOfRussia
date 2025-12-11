@@ -114,6 +114,21 @@ namespace Desktop.ViewModel
             WindowState = "Normal";
             LoadData();
             Load();
+
+            PersonViewModel.EmployeeUpdated += OnEmployeeUpdated;
+            PersonViewModel.EmployeeAdded += OnEmployeeUpdated;
+        }
+
+        private async void OnEmployeeUpdated()
+        {
+            int ex_depid = Depid;
+            await Task.Run(() => LoadData());
+            Load();
+            
+            OnPropertyChanged(nameof(EmployeesList));
+            Depid = ex_depid;
+            FilterEmployeesByDepartment(ex_depid);
+
         }
         private void LoadData()
         {
@@ -358,6 +373,39 @@ namespace Desktop.ViewModel
                       }
                   }));
             }
+        }
+
+        private RelayCommand? closeWindowCommand;
+        public RelayCommand CloseWindowCommand
+        {
+            get
+            {
+                return closeWindowCommand ?? (
+                    closeWindowCommand = new RelayCommand((o) => {
+                        var result = MessageBox.Show("При закрытии программы несохраненные изменения не сохранятся. " +
+                                "Выйти из программы?",
+                            "Подтверждение выхода",
+                            MessageBoxButton.YesNo,
+                            MessageBoxImage.Warning);
+
+                        switch (result)
+                        {
+                            case MessageBoxResult.Yes:
+                                Cleanup();
+                                Application.Current.Shutdown();
+                                break;
+                            case MessageBoxResult.No:
+                                return;
+                        }
+
+                    }));
+            }
+        }
+
+        public void Cleanup()
+        {
+            PersonViewModel.EmployeeUpdated -= OnEmployeeUpdated;
+            PersonViewModel.EmployeeAdded -= OnEmployeeUpdated;
         }
 
     }

@@ -337,6 +337,9 @@ namespace Desktop.ViewModel
             }
         }
 
+        //СОБЫТИЯ
+        public static event Action EmployeeUpdated;
+        public static event Action EmployeeAdded;
 
         //СЕРВИСЫ
         public EmployeeService employeeService;
@@ -380,6 +383,7 @@ namespace Desktop.ViewModel
                                     if (updateResult == true)
                                     {
                                         MessageBox.Show("Сотрудник уволен", "Успешно", MessageBoxButton.OK, MessageBoxImage.Information);
+                                        EmployeeUpdated?.Invoke();
                                     }
                                     else
                                     {
@@ -442,6 +446,7 @@ namespace Desktop.ViewModel
                               if (result)
                               {
                                   MessageBox.Show("Сотрудник добавлен", "Успешно");
+                                  EmployeeAdded?.Invoke();
                                   CloseWindow(); 
                               }
                           }
@@ -451,6 +456,7 @@ namespace Desktop.ViewModel
                               if (result)
                               {
                                   MessageBox.Show("Изменения сохранены", "Успешно");
+                                  EmployeeUpdated?.Invoke();
                                   CloseWindow(); 
                               }
                           }
