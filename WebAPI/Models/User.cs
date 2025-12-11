@@ -5,9 +5,9 @@ namespace WebAPI.Models;
 
 public partial class User
 {
-    public string Email { get; set; } = null!;
+    public required string Email { get; set; }
 
-    public string Password { get; set; } = null!;
+    public required string Password { get; set; }
 
     public int IdUser { get; set; }
 }

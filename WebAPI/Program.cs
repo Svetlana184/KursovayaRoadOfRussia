@@ -29,6 +29,7 @@ builder.Services.AddScoped<IService<Department>, DepartmentService>();
 builder.Services.AddScoped<IService<Employee>, EmployeeService>();
 builder.Services.AddScoped<IService<Event>, EventService>();
 builder.Services.AddScoped<IService<Calendar_>, CalendarService>();
+builder.Services.AddScoped<IService<WorkingCalendar>, WorkingCalendarService>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(
     options =>
@@ -100,6 +101,10 @@ app.MapPost("/register", async (User user, RoadOfRussiaKorushkContext db) =>
     return Results.Ok(createdUser);
 });
 
+var context = app.Services.CreateScope().ServiceProvider.
+    GetRequiredService<RoadOfRussiaKorushkContext>();
+SeedData.SeedDatabase(context);
+
 app.Run();
 
 byte[] StringToByte(string str)
@@ -122,10 +127,9 @@ string ByteToString(byte[] bytes)
     }
     return result;
 }
-var context = app.Services.CreateScope().ServiceProvider.
-    GetRequiredService<RoadOfRussiaKorushkContext>();
-SeedData.SeedDatabase(context);
-app.Run();
+
+
+
 public class AuthOptions
 {
     public const string ISSUER = "MyAuthServer"; //издатель токена

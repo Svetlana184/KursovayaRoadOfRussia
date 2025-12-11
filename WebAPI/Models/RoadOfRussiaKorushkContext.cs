@@ -8,11 +8,13 @@ public partial class RoadOfRussiaKorushkContext : DbContext
 {
     public RoadOfRussiaKorushkContext()
     {
+        Database.EnsureCreated();
     }
 
     public RoadOfRussiaKorushkContext(DbContextOptions<RoadOfRussiaKorushkContext> options)
         : base(options)
     {
+        Database.EnsureCreated();
     }
 
     public virtual DbSet<Calendar_> Calendars { get; set; }
@@ -212,7 +214,10 @@ public partial class RoadOfRussiaKorushkContext : DbContext
 
             entity.ToTable("User");
 
+            entity.HasIndex(e => e.Email, "User_UNIQUE").IsUnique();
+
             entity.Property(e => e.Email).HasMaxLength(200);
+
             entity.Property(e => e.Password).HasColumnType("ntext");
         });
 
