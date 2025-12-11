@@ -15,10 +15,25 @@ namespace WebAPI.Models
                     };
                     context.Departments.Add(dep_start);
                     context.SaveChanges();
-                    Console.WriteLine("Added start department");
+                }
+                if (!context.Events.Any())
+                {
+                    Event ev = new Event()
+                    {
+                        EventName = "мастер-класс",
+                        TypeOfEvent = "обучение",
+                        EventStatus = "запланирован",
+                        EventDescription = "очень важный мастер-класс",
+                        DateOfEvent = DateTime.Parse("2025-12-13"),
+                        EventManagers = "1005",
+                        TypeOfClass = "мастер-класс"
+
+                    };
+                    context.Events.Add(ev);
+                    context.SaveChanges();
                 }
                 if (!context.WorkingCalendars.Any())
-                {
+                    {
                     var calendars = new List<WorkingCalendar>
                     {
                     new WorkingCalendar { ExceptionDate = DateOnly.FromDateTime(DateTime.Parse("2025-01-01")), IsWorkingDay = false, Id=1 },
@@ -42,7 +57,6 @@ namespace WebAPI.Models
 
                     context.WorkingCalendars.AddRange(calendars);
                     context.SaveChanges();
-                    Console.WriteLine($"Added {calendars.Count} working calendar entries");
                 }              
             }
         }
