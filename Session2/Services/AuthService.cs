@@ -14,7 +14,7 @@ namespace Desktop.Services
     public class AuthService
     {
         private HttpClient client = new HttpClient();
-        public async Task<String> Register(Employee employee)
+        public async Task<String> Register(User employee)
         {
             JsonContent content = JsonContent.Create(employee);
             using var response = await client.PostAsync("https://localhost:7013/register", content);
@@ -25,7 +25,7 @@ namespace Desktop.Services
             }
             return $"Пользователь {employee.Email} существует!";
         }
-        public async Task<Response> SignIn(Employee employee)
+        public async Task<Response> SignIn(User employee)
         {
             JsonContent content = JsonContent.Create(employee);
             using var response = await client.PostAsync("https://localhost:7013/login", content);

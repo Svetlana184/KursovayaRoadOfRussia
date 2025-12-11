@@ -80,15 +80,8 @@ namespace Desktop.ViewModel
                       }
 
                       HttpClient client = new HttpClient();
-                      Employee user = new Employee
+                      User user = new User
                       {
-                          Surname = "дефолт",
-                          FirstName = "дефолт",
-                          SecondName = "дефолт",
-                          Position = "дефолт",
-                          PhoneWork = "70000000000",
-                          Cabinet = "000",
-                          IdDepartment = 1,
                           Email = Email,
                           Password = passwordBox.Password
                       };

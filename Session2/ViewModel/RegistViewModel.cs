@@ -45,8 +45,8 @@ namespace Desktop.ViewModel
                 OnPropertyChanged(nameof(Password));
             }
         }
-        private Employee _employee;
-        public Employee SelectedEmployee
+        private User _employee;
+        public User SelectedEmployee
         {
             get { return _employee; }
             set
@@ -70,7 +70,7 @@ namespace Desktop.ViewModel
 
         public RegistViewModel() 
         {
-            SelectedEmployee = new Employee();
+            SelectedEmployee = new User();
             Deps = new ObservableCollection<Department>();
             WindowState = "Normal";
             authService = new AuthService();
@@ -130,7 +130,7 @@ namespace Desktop.ViewModel
                                       string result = await Register(SelectedEmployee);
                                       MessageBox.Show($"{result}");
 
-                                      SelectedEmployee = new Employee();
+                                      SelectedEmployee = new User();
                                       Password = string.Empty;
                                       RepeatPassword = string.Empty;
                                   }
@@ -169,7 +169,7 @@ namespace Desktop.ViewModel
                   }));
             }
         }
-        private async Task<string> Register(Employee employee)
+        private async Task<string> Register(User employee)
         {
             return await authService.Register(employee);
         }
