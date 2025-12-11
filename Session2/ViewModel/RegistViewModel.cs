@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
+using System.Threading.Channels;
 using System.Threading.Tasks;
 using System.Windows;
 using Desktop.Model;
@@ -16,6 +17,7 @@ namespace Desktop.ViewModel
     public class RegistViewModel : ViewModelBase
     {
         private AuthService authService;
+        public event EventHandler RequestClose;
         private string windowstate;
         public string WindowState
         {
@@ -55,44 +57,15 @@ namespace Desktop.ViewModel
                 OnPropertyChanged(nameof(SelectedEmployee));
             }
         }
-        public DepartmentService departmentService;
-        public ObservableCollection<Department> Deps { get; set; }
-        private List<Department> deplist;
-        public List<Department> DepList
-        {
-            get { return deplist; }
-            set
-            {
-                deplist = value;
-                OnPropertyChanged();
-            }
-        }
+        
 
         public RegistViewModel() 
         {
             SelectedEmployee = new User();
-            Deps = new ObservableCollection<Department>();
             WindowState = "Normal";
             authService = new AuthService();
-            departmentService = new DepartmentService();
-
-            LoadData();
+            
         }
-
-        private void LoadData()
-        {
-            try
-            {
-                Task<List<Department>> task_dep = Task.Run(() => departmentService.GetAll());
-                Deps = new ObservableCollection<Department>(task_dep.Result);
-
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-        }
-
 
         private RelayCommand? createCommand;
         public RelayCommand CreateCommand
@@ -123,24 +96,36 @@ namespace Desktop.ViewModel
                               }
                               else
                               {
-                                  try
+                                  if (Password.Length < 8)
                                   {
-                                      SelectedEmployee.Password = Password;
-                                   
-                                      string result = await Register(SelectedEmployee);
-                                      MessageBox.Show($"{result}");
+                                      MessageBox.Show("Пароль содержать минимум восемь символов");
+                                      return;
+                                  }
+                                  else
+                                  {
+                                      try
+                                      {
+                                          SelectedEmployee.Password = Password;
 
-                                      SelectedEmployee = new User();
-                                      Password = string.Empty;
-                                      RepeatPassword = string.Empty;
-                                  }
-                                  catch (Exception ex)
-                                  {
-                                      MessageBox.Show($"Ошибка при регистрации: {ex.Message}");
-                                  }
+                                          string result = await Register(SelectedEmployee);
+                                          MessageBox.Show($"{result}");
+
+                                          SelectedEmployee = new User();
+                                          Password = string.Empty;
+                                          RepeatPassword = string.Empty;
+                                         
+                                          LoginWindow loginWindow = new LoginWindow();
+                                          RequestClose?.Invoke(this, EventArgs.Empty);
+
+
+                                      }
+                                      catch (Exception ex)
+                                      {
+                                          MessageBox.Show($"Ошибка при регистрации: {ex.Message}");
+                                      }
+                                  }     
                               }
-                          }
-                          
+                          } 
                       }
                   }));
             }

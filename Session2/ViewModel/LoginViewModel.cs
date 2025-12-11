@@ -16,7 +16,7 @@ namespace Desktop.ViewModel
     public class LoginViewModel:ViewModelBase
     {
         private AuthService authService;
-
+        
         public LoginViewModel()
         {
             WindowState = "Normal";

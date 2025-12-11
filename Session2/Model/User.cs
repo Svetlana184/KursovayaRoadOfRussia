@@ -44,10 +44,7 @@ public partial class User : IDataErrorInfo, INotifyPropertyChanged
             if (string.IsNullOrEmpty(Email?.Trim()))
                 return "Email обязателен для заполнения";
 
-            if (string.IsNullOrEmpty(Password?.Trim()))
-                return "Email обязателен для заполнения";
-
-            var properties = new[] {"Email", "Password" };
+            var properties = new[] {"Email"};
             var errors = properties
                 .Select(prop => this[prop])
                 .Where(error => !string.IsNullOrEmpty(error))
