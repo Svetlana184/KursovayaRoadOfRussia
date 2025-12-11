@@ -29,7 +29,6 @@ builder.Services.AddScoped<IService<Department>, DepartmentService>();
 builder.Services.AddScoped<IService<Employee>, EmployeeService>();
 builder.Services.AddScoped<IService<Event>, EventService>();
 builder.Services.AddScoped<IService<Calendar_>, CalendarService>();
-builder.Services.AddScoped<IService<User>, UserService>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(
     options =>
