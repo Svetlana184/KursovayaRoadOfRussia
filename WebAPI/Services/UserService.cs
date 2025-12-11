@@ -3,38 +3,38 @@ using WebAPI.Models;
 
 namespace WebAPI.Services
 {
-    public class CalendarService : IService<Calendar_>
+    public class UserService: IService<User>
     {
         private readonly RoadOfRussiaKorushkContext roadOfRussiaContext;
-        public CalendarService(RoadOfRussiaKorushkContext context)
+        public UserService(RoadOfRussiaKorushkContext context)
         {
             this.roadOfRussiaContext = context;
         }
 
-        public async Task<IEnumerable<Calendar_>> GetAll()
+        public async Task<IEnumerable<User>> GetAll()
         {
-            return await roadOfRussiaContext.Calendars.ToListAsync();
+            return await roadOfRussiaContext.Users.ToListAsync();
         }
 
-        public async Task<Calendar_> GetById(int id_)
+        public async Task<User> GetById(int id_)
         {
-            return await roadOfRussiaContext.Calendars.FindAsync(id_);
+            return await roadOfRussiaContext.Users.FindAsync(id_);
         }
 
 
-        public async Task Create(Calendar_ product)
+        public async Task Create(User product)
 
         {
-            await roadOfRussiaContext.Calendars.AddAsync(product);
+            await roadOfRussiaContext.Users.AddAsync(product);
             await roadOfRussiaContext.SaveChangesAsync();
         }
 
         public async Task Delete(int id)
         {
-            var product = await roadOfRussiaContext.Calendars.FindAsync(id);
+            var product = await roadOfRussiaContext.Users.FindAsync(id);
             if (product != null)
             {
-                roadOfRussiaContext.Calendars.Remove(product);
+                roadOfRussiaContext.Users.Remove(product);
                 await roadOfRussiaContext.SaveChangesAsync();
             }
         }
@@ -42,7 +42,7 @@ namespace WebAPI.Services
 
 
 
-        public async Task Update(Calendar_ product)
+        public async Task Update(User product)
         {
             roadOfRussiaContext.Entry(product).State = EntityState.Modified;
             roadOfRussiaContext.Update(product);

@@ -5,7 +5,7 @@ namespace WebAPI.Models
 {
     public class SeedData
     {
-        public static void SeedDatabase(RoadOfRussiaContext context)
+        public static void SeedDatabase(RoadOfRussiaKorushkContext context)
         {
             context.Database.Migrate();
             if (context.Departments.Count() == 0)

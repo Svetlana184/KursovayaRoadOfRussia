@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
+
 namespace WebAPI.Models;
 
 public partial class Employee
@@ -36,19 +37,14 @@ public partial class Employee
     public string? Password { get; set; }
 
     public DateTime? IsFired { get; set; }
-
     [JsonIgnore]
     public virtual ICollection<Calendar_> CalendarIdAlternateNavigations { get; set; } = new List<Calendar_>();
-   
     [JsonIgnore]
     public virtual ICollection<Calendar_> CalendarIdEmployeeNavigations { get; set; } = new List<Calendar_>();
-    
     [JsonIgnore]
     public virtual ICollection<Comment> Comments { get; set; } = new List<Comment>();
-    
     [JsonIgnore]
     public virtual ICollection<Department> Departments { get; set; } = new List<Department>();
-   
     [JsonIgnore]
-    public virtual Department? IdDepartmentNavigation { get; set; }
+    public virtual Department IdDepartmentNavigation { get; set; } = null!;
 }

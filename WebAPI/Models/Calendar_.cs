@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
+
 namespace WebAPI.Models;
+
 public partial class Calendar_
 {
     public int IdCalendar { get; set; }
