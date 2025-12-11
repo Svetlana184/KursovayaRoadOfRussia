@@ -255,16 +255,19 @@ namespace Desktop.ViewModel
                     PhoneWork = emp.PhoneWork,
                     Cabinet = emp.Cabinet,
                     Email = emp.Email,
-                    IdDepartment = emp.IdDepartment
+                    IdDepartment = emp.IdDepartment,
+                    Disabled = true
                 };
 
                 if (emp.IsFired != null)
                 {
                     cardEmp.Color = new SolidColorBrush(Color.FromRgb(128, 128, 128));
+                    cardEmp.Disabled = false;
                 }
                 else
                 {   
                     cardEmp.Color = new SolidColorBrush(Color.FromRgb(120, 178, 75));
+                    
                 }
                 EmployeesList.Add(cardEmp);
             }

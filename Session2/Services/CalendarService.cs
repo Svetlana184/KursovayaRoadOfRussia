@@ -21,25 +21,53 @@ namespace Desktop.Services
             httpClient.DefaultRequestHeaders.Add("Authorization",
                "Bearer " + RegisterUser.access_token);
         }
-        public override async Task Add(Calendar_ obj)
+        public override async Task<bool> Add(Calendar_ obj)
         {
             try
             {
                 JsonContent content = JsonContent.Create(obj);
                 using var response = await httpClient.PostAsync("https://localhost:7013/api/Calendar/post", content);
-                string responseText = await response.Content.ReadAsStringAsync();
-                if (responseText != null)
+
+                if (response.IsSuccessStatusCode)
                 {
-                    Calendar_ resp = JsonSerializer.Deserialize<Calendar_>(responseText!)!;
-                    if (resp == null) MessageBox.Show(responseText);
+                    string responseText = await response.Content.ReadAsStringAsync();
+                    if (!string.IsNullOrEmpty(responseText))
+                    {
+                        Calendar_ resp = JsonSerializer.Deserialize<Calendar_>(responseText)!;
+                        if (resp != null)
+                        {
+                            return true;
+                        }
+                    }
+                    return false;
+                }
+                else
+                {
+                    string error = await response.Content.ReadAsStringAsync();
+                    MessageBox.Show($"Ошибка API: {error}", "Ошибка");
+                    return false;
                 }
             }
-            catch { }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка: {ex.Message}", "Ошибка");
+                return false;
+            }
         }
 
-        public override async Task Delete(Calendar_ obj)
+        public override async Task<bool> Delete(Calendar_ obj)
         {
-            using var response = await httpClient.DeleteAsync($"https://localhost:7013/api/Calendar/delete/{obj.IdCalendar}");
+            try
+            {
+                using var response = await httpClient.DeleteAsync($"https://localhost:7013/api/Calendar/delete/{obj.IdCalendar}");
+                return response.IsSuccessStatusCode;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка: {ex.Message}", "Ошибка");
+                return false;
+            }
+            //using var response = await httpClient.DeleteAsync($"https://localhost:7013/api/Calendar/delete/{obj.IdCalendar}");
 
         }
 
@@ -54,21 +82,19 @@ namespace Desktop.Services
             throw new NotImplementedException();
         }
 
-        public override async Task Update(Calendar_ obj)
+        public override async Task<bool> Update(Calendar_ obj)
         {
             try
             {
                 JsonContent content = JsonContent.Create(obj);
                 using var response = await httpClient.PutAsync($"https://localhost:7013/api/Calendar/update/{obj.IdCalendar}", content);
-                string responseText = await response.Content.ReadAsStringAsync();
-                if (responseText != null)
-                {
-                    Calendar_ resp = JsonSerializer.Deserialize<Calendar_>(responseText!)!;
-                    if (resp == null) MessageBox.Show(responseText);
-                }
-
+                return response.IsSuccessStatusCode;
             }
-            catch { }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка: {ex.Message}", "Ошибка");
+                return false;
+            }
         }
     }
 }

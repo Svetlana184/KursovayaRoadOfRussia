@@ -117,18 +117,18 @@
                 </i:Interaction.Triggers>
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <StackPanel Width="900" Background="{Binding Color}">
-                            <StackPanel Orientation="Horizontal">
+                        <StackPanel Width="900" Background="{Binding Color}" >
+                            <StackPanel Orientation="Horizontal" >
                                 <Label Content="{Binding IdDepartment, Converter={StaticResource IdDepartmenttoName}}" Foreground="white"/>
                                 <Label Content=" - " Foreground="white"/>
                                 <Label Content="{Binding Position}" Foreground="white"/>
                             </StackPanel>
-                            <StackPanel Orientation="Horizontal">
+                            <StackPanel Orientation="Horizontal" >
                                 <Label Content="{Binding Surname}" FontSize="20" Foreground="white"/>
                                 <Label Content="{Binding FirstName}" FontSize="20" Foreground="white"/>
                                 <Label Content="{Binding SecondName}" FontSize="20" Foreground="white"/>
                             </StackPanel>
-                            <StackPanel Orientation="Horizontal">
+                            <StackPanel Orientation="Horizontal" >
                                 <Label Content="{Binding PhoneWork}" Foreground="white"/>
                                 <Label Content="{Binding Email}" Foreground="white"/>
                             </StackPanel>

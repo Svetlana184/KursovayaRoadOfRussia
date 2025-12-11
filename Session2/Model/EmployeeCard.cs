@@ -18,7 +18,12 @@ namespace Desktop.Model
             get { return color; }
             set { color = value; OnPropertyChanged(nameof(Color)); }
         }
-
+        private bool disabled;
+        public bool Disabled
+        {
+            get { return disabled; }
+            set { disabled = value; OnPropertyChanged(nameof(Disabled)); }
+        }
         private int idemployee;
         public int IdEmployee
         {

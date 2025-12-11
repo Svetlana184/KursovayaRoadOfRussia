@@ -354,7 +354,7 @@ namespace Desktop.ViewModel
                         var result = MessageBox.Show("Вы уверены, что хотите уволить данного сотрудника?", "Подтверждение", MessageBoxButton.YesNo);
                         if (result == MessageBoxResult.Yes)
                         {
-                            List<Calendar_> calendarPresent = StudyList.Where(x => DateTime.Parse(x.DateFinish) > (DateTime.Now)).ToList();
+                            List<Calendar_> calendarPresent = StudyList.Where(x => x.DateFinish > DateOnly.FromDateTime((DateTime.Now))).ToList();
                             if (calendarPresent.Count != 0)
                             {
                                 var result1 = MessageBox.Show("Вы не можете уволить данного сотрудника из-за запланированного обучения", "Подтверждение", MessageBoxButton.OKCancel);
@@ -478,14 +478,14 @@ namespace Desktop.ViewModel
             get
             {
                 return deletecalendarCommand ??
-                  (deletecalendarCommand = new RelayCommand((o) =>
+                  (deletecalendarCommand = new RelayCommand(async (o) =>
                   {
                       int calendarid = (int)(o);
                       Calendar_ calendar_ = Calendars.FirstOrDefault(x => x.IdCalendar == calendarid)!;
                       var result = MessageBox.Show("Вы уверены, что хотите удалить это мероприятие?", "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Warning);
                       if (result == MessageBoxResult.Yes)
                       {
-                          calendarService.Delete(calendar_);
+                          await calendarService.Delete(calendar_);
                           Calendars.Remove(calendar_);
                           UpdateEvents();
                       }
@@ -590,7 +590,7 @@ namespace Desktop.ViewModel
             get
             {
                 return saveEvent ??
-                  (saveEvent = new RelayCommand((o) =>
+                  (saveEvent = new RelayCommand(async (o) =>
                   {
                       var result = MessageBox.Show("Cохранить мероприятие?", "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Warning);
                       if (result == MessageBoxResult.Yes)
@@ -602,10 +602,10 @@ namespace Desktop.ViewModel
                           if(NameOfStudy_ != null) newCalendar.IdEvent = NameOfStudy_.IdEvent;
                           newCalendar.TypeOfAbsense = Typeofabsence_;
                           if(IdAlternate_ != null) newCalendar.IdAlternate = IdAlternate_.IdEmployee;
-                          newCalendar.DateStart = DateOnly.FromDateTime((DateTime)DateStart_!).ToString();
-                          newCalendar.DateFinish = DateOnly.FromDateTime((DateTime)DateFinish_!).ToString();
+                          newCalendar.DateStart = DateOnly.FromDateTime((DateTime)DateStart_!);
+                          newCalendar.DateFinish = DateOnly.FromDateTime((DateTime)DateFinish_!);
 
-                          calendarService.Add(newCalendar);
+                          await calendarService.Add(newCalendar);
                           BrowseEvents();
                           TypeOfEvent_ = " ";
                           NameOfStudy_ = null;
@@ -770,7 +770,7 @@ namespace Desktop.ViewModel
             {
                 foreach (Calendar_ item in Calendars)
                 {
-                    if (DateTime.Parse(item.DateFinish) < (DateTime.Now))
+                    if ((item.DateFinish) < DateOnly.FromDateTime((DateTime.Now)))
                     {
                         listAll.Add(item);
                     }
@@ -780,7 +780,7 @@ namespace Desktop.ViewModel
             {
                 foreach (Calendar_ item in Calendars)
                 {
-                    if (DateTime.Parse(item.DateStart) <= DateTime.Now && DateTime.Parse(item.DateFinish) >= DateTime.Now)
+                    if ((item.DateStart) <= DateOnly.FromDateTime((DateTime.Now)) && (item.DateFinish) >= DateOnly.FromDateTime((DateTime.Now)))
                     {
                         listAll.Add(item);
                     }
@@ -790,7 +790,7 @@ namespace Desktop.ViewModel
             {
                 foreach (Calendar_ item in Calendars)
                 {
-                    if (DateTime.Parse(item.DateStart) > DateTime.Now)
+                    if ((item.DateStart) > DateOnly.FromDateTime((DateTime.Now)))
                     {
                         listAll.Add(item);
                     }
