@@ -45,16 +45,13 @@
                 <Image Grid.Column="0"  Margin="10 10 10 10 " Source="/Assets/Logo.png" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
                 <Border Grid.Column="1" Margin="30 0 40 10" Height="50"
                 Background="White" CornerRadius="10">
-                        <TextBox Padding="15 0 0 0" BorderThickness="0" Text="{Binding TitleWindow}" 
-                     FontSize="20" Background="Transparent"
+                        <TextBlock Padding="15 10 0 0"  Text="{Binding TitleWindow}" 
+                     FontSize="20" Background="Transparent" TextAlignment="Left" LineHeight="50" 
                      HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>    
                 </Border> 
             </Grid>
-            
-            <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right">
-               
-                <Button Width="50" Height="60" Command="{Binding UpdateCommand}" Background="Transparent" BorderBrush="Transparent" Foreground="White" Content="{materialIcons:MaterialIconExt Kind=Update, Size=20}" VerticalContentAlignment="Top" VerticalAlignment="Top" HorizontalContentAlignment="Right" HorizontalAlignment="Right" Margin="0 0 0 10"/>
 
+            <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right">
                 <Button Width="50" Height="60" Command="{Binding StateminCommand}" 
                     Background="Transparent" BorderBrush="Transparent" 
                     Foreground="White" Content="{materialIcons:MaterialIconExt Kind=Minus, Size=20}" 
@@ -66,7 +63,13 @@
                     VerticalContentAlignment="Top" VerticalAlignment="Top" HorizontalContentAlignment="Right" 
                     HorizontalAlignment="Right" Margin="0 0 0 10"/>     
                 
-                <Button  Width="50" Height="50" Background="Transparent" BorderBrush="Transparent" Foreground="White" Content="{materialIcons:MaterialIconExt Kind=Close, Size=20}" VerticalContentAlignment="Top" HorizontalContentAlignment="Right" HorizontalAlignment="Right" VerticalAlignment="Top" Click="Button_Click" ></Button>
+                <Button  Width="50" Height="50" Background="Transparent"
+                         BorderBrush="Transparent" Foreground="White" 
+                         Content="{materialIcons:MaterialIconExt Kind=Close, Size=20}" 
+                         VerticalContentAlignment="Top" HorizontalContentAlignment="Right"
+                         HorizontalAlignment="Right" VerticalAlignment="Top" 
+                         Command="{Binding CloseWindowCommand}"
+                         ></Button>
                 
                 
             </StackPanel>
@@ -115,20 +118,31 @@
                         <i:InvokeCommandAction Command="{Binding EditCommand}" CommandParameter="{Binding SelectedEmployee}"/>
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="ListBoxItem">
+                        <Setter Property="IsEnabled" Value="{Binding Disabled}"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Disabled}" Value="False">
+                                <Setter Property="Opacity" Value="0.5"/>
+                                <Setter Property="Background" Value="LightGray"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </ListBox.ItemContainerStyle>
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <StackPanel Width="900" Background="{Binding Color}">
-                            <StackPanel Orientation="Horizontal">
+                        <StackPanel Width="900" Background="{Binding Color}" >
+                            <StackPanel Orientation="Horizontal" >
                                 <Label Content="{Binding IdDepartment, Converter={StaticResource IdDepartmenttoName}}" Foreground="white"/>
                                 <Label Content=" - " Foreground="white"/>
                                 <Label Content="{Binding Position}" Foreground="white"/>
                             </StackPanel>
-                            <StackPanel Orientation="Horizontal">
+                            <StackPanel Orientation="Horizontal" >
                                 <Label Content="{Binding Surname}" FontSize="20" Foreground="white"/>
                                 <Label Content="{Binding FirstName}" FontSize="20" Foreground="white"/>
                                 <Label Content="{Binding SecondName}" FontSize="20" Foreground="white"/>
                             </StackPanel>
-                            <StackPanel Orientation="Horizontal">
+                            <StackPanel Orientation="Horizontal" >
                                 <Label Content="{Binding PhoneWork}" Foreground="white"/>
                                 <Label Content="{Binding Email}" Foreground="white"/>
                             </StackPanel>

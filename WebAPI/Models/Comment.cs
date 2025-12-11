@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
+
 namespace WebAPI.Models;
+
 public partial class Comment
 {
     public int IdComment { get; set; }

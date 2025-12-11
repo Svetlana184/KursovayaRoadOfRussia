@@ -1,5 +1,6 @@
 ﻿using Desktop.Model;
 using Desktop.Services;
+using Desktop.ViewModel;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
@@ -25,6 +26,11 @@ namespace Desktop.View
         public RegistWindow()
         {
             InitializeComponent();
+            var viewModel = new RegistViewModel();
+            DataContext = viewModel;
+
+            // Подписываемся на событие закрытия
+            viewModel.RequestClose += (sender, e) => this.Close();
         }
         private void Hyperlink_MouseDown_1(object sender, RoutedEventArgs e)
         {

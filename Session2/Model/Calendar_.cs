@@ -56,8 +56,8 @@ public partial class Calendar_ :  INotifyPropertyChanged, IComparable<Calendar_>
         }
         set { idalternate = value; OnPropertyChanged(nameof(IdAlternate)); }
     }
-    private string? datestart;
-    public string? DateStart
+    private DateOnly datestart;
+    public DateOnly DateStart
     {
         get
         {
@@ -70,8 +70,8 @@ public partial class Calendar_ :  INotifyPropertyChanged, IComparable<Calendar_>
             OnPropertyChanged(nameof(DateStart));
         }
     }
-    private string? datefinish;
-    public string? DateFinish
+    private DateOnly datefinish;
+    public DateOnly DateFinish
     {
         get
         {

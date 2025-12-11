@@ -5,8 +5,8 @@ namespace WebAPI.Services
 {
     public class DepartmentService : IService<Department>
     {
-        private readonly RoadOfRussiaContext roadOfRussiaContext;
-        public DepartmentService(RoadOfRussiaContext context)
+        private readonly RoadOfRussiaKorushkContext roadOfRussiaContext;
+        public DepartmentService(RoadOfRussiaKorushkContext context)
         {
             this.roadOfRussiaContext = context;
         }

@@ -5,8 +5,8 @@ namespace WebAPI.Services
 {
     public class EventService : IService<Event>
     {
-        private readonly RoadOfRussiaContext roadOfRussiaContext;
-        public EventService(RoadOfRussiaContext context)
+        private readonly RoadOfRussiaKorushkContext roadOfRussiaContext;
+        public EventService(RoadOfRussiaKorushkContext context)
         {
             this.roadOfRussiaContext = context;
         }

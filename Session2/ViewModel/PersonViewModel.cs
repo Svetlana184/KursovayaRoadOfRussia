@@ -2,6 +2,7 @@
 using Desktop.Services;
 using Desktop.Utilits;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -220,7 +221,16 @@ namespace Desktop.ViewModel
                 OnPropertyChanged();
             }
         }
-
+        private ObservableCollection<WorkingCalendar> holidays;
+        public ObservableCollection<WorkingCalendar> Holidays
+        {
+            get => holidays;
+            set
+            {
+                holidays = value;
+                OnPropertyChanged();
+            }
+        }
 
         //поля для карточки сотрудника
         private Employee? bossid_;
@@ -327,11 +337,15 @@ namespace Desktop.ViewModel
             }
         }
 
+        //СОБЫТИЯ
+        public static event Action EmployeeUpdated;
+        public static event Action EmployeeAdded;
 
         //СЕРВИСЫ
         public EmployeeService employeeService;
         public CalendarService calendarService;
         public EventService eventService;
+        public WorkingCalendarService workingCalendarService;
 
         public event Action WindowClosed;
         private void CloseWindow()
@@ -353,7 +367,7 @@ namespace Desktop.ViewModel
                         var result = MessageBox.Show("Вы уверены, что хотите уволить данного сотрудника?", "Подтверждение", MessageBoxButton.YesNo);
                         if (result == MessageBoxResult.Yes)
                         {
-                            List<Calendar_> calendarPresent = StudyList.Where(x => DateTime.Parse(x.DateFinish) > (DateTime.Now)).ToList();
+                            List<Calendar_> calendarPresent = StudyList.Where(x => x.DateFinish > DateOnly.FromDateTime((DateTime.Now))).ToList();
                             if (calendarPresent.Count != 0)
                             {
                                 var result1 = MessageBox.Show("Вы не можете уволить данного сотрудника из-за запланированного обучения", "Подтверждение", MessageBoxButton.OKCancel);
@@ -369,6 +383,7 @@ namespace Desktop.ViewModel
                                     if (updateResult == true)
                                     {
                                         MessageBox.Show("Сотрудник уволен", "Успешно", MessageBoxButton.OK, MessageBoxImage.Information);
+                                        EmployeeUpdated?.Invoke();
                                     }
                                     else
                                     {
@@ -404,9 +419,14 @@ namespace Desktop.ViewModel
             get
             {
                 return addEmp ??
-                  (addEmp = new RelayCommand((o) =>
+                  (addEmp = new RelayCommand(async (o) =>
                   {
-
+                      if (!string.IsNullOrEmpty(SelectedEmployee.Error))
+                      {
+                          MessageBox.Show(SelectedEmployee.Error, "Ошибка валидации",
+                              MessageBoxButton.OK, MessageBoxImage.Error);
+                          return;
+                      }
                       if (BossId_ != null) 
                       { 
                           SelectedEmployee.IdBoss = BossId_.IdEmployee;
@@ -415,16 +435,37 @@ namespace Desktop.ViewModel
                       { 
                            SelectedEmployee.IdHelper = HelperId_.IdEmployee;
                           
-                      } 
-
-                      if (SelectedEmployee.IdEmployee == 0)
-                      {
-                          Task.Run(() => employeeService.Add(SelectedEmployee));
                       }
-                      else Task.Run(() => employeeService.Update(SelectedEmployee));
-                      IsEditable = false;
-                      var result = MessageBox.Show("Для обновления списка сотрудников перезагрузите окно, нажав на кнопку перезагрузки в верхней правой части главного окна", 
-                          "Подтверждение", MessageBoxButton.OKCancel, MessageBoxImage.Information);
+
+                      try
+                      {
+                          bool result;
+                          if (SelectedEmployee.IdEmployee == 0)
+                          {
+                              result = await employeeService.Add(SelectedEmployee);
+                              if (result)
+                              {
+                                  MessageBox.Show("Сотрудник добавлен", "Успешно");
+                                  EmployeeAdded?.Invoke();
+                                  CloseWindow(); 
+                              }
+                          }
+                          else
+                          {
+                              result = await employeeService.Update(SelectedEmployee);
+                              if (result)
+                              {
+                                  MessageBox.Show("Изменения сохранены", "Успешно");
+                                  EmployeeUpdated?.Invoke();
+                                  CloseWindow(); 
+                              }
+                          }
+                      }
+                      catch (Exception ex)
+                      {
+                          MessageBox.Show($"Ошибка: {ex.Message}", "Ошибка");
+                      }
+                     
                   }));
             }
         }
@@ -453,14 +494,14 @@ namespace Desktop.ViewModel
             get
             {
                 return deletecalendarCommand ??
-                  (deletecalendarCommand = new RelayCommand((o) =>
+                  (deletecalendarCommand = new RelayCommand(async (o) =>
                   {
                       int calendarid = (int)(o);
                       Calendar_ calendar_ = Calendars.FirstOrDefault(x => x.IdCalendar == calendarid)!;
                       var result = MessageBox.Show("Вы уверены, что хотите удалить это мероприятие?", "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Warning);
                       if (result == MessageBoxResult.Yes)
                       {
-                          calendarService.Delete(calendar_);
+                          await calendarService.Delete(calendar_);
                           Calendars.Remove(calendar_);
                           UpdateEvents();
                       }
@@ -565,33 +606,170 @@ namespace Desktop.ViewModel
             get
             {
                 return saveEvent ??
-                  (saveEvent = new RelayCommand((o) =>
+                  (saveEvent = new RelayCommand(async (o) =>
                   {
                       var result = MessageBox.Show("Cохранить мероприятие?", "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Warning);
                       if (result == MessageBoxResult.Yes)
                       {
-                          
-                          Calendar_ newCalendar = new Calendar_();
-                          newCalendar.IdEmployee = SelectedEmployee.IdEmployee;
-                          newCalendar.TypeOfEvent = TypeOfEvent_;
-                          if(NameOfStudy_ != null) newCalendar.IdEvent = NameOfStudy_.IdEvent;
-                          newCalendar.TypeOfAbsense = Typeofabsence_;
-                          if(IdAlternate_ != null) newCalendar.IdAlternate = IdAlternate_.IdEmployee;
-                          newCalendar.DateStart = DateOnly.FromDateTime((DateTime)DateStart_!).ToString();
-                          newCalendar.DateFinish = DateOnly.FromDateTime((DateTime)DateFinish_!).ToString();
+                          if (TypeOfEvent_ == null || DateStart_ == null || DateFinish_ == null)
+                          {
+                              MessageBox.Show("Заполните поле названия мероприятия и даты его проведения",
+                                  "Обязательные поля", MessageBoxButton.OKCancel, MessageBoxImage.Warning);
+                          }
+                          else
+                          {
+                              List<DateTime> dateRange = GenerateDateRange(DateStart_.Value, DateFinish_.Value);
+                              if (DateStart_ <= DateFinish_)
+                              {
+                                  switch (TypeOfEvent_)
+                                  {
+                                      case "Отпуск":
+                                      case "Обучение":
+                                          {
+                                              List<Calendar_> conflictingEvents = GetConflictingEvents(dateRange, skipList.ToList());
+                                              if (conflictingEvents.Any())
+                                              {
+                                                  ShowConflictMessage(conflictingEvents);
+                                                  return;
+                                              }
+                                              break;
+                                          }    
+                                      case "Временное отсутствие":
+                                          {
+                                              List<Calendar_> conflictingEvents = new List<Calendar_>();
+                                              List<DateTime> conflictHolidays = new List<DateTime>();
+                                              conflictingEvents.AddRange(GetConflictingEvents(dateRange, vacationList.ToList()));
+                                              var x = GenerateHolidayRange();
+                                              conflictingEvents.AddRange(GetConflictingEvents(dateRange, studyList.ToList()));
+                                              conflictHolidays.AddRange(GetConflictingEventsWithHolidays(dateRange, GenerateHolidayRange()));
+                                              if (conflictingEvents.Any())
+                                              {
+                                                  ShowConflictMessage(conflictingEvents);
+                                                  return;
+                                              }
+                                              if (conflictHolidays.Any())
+                                              {
+                                                  MessageBox.Show("Отгул нельзя запланировать на выходной день", "Конфликт планирования",
+                                                      MessageBoxButton.OKCancel, MessageBoxImage.Warning);
+                                                  return;
+                                              }
+                                              break;
+                                          }     
+                                  }
+                                  Calendar_ newCalendar = new Calendar_();
+                                  newCalendar.IdEmployee = SelectedEmployee.IdEmployee;
+                                  newCalendar.TypeOfEvent = TypeOfEvent_;
+                                  if (NameOfStudy_ != null) newCalendar.IdEvent = NameOfStudy_.IdEvent;
+                                  newCalendar.TypeOfAbsense = Typeofabsence_;
+                                  if (IdAlternate_ != null) newCalendar.IdAlternate = IdAlternate_.IdEmployee;
+                                  newCalendar.DateStart = DateOnly.FromDateTime((DateTime)DateStart_!);
+                                  newCalendar.DateFinish = DateOnly.FromDateTime((DateTime)DateFinish_!);
 
-                          calendarService.Add(newCalendar);
-                          BrowseEvents();
-                          TypeOfEvent_ = " ";
-                          NameOfStudy_ = null;
-                          Typeofabsence_ = " ";
-                          IdAlternate_ = null;
-                          DateStart_ = null;
-                          DateFinish_ = null;
+                                  await calendarService.Add(newCalendar);
+
+                                  LoadCalendars();
+                                  BrowseEvents();
+                                  TypeOfEvent_ = " ";
+                                  NameOfStudy_ = null;
+                                  Typeofabsence_ = " ";
+                                  IdAlternate_ = null;
+                                  DateStart_ = null;
+                                  DateFinish_ = null;
+
+
+                              }
+                              else
+                              {
+                                  MessageBox.Show("Дата окончания мероприятия не может быть раньше даты окончания", "Даты мероприятия",
+                                      MessageBoxButton.OKCancel, MessageBoxImage.Warning);
+                              }
+                          }
+                          
                       }
 
                   }));
             }
+        }
+
+        private void ShowConflictMessage(List<Calendar_> conflicts)
+        {
+            StringBuilder message = new StringBuilder();
+
+            message.AppendLine("Обнаружены конфликтующие события:");
+
+            foreach (var conflict in conflicts)
+            {
+                message.AppendLine($"• {conflict.TypeOfEvent}: {conflict.DateStart} - {conflict.DateFinish}"); 
+            }
+
+            MessageBox.Show(message.ToString(), "Конфликт планирования",
+                MessageBoxButton.OK, MessageBoxImage.Warning);
+        }
+
+        private List<DateTime> GetConflictingEventsWithHolidays(List<DateTime> dateRange,
+                                          List<DateTime> days)
+        {
+            List<DateTime> conflicts = new List<DateTime>();
+
+            foreach (var calendar in days)
+            {
+                DateTime calStart = calendar;
+                DateTime calEnd = calendar;
+                bool hasConflict = false;
+                hasConflict = dateRange.Any(date => date >= calStart && date <= calEnd);
+                if (hasConflict)
+                {
+                    conflicts.Add(calendar);
+                }
+            }
+
+            return conflicts;
+        }
+
+        private List<Calendar_> GetConflictingEvents(List<DateTime> dateRange,
+                                           List<Calendar_> calendars)
+        {
+            List<Calendar_> conflicts = new List<Calendar_>();
+
+            foreach (var calendar in calendars)
+            {
+                DateTime calStart = DateTime.Parse(calendar.DateStart.ToString());
+                DateTime calEnd = DateTime.Parse(calendar.DateFinish.ToString());
+                bool hasConflict = false;
+                hasConflict = dateRange.Any(date => date >= calStart && date <= calEnd);
+                if (hasConflict)
+                {
+                    conflicts.Add(calendar);
+                }
+            }
+
+            return conflicts;
+        }
+        private List<DateTime> GenerateHolidayRange()
+        {
+            List<DateTime> dates = new List<DateTime>();
+
+            foreach (WorkingCalendar day in Holidays)
+            {
+                if(day.IsWorkingDay == false)
+                {
+                    dates.Add(DateTime.Parse(day.ExceptionDate.ToString()));
+                }
+                
+            }
+
+            return dates;
+        }
+        private List<DateTime> GenerateDateRange(DateTime startDate, DateTime endDate)
+        {
+            List<DateTime> dates = new List<DateTime>();
+
+            for (DateTime date = startDate; date <= endDate; date = date.AddDays(1))
+            {
+                dates.Add(date);
+            }
+
+            return dates;
         }
 
         private RelayCommand? stateminCommand;
@@ -633,17 +811,13 @@ namespace Desktop.ViewModel
             SelectedEmployee = employee;
             
             SelectedDepartment = departmentid;
-            LoadEmpDep();
-            EmployeeList = Employees!.Where(x => x.IdDepartment == SelectedDepartment && x.IdEmployee != SelectedEmployee.IdEmployee).ToList();
-            EmployeeList.Sort();
-            EmployeeList.Add(new Employee());
-            LastShow = false;
-            PresentShow = true;
-            FutureShow = true;
-            ColorPresent = "Green";
-            ColorLast = "LightGreen";
-            ColorFuture = "Green";
-            BrowseEmployee(); 
+
+            Employees = new ObservableCollection<Employee>();
+            EmployeeList = new List<Employee>();
+
+            LoadData();
+
+           
 
         }
         private void BrowseEmployee()
@@ -663,30 +837,60 @@ namespace Desktop.ViewModel
                 BossId_ = null;
                 HelperId_ = null;
                 IsEditable = true;
-                SelectedDepartment = 888;
                 VisibilityButton = "Hidden";
             }
             
 
         }
-        private void LoadEmpDep()
+        
+        private async void LoadData()
         {
-            employeeService = new EmployeeService();
-            eventService = new EventService();
-            calendarService = new CalendarService();
             try
             {
-                Employees = null;
-                Task<List<Employee>> task_emp = Task.Run(() => employeeService.GetAll());
-                Employees = new ObservableCollection<Employee>(task_emp.Result);
-                Events = null;
-                Task<List<Event>> task_ev = Task.Run(() => eventService.GetAll());
-                Events = new ObservableCollection<Event>(task_ev.Result);
+                await LoadEmpDep();
+                EmployeeList = Employees!.Where(x => x.IdDepartment == SelectedDepartment && x.IdEmployee != SelectedEmployee.IdEmployee).ToList();
+                EmployeeList.Sort();
+                EmployeeList.Add(new Employee());
+                LastShow = false;
+                PresentShow = true;
+                FutureShow = true;
+                ColorPresent = "Green";
+                ColorLast = "LightGreen";
+                ColorFuture = "Green";
+                BrowseEmployee();
 
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show($"Ошибка загрузки данных: {ex.Message}", "Ошибка",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+        private async Task LoadEmpDep()
+        {
+            employeeService = new EmployeeService();
+            eventService = new EventService();
+            calendarService = new CalendarService();
+            workingCalendarService = new WorkingCalendarService();
+            try
+            {
+                Employees = null;
+                Task<List<Employee>> task_emp = Task.Run(() => employeeService.GetAll());
+                
+                Events = null;
+                Task<List<Event>> task_ev = Task.Run(() => eventService.GetAll());
+                Holidays = null;
+                Task<List<WorkingCalendar>> task_h = Task.Run(() => workingCalendarService.GetAll());
+
+                await Task.WhenAll(task_emp, task_ev, task_h);
+                Employees = new ObservableCollection<Employee>(task_emp.Result);
+                Events = new ObservableCollection<Event>(task_ev.Result);
+                Holidays = new ObservableCollection<WorkingCalendar>(task_h.Result);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Ошибка загрузки",
+                MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
         private void LoadCalendars()
@@ -722,7 +926,7 @@ namespace Desktop.ViewModel
             {
                 foreach (Calendar_ item in Calendars)
                 {
-                    if (DateTime.Parse(item.DateFinish) < (DateTime.Now))
+                    if ((item.DateFinish) < DateOnly.FromDateTime((DateTime.Now)))
                     {
                         listAll.Add(item);
                     }
@@ -732,7 +936,7 @@ namespace Desktop.ViewModel
             {
                 foreach (Calendar_ item in Calendars)
                 {
-                    if (DateTime.Parse(item.DateStart) <= DateTime.Now && DateTime.Parse(item.DateFinish) >= DateTime.Now)
+                    if ((item.DateStart) <= DateOnly.FromDateTime((DateTime.Now)) && (item.DateFinish) >= DateOnly.FromDateTime((DateTime.Now)))
                     {
                         listAll.Add(item);
                     }
@@ -742,7 +946,7 @@ namespace Desktop.ViewModel
             {
                 foreach (Calendar_ item in Calendars)
                 {
-                    if (DateTime.Parse(item.DateStart) > DateTime.Now)
+                    if ((item.DateStart) > DateOnly.FromDateTime((DateTime.Now)))
                     {
                         listAll.Add(item);
                     }

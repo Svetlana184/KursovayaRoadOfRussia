@@ -61,13 +61,13 @@ namespace Desktop.ViewModel
             }
         }
         public ObservableCollection<Department> Deps{ get; set; }
-        private List<EmployeeCard> employeeslist;
-        public List<EmployeeCard> EmployeesList 
+        private ObservableCollection<EmployeeCard> employeesList;
+        public ObservableCollection<EmployeeCard> EmployeesList
         {
-            get { return employeeslist; }
+            get { return employeesList; }
             set
             {
-                employeeslist = value;
+                employeesList = value;
                 OnPropertyChanged(nameof(EmployeesList));
             }
         }
@@ -114,6 +114,21 @@ namespace Desktop.ViewModel
             WindowState = "Normal";
             LoadData();
             Load();
+
+            PersonViewModel.EmployeeUpdated += OnEmployeeUpdated;
+            PersonViewModel.EmployeeAdded += OnEmployeeUpdated;
+        }
+
+        private async void OnEmployeeUpdated()
+        {
+            int ex_depid = Depid;
+            await Task.Run(() => LoadData());
+            Load();
+            
+            OnPropertyChanged(nameof(EmployeesList));
+            Depid = ex_depid;
+            FilterEmployeesByDepartment(ex_depid);
+
         }
         private void LoadData()
         {
@@ -172,9 +187,9 @@ namespace Desktop.ViewModel
                     }
 
                 }
-            EmployeesList = new List<EmployeeCard>();
+                EmployeesList = new ObservableCollection<EmployeeCard>();
                 foreach (Employee emp in Employees)
-                {
+                    {
                     if (emp.IsFired == null || DateTime.Now - DateTime.Parse(emp.IsFired.ToString()).AddDays(30) < TimeSpan.Zero)
                     {
                         EmployeeCard cardEmp = new EmployeeCard
@@ -193,10 +208,12 @@ namespace Desktop.ViewModel
                         {
 
                             cardEmp.Color = new SolidColorBrush(Color.FromRgb(128, 128, 128));
+                            cardEmp.Disabled = false;
                         }
                         else
                         {
                             cardEmp.Color = new SolidColorBrush(Color.FromRgb(120, 178, 75));
+                            cardEmp.Disabled = true;
                         }
                         EmployeesList.Add(cardEmp);
                     }
@@ -212,11 +229,15 @@ namespace Desktop.ViewModel
         public void FilterEmployeesByDepartment(int departmentId)
         {
             Depid = departmentId;
+            EmployeesList = new ObservableCollection<EmployeeCard>();
             List<Department> depList = new List<Department>();
 
-            depList.Add(Deps.FirstOrDefault(p => p.IdDepartment == Depid)!);
+            var department = Deps.FirstOrDefault(p => p.IdDepartment == Depid);
+            if (department == null) return;
 
-            for(int i =0; i <=4; i++)
+            depList.Add(department);
+
+            for (int i =0; i <=4; i++)
             {
                 List<Department> childList = new List<Department>();
                 foreach (Department v in depList)
@@ -231,8 +252,11 @@ namespace Desktop.ViewModel
 
             foreach (Department d in depList)
             {
-                
-                listMain.AddRange(Employees.Where(p => p.IdDepartment == d.IdDepartment));
+
+                if (d != null)
+                {
+                    listMain.AddRange(Employees.Where(p => p.IdDepartment == d.IdDepartment));
+                }
             }
             listMain.Sort();
             List<Employee> empsTemp = listMain.Distinct().ToList();
@@ -248,16 +272,19 @@ namespace Desktop.ViewModel
                     PhoneWork = emp.PhoneWork,
                     Cabinet = emp.Cabinet,
                     Email = emp.Email,
-                    IdDepartment = emp.IdDepartment
+                    IdDepartment = emp.IdDepartment,
+                    Disabled = true
                 };
 
                 if (emp.IsFired != null)
                 {
                     cardEmp.Color = new SolidColorBrush(Color.FromRgb(128, 128, 128));
+                    cardEmp.Disabled = false;
                 }
                 else
                 {   
                     cardEmp.Color = new SolidColorBrush(Color.FromRgb(120, 178, 75));
+                    
                 }
                 EmployeesList.Add(cardEmp);
             }
@@ -278,8 +305,7 @@ namespace Desktop.ViewModel
                       Employee new_emp = new Employee();
                       new_emp.IdDepartment = Deps.FirstOrDefault(p => p.IdDepartmentParent == null)!.IdDepartment;
                      PersonWindow window = new PersonWindow(new_emp, Depid);
-                      int x = 0;
-                     window.Show();
+                      window.Show();
                   }));
             }
         }
@@ -291,11 +317,14 @@ namespace Desktop.ViewModel
                 return editCommand ??
                   (editCommand = new RelayCommand((o) =>
                   {
-                      EmployeeCard employee = o as EmployeeCard;
+                      if(o != null)
+                      {
+                          EmployeeCard employee = o as EmployeeCard;
+                          PersonWindow window = new PersonWindow(employees.FirstOrDefault(p => p.IdEmployee == employee!.IdEmployee)!, employee!.IdDepartment);
+                          window.Show();
+                      }
                       
-                      PersonWindow window = new PersonWindow(employees.FirstOrDefault(p=>p.IdEmployee == employee!.IdEmployee)!, employee!.IdDepartment);
                       
-                      window.Show();
                      
                   }));
             }
@@ -344,6 +373,39 @@ namespace Desktop.ViewModel
                       }
                   }));
             }
+        }
+
+        private RelayCommand? closeWindowCommand;
+        public RelayCommand CloseWindowCommand
+        {
+            get
+            {
+                return closeWindowCommand ?? (
+                    closeWindowCommand = new RelayCommand((o) => {
+                        var result = MessageBox.Show("При закрытии программы несохраненные изменения не сохранятся. " +
+                                "Выйти из программы?",
+                            "Подтверждение выхода",
+                            MessageBoxButton.YesNo,
+                            MessageBoxImage.Warning);
+
+                        switch (result)
+                        {
+                            case MessageBoxResult.Yes:
+                                Cleanup();
+                                Application.Current.Shutdown();
+                                break;
+                            case MessageBoxResult.No:
+                                return;
+                        }
+
+                    }));
+            }
+        }
+
+        public void Cleanup()
+        {
+            PersonViewModel.EmployeeUpdated -= OnEmployeeUpdated;
+            PersonViewModel.EmployeeAdded -= OnEmployeeUpdated;
         }
 
     }

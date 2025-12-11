@@ -23,12 +23,13 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 
-builder.Services.AddDbContext<RoadOfRussiaContext>(options =>
+builder.Services.AddDbContext<RoadOfRussiaKorushkContext>(options =>
 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddScoped<IService<Department>, DepartmentService>();
 builder.Services.AddScoped<IService<Employee>, EmployeeService>();
 builder.Services.AddScoped<IService<Event>, EventService>();
 builder.Services.AddScoped<IService<Calendar_>, CalendarService>();
+builder.Services.AddScoped<IService<WorkingCalendar>, WorkingCalendarService>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(
     options =>
@@ -56,13 +57,13 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseAuthentication();
 
-app.Map("/login", async (Employee emp) => {
+app.Map("/login", async (User emp) => {
 
-    Employee employee = null;
-    using (RoadOfRussiaContext db = new RoadOfRussiaContext())
+    User employee = null;
+    using (RoadOfRussiaKorushkContext db = new RoadOfRussiaKorushkContext())
     {
 
-        employee = await db.Employees.FirstOrDefaultAsync(p => p.Email == emp.Email)!;
+        employee = await db.Users.FirstOrDefaultAsync(p => p.Email == emp.Email)!;
 
         string password = AuthOptions.GenerateSha256Hash(emp.Password);
         if (employee == null || employee.Password != password) return Results.Unauthorized();
@@ -90,15 +91,19 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.MapPost("/register", async (Employee user, RoadOfRussiaContext db) =>
+app.MapPost("/register", async (User user, RoadOfRussiaKorushkContext db) =>
 {
    
     user.Password = AuthOptions.GenerateSha256Hash(user.Password);
-    db.Employees.Add(user);
+    db.Users.Add(user);
     await db.SaveChangesAsync();
-    Employee createdUser = db.Employees.FirstOrDefault(p => p.Email == user.Email)!;
+    User createdUser = db.Users.FirstOrDefault(p => p.Email == user.Email)!;
     return Results.Ok(createdUser);
 });
+
+var context = app.Services.CreateScope().ServiceProvider.
+    GetRequiredService<RoadOfRussiaKorushkContext>();
+SeedData.SeedDatabase(context);
 
 app.Run();
 
@@ -122,10 +127,9 @@ string ByteToString(byte[] bytes)
     }
     return result;
 }
-var context = app.Services.CreateScope().ServiceProvider.
-    GetRequiredService<RoadOfRussiaContext>();
-SeedData.SeedDatabase(context);
-app.Run();
+
+
+
 public class AuthOptions
 {
     public const string ISSUER = "MyAuthServer"; //издатель токена

@@ -9,7 +9,7 @@
         xmlns:local="clr-namespace:Desktop.View" 
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:converter ="clr-namespace:Desktop.Helpers"
-        d:DataContext="{d:DesignInstance Type=vm:PersonViewModel}"
+        d:DataContext = "{d:DesignInstance Type=vm:PersonViewModel}"
         mc:Ignorable="d"
         Title="PersonWindow" Height="650" Width="900"
         Left="250"

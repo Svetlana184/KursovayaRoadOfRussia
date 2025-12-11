@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
+
 namespace WebAPI.Models;
+
 public partial class Department
 {
     public int IdDepartment { get; set; }

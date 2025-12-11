@@ -1,6 +1,7 @@
-﻿using Microsoft.Identity.Client;
-using Desktop.Model;
+﻿using Desktop.Model;
 using Desktop.View;
+using Desktop.ViewModel;
+using Microsoft.Identity.Client;
 using System.ComponentModel;
 using System.Net.Http;
 using System.Net.Http.Json;
@@ -30,7 +31,7 @@ namespace Desktop.View
             InitializeComponent();
             Instance = this;
         }
-        
+ 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             var result = MessageBox.Show("При закрытии программы несохраненные изменения не сохранятся. " +

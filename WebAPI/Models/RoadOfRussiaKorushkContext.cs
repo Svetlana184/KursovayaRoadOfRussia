@@ -1,18 +1,17 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
+using Microsoft.EntityFrameworkCore;
 
 namespace WebAPI.Models;
 
-public partial class RoadOfRussiaContext : DbContext
+public partial class RoadOfRussiaKorushkContext : DbContext
 {
-    public RoadOfRussiaContext()
+    public RoadOfRussiaKorushkContext()
     {
         Database.EnsureCreated();
     }
 
-    public RoadOfRussiaContext(DbContextOptions<RoadOfRussiaContext> options)
+    public RoadOfRussiaKorushkContext(DbContextOptions<RoadOfRussiaKorushkContext> options)
         : base(options)
     {
         Database.EnsureCreated();
@@ -34,11 +33,13 @@ public partial class RoadOfRussiaContext : DbContext
 
     public virtual DbSet<Material> Materials { get; set; }
 
+    public virtual DbSet<User> Users { get; set; }
+
     public virtual DbSet<WorkingCalendar> WorkingCalendars { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Data Source=GoblinsComp3;Initial Catalog=RoadOfRussiaKorushk;User ID=sa;Password=1234;Encrypt=False");
+        => optionsBuilder.UseSqlServer("Data Source=GoblinsComp3;Initial Catalog=RoadOfRussiaKorushk;Persist Security Info=True;User ID=sa;Password=1234;Encrypt=False");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -143,7 +144,7 @@ public partial class RoadOfRussiaContext : DbContext
             entity.Property(e => e.IsFired).HasColumnType("datetime");
             entity.Property(e => e.Other).HasColumnType("text");
             entity.Property(e => e.Password)
-                .HasMaxLength(2000)
+                .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("password");
             entity.Property(e => e.Phone).HasMaxLength(20);
@@ -151,7 +152,7 @@ public partial class RoadOfRussiaContext : DbContext
             entity.Property(e => e.Position).HasMaxLength(100);
             entity.Property(e => e.SecondName).HasMaxLength(20);
             entity.Property(e => e.Surname).HasMaxLength(20);
-            
+
             entity.HasOne(d => d.IdDepartmentNavigation).WithMany(p => p.Employees)
                 .HasForeignKey(d => d.IdDepartment)
                 .OnDelete(DeleteBehavior.ClientSetNull)
@@ -205,6 +206,19 @@ public partial class RoadOfRussiaContext : DbContext
             entity.Property(e => e.MaterialName).HasMaxLength(100);
             entity.Property(e => e.Status).HasMaxLength(15);
             entity.Property(e => e.TypeOfMaterial).HasMaxLength(20);
+        });
+
+        modelBuilder.Entity<User>(entity =>
+        {
+            entity.HasKey(e => e.IdUser).HasName("PK_User_1");
+
+            entity.ToTable("User");
+
+            entity.HasIndex(e => e.Email, "User_UNIQUE").IsUnique();
+
+            entity.Property(e => e.Email).HasMaxLength(200);
+
+            entity.Property(e => e.Password).HasColumnType("ntext");
         });
 
         modelBuilder.Entity<WorkingCalendar>(entity =>

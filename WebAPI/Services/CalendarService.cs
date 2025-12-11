@@ -5,8 +5,8 @@ namespace WebAPI.Services
 {
     public class CalendarService : IService<Calendar_>
     {
-        private readonly RoadOfRussiaContext roadOfRussiaContext;
-        public CalendarService(RoadOfRussiaContext context)
+        private readonly RoadOfRussiaKorushkContext roadOfRussiaContext;
+        public CalendarService(RoadOfRussiaKorushkContext context)
         {
             this.roadOfRussiaContext = context;
         }

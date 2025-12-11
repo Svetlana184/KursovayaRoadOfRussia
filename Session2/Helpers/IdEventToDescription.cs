@@ -16,20 +16,24 @@ namespace Desktop.Helpers
         public EventService eventService;
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            int id = int.Parse(value.ToString()!);
-            ObservableCollection<Event> evs;
-            eventService = new EventService();
-            try
+            if (value != null)
             {
-                evs = null!;
-                Task<List<Event>> task = Task.Run(() => eventService.GetAll());
-                evs = new ObservableCollection<Event>(task.Result);
-                return evs.FirstOrDefault(x => x.IdEvent == id)!.EventDescription;
+                try
+                {
+                    int id = int.Parse(value.ToString()!);
+                    ObservableCollection<Event> evs;
+                    eventService = new EventService();
+                    evs = null!;
+                    Task<List<Event>> task = Task.Run(() => eventService.GetAll());
+                    evs = new ObservableCollection<Event>(task.Result);
+                    return evs.FirstOrDefault(x => x.IdEvent == id)!.EventDescription;
+                }
+                catch
+                {
+                    return "хз брат";
+                }
             }
-            catch
-            {
-                return "хз брат";
-            }
+            else return "";
             
         }
 
