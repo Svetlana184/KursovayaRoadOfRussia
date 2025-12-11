@@ -446,6 +446,7 @@ namespace Desktop.ViewModel
                               if (result)
                               {
                                   MessageBox.Show("Сотрудник добавлен", "Успешно");
+                                  
                                   EmployeeAdded?.Invoke();
                                   CloseWindow(); 
                               }
@@ -456,6 +457,7 @@ namespace Desktop.ViewModel
                               if (result)
                               {
                                   MessageBox.Show("Изменения сохранены", "Успешно");
+                                  IsEditable = false;
                                   EmployeeUpdated?.Invoke();
                                   CloseWindow(); 
                               }
@@ -649,7 +651,7 @@ namespace Desktop.ViewModel
                                               }
                                               if (conflictHolidays.Any())
                                               {
-                                                  MessageBox.Show("Отгул нельзя запланировать на выходной день", "Конфликт планирования",
+                                                  MessageBox.Show("Отгул нельзя запланировать на праздничный день", "Конфликт планирования",
                                                       MessageBoxButton.OKCancel, MessageBoxImage.Warning);
                                                   return;
                                               }
@@ -680,7 +682,7 @@ namespace Desktop.ViewModel
                               }
                               else
                               {
-                                  MessageBox.Show("Дата окончания мероприятия не может быть раньше даты окончания", "Даты мероприятия",
+                                  MessageBox.Show("Дата окончания мероприятия не может быть раньше даты начала", "Даты мероприятия",
                                       MessageBoxButton.OKCancel, MessageBoxImage.Warning);
                               }
                           }

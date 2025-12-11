@@ -382,7 +382,7 @@ namespace Desktop.ViewModel
             {
                 return closeWindowCommand ?? (
                     closeWindowCommand = new RelayCommand((o) => {
-                        var result = MessageBox.Show("При закрытии программы несохраненные изменения не сохранятся. " +
+                        var result = MessageBox.Show("При закрытии программы несохраненные изменения будут утеряны. " +
                                 "Выйти из программы?",
                             "Подтверждение выхода",
                             MessageBoxButton.YesNo,

@@ -41,7 +41,7 @@ namespace Desktop.View
         }
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            var result = MessageBox.Show("При закрытии программы несохраненные изменения не сохранятся. " +
+            var result = MessageBox.Show("При закрытии программы несохраненные изменения будут утеряны. " +
                 "Выйти из программы?",
             "Подтверждение выхода",
             MessageBoxButton.YesNo,

@@ -97,7 +97,7 @@ namespace Desktop.ViewModel
                       }
                       else
                       {
-                          MessageBox.Show("Пользователь с таким именем или паролем не существует!");
+                          MessageBox.Show("Пользователь с такой почтой или паролем не существует!");
                       }
 
                   }));

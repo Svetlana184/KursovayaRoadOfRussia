@@ -98,7 +98,7 @@ namespace Desktop.ViewModel
                               {
                                   if (Password.Length < 8)
                                   {
-                                      MessageBox.Show("Пароль содержать минимум восемь символов");
+                                      MessageBox.Show("Пароль должен содержать минимум восемь символов");
                                       return;
                                   }
                                   else
