@@ -221,7 +221,16 @@ namespace Desktop.ViewModel
                 OnPropertyChanged();
             }
         }
-
+        private ObservableCollection<WorkingCalendar> holidays;
+        public ObservableCollection<WorkingCalendar> Holidays
+        {
+            get => holidays;
+            set
+            {
+                holidays = value;
+                OnPropertyChanged();
+            }
+        }
 
         //поля для карточки сотрудника
         private Employee? bossid_;
@@ -333,6 +342,7 @@ namespace Desktop.ViewModel
         public EmployeeService employeeService;
         public CalendarService calendarService;
         public EventService eventService;
+        public WorkingCalendarService workingCalendarService;
 
         public event Action WindowClosed;
         private void CloseWindow()
@@ -603,7 +613,7 @@ namespace Desktop.ViewModel
                           else
                           {
                               List<DateTime> dateRange = GenerateDateRange(DateStart_.Value, DateFinish_.Value);
-                              if (DateStart_ < DateFinish_)
+                              if (DateStart_ <= DateFinish_)
                               {
                                   switch (TypeOfEvent_)
                                   {
@@ -621,11 +631,20 @@ namespace Desktop.ViewModel
                                       case "Временное отсутствие":
                                           {
                                               List<Calendar_> conflictingEvents = new List<Calendar_>();
+                                              List<DateTime> conflictHolidays = new List<DateTime>();
                                               conflictingEvents.AddRange(GetConflictingEvents(dateRange, vacationList.ToList()));
+                                              var x = GenerateHolidayRange();
                                               conflictingEvents.AddRange(GetConflictingEvents(dateRange, studyList.ToList()));
+                                              conflictHolidays.AddRange(GetConflictingEventsWithHolidays(dateRange, GenerateHolidayRange()));
                                               if (conflictingEvents.Any())
                                               {
                                                   ShowConflictMessage(conflictingEvents);
+                                                  return;
+                                              }
+                                              if (conflictHolidays.Any())
+                                              {
+                                                  MessageBox.Show("Отгул нельзя запланировать на выходной день", "Конфликт планирования",
+                                                      MessageBoxButton.OKCancel, MessageBoxImage.Warning);
                                                   return;
                                               }
                                               break;
@@ -681,6 +700,26 @@ namespace Desktop.ViewModel
                 MessageBoxButton.OK, MessageBoxImage.Warning);
         }
 
+        private List<DateTime> GetConflictingEventsWithHolidays(List<DateTime> dateRange,
+                                          List<DateTime> days)
+        {
+            List<DateTime> conflicts = new List<DateTime>();
+
+            foreach (var calendar in days)
+            {
+                DateTime calStart = calendar;
+                DateTime calEnd = calendar;
+                bool hasConflict = false;
+                hasConflict = dateRange.Any(date => date >= calStart && date <= calEnd);
+                if (hasConflict)
+                {
+                    conflicts.Add(calendar);
+                }
+            }
+
+            return conflicts;
+        }
+
         private List<Calendar_> GetConflictingEvents(List<DateTime> dateRange,
                                            List<Calendar_> calendars)
         {
@@ -700,7 +739,21 @@ namespace Desktop.ViewModel
 
             return conflicts;
         }
+        private List<DateTime> GenerateHolidayRange()
+        {
+            List<DateTime> dates = new List<DateTime>();
 
+            foreach (WorkingCalendar day in Holidays)
+            {
+                if(day.IsWorkingDay == false)
+                {
+                    dates.Add(DateTime.Parse(day.ExceptionDate.ToString()));
+                }
+                
+            }
+
+            return dates;
+        }
         private List<DateTime> GenerateDateRange(DateTime startDate, DateTime endDate)
         {
             List<DateTime> dates = new List<DateTime>();
@@ -812,18 +865,21 @@ namespace Desktop.ViewModel
             employeeService = new EmployeeService();
             eventService = new EventService();
             calendarService = new CalendarService();
+            workingCalendarService = new WorkingCalendarService();
             try
             {
                 Employees = null;
                 Task<List<Employee>> task_emp = Task.Run(() => employeeService.GetAll());
-                Employees = new ObservableCollection<Employee>(task_emp.Result);
+                
                 Events = null;
                 Task<List<Event>> task_ev = Task.Run(() => eventService.GetAll());
+                Holidays = null;
+                Task<List<WorkingCalendar>> task_h = Task.Run(() => workingCalendarService.GetAll());
 
-                await Task.WhenAll(task_emp, task_ev);
-
+                await Task.WhenAll(task_emp, task_ev, task_h);
+                Employees = new ObservableCollection<Employee>(task_emp.Result);
                 Events = new ObservableCollection<Event>(task_ev.Result);
-
+                Holidays = new ObservableCollection<WorkingCalendar>(task_h.Result);
             }
             catch (Exception ex)
             {
