@@ -193,10 +193,12 @@ namespace Desktop.ViewModel
                         {
 
                             cardEmp.Color = new SolidColorBrush(Color.FromRgb(128, 128, 128));
+                            cardEmp.Disabled = false;
                         }
                         else
                         {
                             cardEmp.Color = new SolidColorBrush(Color.FromRgb(120, 178, 75));
+                            cardEmp.Disabled = true;
                         }
                         EmployeesList.Add(cardEmp);
                     }
@@ -300,10 +302,14 @@ namespace Desktop.ViewModel
                 return editCommand ??
                   (editCommand = new RelayCommand((o) =>
                   {
-                      EmployeeCard employee = o as EmployeeCard;
+                      if(o != null)
+                      {
+                          EmployeeCard employee = o as EmployeeCard;
+                          PersonWindow window = new PersonWindow(employees.FirstOrDefault(p => p.IdEmployee == employee!.IdEmployee)!, employee!.IdDepartment);
+                          window.Show();
+                      }
                       
-                      PersonWindow window = new PersonWindow(employees.FirstOrDefault(p=>p.IdEmployee == employee!.IdEmployee)!, employee!.IdDepartment);
-                      window.Show();
+                      
                      
                   }));
             }
